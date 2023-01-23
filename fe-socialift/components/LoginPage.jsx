@@ -15,13 +15,12 @@ export const LoginPage = () => {
     const [password, setPassword] = useState('');
 
 
-    
+    const CheckLoginDetails = () => {
+
+    }
+
 
     return (
-    //     <Button
-    //     title="Login"
-    //     onPress={() => Alert.alert('Simple Button pressed')}
-    //   />
 
     <View style={{padding: 100}}>
       <TextInput
@@ -39,7 +38,7 @@ export const LoginPage = () => {
         /> 
     <Button
     title="Login"
-    onPress={() => Alert.alert('Simple Button pressed')}
+    onPress={CheckLoginDetails}
     />
 
 
