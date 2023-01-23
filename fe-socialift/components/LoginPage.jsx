@@ -16,7 +16,7 @@ export const LoginPage = () => {
 
 
     const CheckLoginDetails = () => {
-
+        // checks username and password with backend
     }
 
 
@@ -26,8 +26,7 @@ export const LoginPage = () => {
       <TextInput
         style={{height: 40}}
         placeholder="Username"
-        onChangeText={newUsername => setText(newUsername)}
-        defaultValue={username}
+        onChangeText={username => setUsername(username)}
       />
 
         <TextInput
