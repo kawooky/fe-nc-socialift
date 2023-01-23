@@ -1,22 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { Image } from 'react-native';
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {LoginPage} from './components/LoginPage'
 
-export default function App() {
+const App = () => {
+  const [user, setUser] = React.useState('')
   return (
-    <View style={styles.container}>
-      <Image source={require('./assets/logo.png')}/>
-      <Text>sociaLift</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    <NavigationContainer>
+      {/* Rest of your app code */}
+      {/* {!user && <LoginPage/>} */}
+      <LoginPage/>
+
+
+
+    </NavigationContainer>
+  );
+};
+
+
+
+
+export default App;
