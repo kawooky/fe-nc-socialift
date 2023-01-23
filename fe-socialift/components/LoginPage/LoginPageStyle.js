@@ -10,10 +10,14 @@ view: {
     justifyContent: "center",
     alignItems: "center"
   },
+  form: {
+    display: "inherit",
+    flexDirection: "column"
+  },
 input: {
     width: "200px",
     backgroundColor: "#f5f5f5",
-    borderRadius: "10px",
+    borderRadius: "5px",
     margin: "10px"
 },
 loginButton: {
