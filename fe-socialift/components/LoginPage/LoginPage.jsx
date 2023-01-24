@@ -17,13 +17,52 @@ export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("")
+  const [emailError, setEmailError] = useState(false)
+  const [usernameError, setUsernameError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+  const [confirmError, setConfirmError] = useState(false)
 
   const handleChange = (event, setter) => {
-    console.log(event.target.error)
     setter(event.target.value)
     if (event.target.name === "passwordConfirm" && password !== passwordConfirm) {
       console.log('checking matching passwords')
       event.target.error = true
+    }
+  }
+
+  const validateEmail = async(email) => {
+    if (email !== "" && !emailRegex.test(email)) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setEmailError(true)
+    } else {
+      setEmailError(false)
+    }
+  }
+
+  const validateUsername = async(username) => {
+    if (showRegister && username !== "" && currentUsers.includes(username)) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setUsernameError(true)
+    } else {
+      setUsernameError(false)
+    }
+  }
+
+  const validatePassword = async(password) => {
+    if (showRegister && password !== "" && password.length < 8) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPasswordError(true)
+    } else {
+      setPasswordError(false)
+    }
+  }
+
+  const validateConfirmPassword = async(confirmPassword) => {
+    if (confirmPassword !== "" && password !== confirmPassword) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setConfirmError(true)
+    } else {
+      setConfirmError(false)
     }
   }
 
@@ -48,9 +87,9 @@ export const LoginPage = () => {
             variant="outlined"
             placeholder="Email"
             name="email"
-            onChange={(e) => {handleChange(e, setEmail)}}
-            error={(!emailRegex.test(email) && email !== '')}
-            helperText={(!emailRegex.test(email) && email !== '') ? "Please enter a valid email": ""}
+            onChange={(e) => {handleChange(e, setEmail); validateEmail(e.target.value)}}
+            error={emailError}
+            helperText={(emailError) ? "Please enter a valid email": ""}
           />
         )}
         {(showLogin || showRegister) && (
@@ -59,9 +98,9 @@ export const LoginPage = () => {
             variant="outlined"
             name="username"
             placeholder="Username"
-            onChange={(e) => handleChange(e, setUsername)}
-            error={(showRegister && currentUsers.includes(username))}
-            helperText={(showRegister && currentUsers.includes(username)) ? `${username} is taken, please choose another username`: ""}
+            onChange={(e) => {handleChange(e, setUsername); validateUsername(e.target.value)}}
+            error={usernameError}
+            helperText={usernameError ? `${username} is taken, please choose another username`: ""}
           />
         )}
         {(showLogin || showRegister) && (
@@ -70,9 +109,9 @@ export const LoginPage = () => {
             type="password"
             name="password"
             placeholder="Password"
-            onChange={(e) => handleChange(e, setPassword)}
-            error={(password.length < 8 && password !== '' && showRegister)}
-            helperText={(password.length < 8 && password !== '' && showRegister) ? "Passwords must be at least 8 characters": ""}
+            onChange={(e) => {handleChange(e, setPassword); validatePassword(e.target.value)}}
+            error={passwordError}
+            helperText={(passwordError) ? "Passwords must be at least 8 characters": ""}
           />
         )}
         {(showRegister) && (
@@ -81,9 +120,9 @@ export const LoginPage = () => {
             type="password"
             name="passwordConfirm"
             placeholder="Confirm Password"
-            onChange={(e) => handleChange(e, setPasswordConfirm)}
-            error={(password !== passwordConfirm && passwordConfirm !== "")}
-            helperText={password !== passwordConfirm && passwordConfirm ? "Passwords do not match": ""}
+            onChange={(e) => {handleChange(e, setPasswordConfirm); validateConfirmPassword(e.target.value)}}
+            error={confirmError}
+            helperText={confirmError ? "Passwords do not match": ""}
           />
         )}
         <Button
