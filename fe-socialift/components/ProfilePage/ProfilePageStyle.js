@@ -8,7 +8,9 @@ view: {
     backgroundColor: "#151515",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    fontSize: '100px',
+
   },
 input: {
     width: "200px",
@@ -19,6 +21,9 @@ input: {
 loginButton: {
     width: "200px",
     margin: "10px"
+},
+text: {
+    color: 'white'
 }
    
 });
