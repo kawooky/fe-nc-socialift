@@ -6,7 +6,11 @@ import { LoginPage } from "./components/LoginPage/LoginPage";
 const App = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <LoginPage />
+    <NavigationContainer>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Login" component={LoginPage} />
+    </Stack.Navigator>
+  </NavigationContainer>
   );
 };
 

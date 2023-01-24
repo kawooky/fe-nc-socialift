@@ -1,10 +1,7 @@
-import {
-  View,
-  Text
-} from "react-native";
-import React, { useState } from "react";
+import { View, Text } from "react-native";
+import React, { createRef, useState } from "react";
 import { styles, theme } from "./LoginPageStyle.js";
-import {Input, Button, ThemeProvider} from "@rneui/themed"
+import { Input, Button, ThemeProvider } from "@rneui/themed";
 
 import app from "../../firebase.js";
 import {
@@ -27,49 +24,41 @@ export const LoginPage = () => {
 
   const auth = getAuth(app);
 
+  const emailRef = createRef()
+  const usernameRef = createRef()
+  const passRef = createRef()
+  const confirmRef = createRef()
+
   const handleChange = (event, setter) => {
-    console.log(event.target);
-    setter(event.target.value);
-    if (
-      event.target.name === "passwordConfirm" &&
-      password !== passwordConfirm
-    ) {
-      console.log("checking matching passwords");
-      event.target.error = true;
-    }
+    setter(event);
   };
 
   const validateEmail = async (email) => {
     if (email !== "" && !emailRegex.test(email)) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       setEmailError(true);
     } else {
-      setInterval(setEmailError(false), 50);
+      setEmailError(false)
     }
   };
 
   const validateUsername = async (username) => {
     if (showRegister && username !== "" && currentUsers.includes(username)) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       setUsernameError(true);
     } else {
       setUsernameError(false);
     }
   };
 
-  const validatePassword = async (password) => {
-    if (showRegister && password !== "") {
-      if (password.length < 8) {
-        setPasswordError(true);
-      } else {
-        setPasswordError(false);
-      }
+  const validatePassword = (password) => {
+    if (showRegister && password !== "" && password.length < 8) {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
     }
   };
 
-  const validateConfirmPassword = async (confirmPassword) => {
+  const validateConfirmPassword = (confirmPassword) => {
     if (confirmPassword !== "" && password !== confirmPassword) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       setConfirmError(true);
     } else {
       setConfirmError(false);
@@ -79,19 +68,40 @@ export const LoginPage = () => {
   const currentUsers = ["steve", "mark", "phil", "godfrey"];
 
   const validateLogin = () => {
+    if (!username) {
+      usernameRef.current.shake()
+    }
+    if (!password) {
+      passRef.current.shake()
+    }
+    if (username && password) {
+      signInWithEmailAndPassword(auth, username, password)
+    }
     console.log("Validating Login Details...");
   };
 
   const registerUser = () => {
+    
     if (emailError || !email) {
-      return;
+      emailRef.current.shake()
     }
-    createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredentials) => {
-        console.log(userCredentials);
-      }
-    );
-    console.log("Registering New User...");
+    if (usernameError || !username) {
+      usernameRef.current.shake()
+    }
+    if (passwordError || !password) {
+      passRef.current.shake()
+    }
+    if (confirmError || !passwordConfirm) {
+      confirmRef.current.shake()
+    }
+    if (!emailError && email && !usernameError && username && !passwordError && password && !confirmError && confirmPassword) {
+      console.log("Registering New User...");
+      createUserWithEmailAndPassword(auth, email, password).then(
+        (userCredentials) => {
+          console.log(userCredentials);
+        }
+      );
+    }
   };
 
   const emailRegex =
@@ -99,79 +109,98 @@ export const LoginPage = () => {
 
   return (
     <View style={styles.mainView}>
-        <View style={styles.formView}>
+      <View style={styles.formView}>
         <ThemeProvider theme={theme}>
-        {showRegister && <Input
-            
-            placeholder="Email"
-            onChange={(e) => {
-              handleChange(e, setEmail);
-              validateEmail(e.target.value);
-            }}
-          />}
-        
-        {(showRegister || showLogin) && <Input
-            
-            placeholder="Username"
-            onChange={(e) => {
-              handleChange(e, setUsername);
-              validateUsername(e.target.value);
-            }}
-          />}
-        
-        
-          {(showRegister || showLogin) && <Input
-            
-            placeholder="Password"
-            onChange={(e) => {
-              handleChange(e, setPassword);
-              validatePassword(e.target.value);
-            }}
-            secureTextEntry={true}
-          />}
-        
-        
-          {showRegister && <Input
-            
-            placeholder="Confirm Password"
-            onChange={(e) => {
-              handleChange(e, setPasswordConfirm);
-              validateConfirmPassword(e.target.value);
-            }}
-          />}
-        
-        <Button
-          containerViewStyle={{width: '50px'}}
-          onPress={() => {
-            if (showLogin) {
-              validateLogin();
-            } else {
-              setShowLogin(true);
-              setShowRegister(false);
-            }
-          }}
-          title="Login"
-        />
-          
-        
+          {showRegister && (
+            <Input
+            value={email}
+              placeholder="Email"
+              onChangeText={(e) => {
+                handleChange(e, setEmail);
+                validateEmail(e);
+              }}
+              errorMessage={emailError ? "Please enter a valid email" : " "}
+              onFocus={(e) => console.log(e.target.placeholder)}
+              autoCorrect={false}
+              ref={emailRef}
+            />
+          )}
 
-        <Button
-          containerViewStyle={{width: '50%'}}
-          variant="contained"
-          onPress={() => {
-            if (showRegister) {
-              registerUser();
-            } else {
-              setShowLogin(false);
-              setShowRegister(true);
-            }
-          }}
-          title="Register"
-        />
+          {(showRegister || showLogin) && (
+            <Input
+              placeholder="Username"
+              onChangeText={(e) => {
+                handleChange(e, setUsername);
+                validateUsername(e);
+              }}
+              errorMessage={
+                usernameError
+                  ? `Sorry, ${username} is already taken, please choose another username`
+                  : " "
+              }
+              autoCorrect={false}
+              ref={usernameRef}
+            />
+          )}
+
+          {(showRegister || showLogin) && (
+            <Input
+              placeholder="Password"
+              onChangeText={(e) => {
+                handleChange(e, setPassword);
+                validatePassword(e);
+              }}
+              errorMessage={
+                passwordError ? "Password must be at least 8 characters" : " "
+              }
+              autoCorrect={false}
+              secureTextEntry={true}
+              ref={passRef}
+            />
+          )}
+
+          {showRegister && (
+            <Input
+              placeholder="Confirm Password"
+              onChange={(e) => {
+                handleChange(e, setPasswordConfirm);
+                validateConfirmPassword(e);
+              }}
+              errorMessage={confirmError ? "Passwords must match" : " "}
+              autoCorrect={false}
+              secureTextEntry={true}
+              ref={confirmRef}
+            />
+          )}
+
+          <Button
+            // containerViewStyle={{width: '50px'}}
+            onPress={() => {
+              if (showLogin) {
+                validateLogin();
+              } else {
+                setShowLogin(true);
+                setShowRegister(false);
+              }
+            }}
+            title="Login"
+          />
+
+          <Button
+            // containerViewStyle={{width: '50%'}}
+            variant="contained"
+            onPress={() => {
+              if (showRegister) {
+                registerUser();
+              } else {
+                setShowLogin(false);
+                setShowRegister(true);
+              }
+            }}
+            title="Register"
+          />
         </ThemeProvider>
-
-        </View>
-        
+      </View>
     </View>
   );
 };

@@ -4,18 +4,18 @@ import {createTheme} from '@rneui/themed'
 const styles = StyleSheet.create({
 
 mainView: {
-    height: "100vh",
-    width: "100vw",
+    flex: 1,
     backgroundColor: "#f1f1f1",
-    display: "flex",
     justifyContent: "center",
     alignItems: "center"
 },
 formView: {
-    width: "320px",
-    height: "100vh",
-    display: "inherit",
-    justifyContent: "center"
+   width: 320,
+   backgroundColor: "#f5f5f5",
+   borderRadius: 10,
+   paddingTop: 30,
+   padding: 10,
+   paddingRight: 10
 }   
 });
 
@@ -23,14 +23,18 @@ const theme = createTheme({
   components: {
     Button: {
       raised: true,
+      radius: 10,
       containerStyle: {
-        margin: 10
+        marginBottom: 20,
+        
       }
     },
     Input: {
-      
+      containerStyle: {
+        
+      }
     }
-  },
+  }
 })
 
 export { styles, theme }
