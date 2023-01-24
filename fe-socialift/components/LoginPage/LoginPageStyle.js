@@ -1,31 +1,36 @@
 import { StyleSheet } from 'react-native';
+import {createTheme} from '@rneui/themed'
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
 
-view: {
+mainView: {
     height: "100vh",
     width: "100vw",
     backgroundColor: "#f1f1f1",
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "f4f4f4"
-  },
-input: {
-    width: "300px",
-    backgroundColor: "#f5f5f5",
-    borderRadius: "5px",
-    margin: "10px"
 },
-loginButton: {
-    width: "300px",
-    margin: "10px"
-}
-   
+formView: {
+    width: "320px",
+    height: "100vh",
+    display: "inherit",
+    justifyContent: "center"
+}   
 });
 
-export { Styles }
+const theme = createTheme({
+  components: {
+    Button: {
+      raised: true,
+      containerStyle: {
+        margin: 10
+      }
+    },
+    Input: {
+      
+    }
+  },
+})
+
+export { styles, theme }

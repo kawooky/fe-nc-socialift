@@ -1,14 +1,10 @@
 import {
-  StyleSheet,
   View,
-  SafeAreaView,
-  Text,
-  Alert,
-  TextInput,
+  Text
 } from "react-native";
 import React, { useState } from "react";
-import { Styles } from "./LoginPageStyle.js";
-import { TextField, Button } from "@mui/material";
+import { styles, theme } from "./LoginPageStyle.js";
+import {Input, Button, ThemeProvider} from "@rneui/themed"
 
 import app from "../../firebase.js";
 import {
@@ -102,73 +98,51 @@ export const LoginPage = () => {
     /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
   return (
-    <View style={Styles.view}>
-        {showRegister && (
-          <TextField
-            style={Styles.input}
-            variant="outlined"
-            label="Email"
-            name="email"
+    <View style={styles.mainView}>
+        <View style={styles.formView}>
+        <ThemeProvider theme={theme}>
+        {showRegister && <Input
+            
+            placeholder="Email"
             onChange={(e) => {
               handleChange(e, setEmail);
               validateEmail(e.target.value);
             }}
-            error={emailError}
-            helperText={emailError ? "Please enter a valid email" : ""}
-          />
-        )}
-        {(showLogin || showRegister) && (
-          <TextField
-            style={Styles.input}
-            variant="outlined"
-            name="username"
-            label="Username"
+          />}
+        
+        {(showRegister || showLogin) && <Input
+            
+            placeholder="Username"
             onChange={(e) => {
               handleChange(e, setUsername);
               validateUsername(e.target.value);
             }}
-            error={usernameError}
-            helperText={
-              usernameError
-                ? `${username} is taken, please choose another username`
-                : ""
-            }
-          />
-        )}
-        {(showLogin || showRegister) && (
-          <TextField
-            style={Styles.input}
-            type="password"
-            name="password"
-            label="Password"
+          />}
+        
+        
+          {(showRegister || showLogin) && <Input
+            
+            placeholder="Password"
             onChange={(e) => {
               handleChange(e, setPassword);
               validatePassword(e.target.value);
             }}
-            error={passwordError}
-            helperText={
-              passwordError ? "Passwords must be at least 8 characters" : ""
-            }
-          />
-        )}
-        {showRegister && (
-          <TextField
-            style={Styles.input}
-            type="password"
-            name="passwordConfirm"
-            label="Confirm Password"
+            secureTextEntry={true}
+          />}
+        
+        
+          {showRegister && <Input
+            
+            placeholder="Confirm Password"
             onChange={(e) => {
               handleChange(e, setPasswordConfirm);
               validateConfirmPassword(e.target.value);
             }}
-            error={confirmError}
-            helperText={confirmError ? "Passwords do not match" : ""}
-          />
-        )}
+          />}
+        
         <Button
-          style={Styles.loginButton}
-          variant="contained"
-          onClick={() => {
+          containerViewStyle={{width: '50px'}}
+          onPress={() => {
             if (showLogin) {
               validateLogin();
             } else {
@@ -176,13 +150,15 @@ export const LoginPage = () => {
               setShowRegister(false);
             }
           }}
-        >
-          <Text>Login</Text>
-        </Button>
+          title="Login"
+        />
+          
+        
+
         <Button
-          style={Styles.loginButton}
+          containerViewStyle={{width: '50%'}}
           variant="contained"
-          onClick={() => {
+          onPress={() => {
             if (showRegister) {
               registerUser();
             } else {
@@ -190,9 +166,12 @@ export const LoginPage = () => {
               setShowRegister(true);
             }
           }}
-        >
-          <Text>Register</Text>
-        </Button>
+          title="Register"
+        />
+        </ThemeProvider>
+
+        </View>
+        
     </View>
   );
 };
