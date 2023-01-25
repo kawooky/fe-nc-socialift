@@ -9,7 +9,7 @@ import {
   } from "react-native";
 import React, { useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
-import { TextField, Button, Avatar, Stack } from "@mui/material";
+import { Avatar, Button, Stack } from '@rneui/themed';
 
 
 const exampleUser = {

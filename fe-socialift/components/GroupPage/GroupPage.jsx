@@ -10,7 +10,6 @@ import {
   } from "react-native";
 import * as React from 'react';
 import { styles } from "./GroupPageStyle.js";
-import { TextField, Stack, AvatarGroup, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Container } from "@mui/material";
 import { Avatar, Button } from '@rneui/themed';
 
 const exampleGroup = {
@@ -61,7 +60,7 @@ export const GroupPage = () => {
 
 
         <View style={styles.exerciseDropdownContainer}>
-        <FormControl size="small" style={styles.exerciseDropDown} sx={{ m:1}}>
+        {/* <FormControl size="small" style={styles.exerciseDropDown} sx={{ m:1}}>
         <InputLabel style={styles.exerciseDropDown}>Exercise</InputLabel>
 
         <Select
@@ -86,7 +85,7 @@ export const GroupPage = () => {
             <Picker.Item label="JavaScript" value="js" />
             <Picker.Item label="Python" value="python" />
         </Picker>
-      </FormControl> 
+      </FormControl>  */}
         </View >
         <View style={styles.graphContainer}>
             <Text style={{color:'white'}}>Some Graph </Text>

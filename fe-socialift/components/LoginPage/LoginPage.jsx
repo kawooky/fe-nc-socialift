@@ -1,7 +1,9 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React, { createRef, useState } from 'react';
 import { styles, theme } from './LoginPageStyle.js';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import app from '../../firebase.js';
 import {
@@ -11,7 +13,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 
-export const LoginPage = () => {
+export const LoginPage = ({navigation}) => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState('');
@@ -111,6 +113,9 @@ export const LoginPage = () => {
           updateProfile(auth.currentUser, {
             displayName: username,
           });
+        })
+        .then(() => {
+          navigation.navigate('Group')
         })
         .catch((error) => {
           console.log(error);
