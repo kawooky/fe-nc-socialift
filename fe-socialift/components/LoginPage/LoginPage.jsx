@@ -24,7 +24,7 @@ export const LoginPage = () => {
       {showLogin && <TextField style={styles.input} variant="outlined" placeholder="Username" />}
       {showLogin && <TextField style={styles.input} type="password" placeholder="Password" />}
       <Button style={styles.loginButton} variant="contained" onClick={() => {setShowLogin(true)}}>Login</Button>
-      
+
     </View>
   );
 };
