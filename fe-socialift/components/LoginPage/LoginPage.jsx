@@ -2,8 +2,6 @@ import { View } from 'react-native';
 import React, { createRef, useState } from 'react';
 import { styles, theme } from './LoginPageStyle.js';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import app from '../../firebase.js';
 import {
