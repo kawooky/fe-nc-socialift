@@ -1,48 +1,50 @@
-import { View, Text } from "react-native";
-import React, { createRef, useState } from "react";
-import { styles, theme } from "./LoginPageStyle.js";
-import { Input, Button, ThemeProvider } from "@rneui/themed";
+import { View, Text } from 'react-native';
+import React, { createRef, useState } from 'react';
+import { styles, theme } from './LoginPageStyle.js';
+import { Input, Button, ThemeProvider } from '@rneui/themed';
 
-import app from "../../firebase.js";
+import app from '../../firebase.js';
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-} from "firebase/auth";
+  updateProfile,
+} from 'firebase/auth';
 
 export const LoginPage = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
+  const [disableButtons, setDisableButtons] = useState(false);
 
   const auth = getAuth(app);
 
-  const emailRef = createRef()
-  const usernameRef = createRef()
-  const passRef = createRef()
-  const confirmRef = createRef()
+  const emailRef = createRef();
+  const usernameRef = createRef();
+  const passRef = createRef();
+  const confirmRef = createRef();
 
   const handleChange = (event, setter) => {
     setter(event);
   };
 
   const validateEmail = async (email) => {
-    if (email !== "" && !emailRegex.test(email)) {
+    if (email !== '' && !emailRegex.test(email)) {
       setEmailError(true);
     } else {
-      setEmailError(false)
+      setEmailError(false);
     }
   };
 
   const validateUsername = async (username) => {
-    if (showRegister && username !== "" && currentUsers.includes(username)) {
+    if (showRegister && username !== '' && currentUsers.includes(username)) {
       setUsernameError(true);
     } else {
       setUsernameError(false);
@@ -50,7 +52,7 @@ export const LoginPage = () => {
   };
 
   const validatePassword = (password) => {
-    if (showRegister && password !== "" && password.length < 8) {
+    if (showRegister && password !== '' && password.length < 8) {
       setPasswordError(true);
     } else {
       setPasswordError(false);
@@ -58,49 +60,62 @@ export const LoginPage = () => {
   };
 
   const validateConfirmPassword = (confirmPassword) => {
-    if (confirmPassword !== "" && password !== confirmPassword) {
+    if (confirmPassword !== '' && password !== confirmPassword) {
       setConfirmError(true);
     } else {
       setConfirmError(false);
     }
   };
 
-  const currentUsers = ["steve", "mark", "phil", "godfrey"];
+  const currentUsers = ['steve', 'mark', 'phil', 'godfrey'];
 
   const validateLogin = () => {
     if (!username) {
-      usernameRef.current.shake()
+      usernameRef.current.shake();
     }
     if (!password) {
-      passRef.current.shake()
+      passRef.current.shake();
     }
     if (username && password) {
-      signInWithEmailAndPassword(auth, username, password)
+      signInWithEmailAndPassword(auth, username, password);
     }
-    console.log("Validating Login Details...");
+    console.log('Validating Login Details...');
   };
 
   const registerUser = () => {
-    
     if (emailError || !email) {
-      emailRef.current.shake()
+      emailRef.current.shake();
     }
     if (usernameError || !username) {
-      usernameRef.current.shake()
+      usernameRef.current.shake();
     }
     if (passwordError || !password) {
-      passRef.current.shake()
+      passRef.current.shake();
     }
     if (confirmError || !passwordConfirm) {
-      confirmRef.current.shake()
+      confirmRef.current.shake();
     }
-    if (!emailError && email && !usernameError && username && !passwordError && password && !confirmError && confirmPassword) {
-      console.log("Registering New User...");
-      createUserWithEmailAndPassword(auth, email, password).then(
-        (userCredentials) => {
-          console.log(userCredentials);
-        }
-      );
+    if (
+      !emailError &&
+      email &&
+      !usernameError &&
+      username &&
+      !passwordError &&
+      password &&
+      !confirmError &&
+      passwordConfirm
+    ) {
+      setDisableButtons(true);
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredentials) => {
+          updateProfile(auth.currentUser, {
+            displayName: username,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          setDisableButtons(false);
+        });
     }
   };
 
@@ -113,13 +128,13 @@ export const LoginPage = () => {
         <ThemeProvider theme={theme}>
           {showRegister && (
             <Input
-            value={email}
+              value={email}
               placeholder="Email"
               onChangeText={(e) => {
                 handleChange(e, setEmail);
                 validateEmail(e);
               }}
-              errorMessage={emailError ? "Please enter a valid email" : " "}
+              errorMessage={emailError ? 'Please enter a valid email' : ' '}
               onFocus={(e) => console.log(e.target.placeholder)}
               autoCorrect={false}
               ref={emailRef}
@@ -136,7 +151,7 @@ export const LoginPage = () => {
               errorMessage={
                 usernameError
                   ? `Sorry, ${username} is already taken, please choose another username`
-                  : " "
+                  : ' '
               }
               autoCorrect={false}
               ref={usernameRef}
@@ -151,7 +166,7 @@ export const LoginPage = () => {
                 validatePassword(e);
               }}
               errorMessage={
-                passwordError ? "Password must be at least 8 characters" : " "
+                passwordError ? 'Password must be at least 8 characters' : ' '
               }
               autoCorrect={false}
               secureTextEntry={true}
@@ -162,11 +177,11 @@ export const LoginPage = () => {
           {showRegister && (
             <Input
               placeholder="Confirm Password"
-              onChange={(e) => {
+              onChangeText={(e) => {
                 handleChange(e, setPasswordConfirm);
                 validateConfirmPassword(e);
               }}
-              errorMessage={confirmError ? "Passwords must match" : " "}
+              errorMessage={confirmError ? 'Passwords must match' : ' '}
               autoCorrect={false}
               secureTextEntry={true}
               ref={confirmRef}
@@ -174,7 +189,6 @@ export const LoginPage = () => {
           )}
 
           <Button
-            // containerViewStyle={{width: '50px'}}
             onPress={() => {
               if (showLogin) {
                 validateLogin();
@@ -184,10 +198,10 @@ export const LoginPage = () => {
               }
             }}
             title="Login"
+            disabled={disableButtons}
           />
 
           <Button
-            // containerViewStyle={{width: '50%'}}
             variant="contained"
             onPress={() => {
               if (showRegister) {
@@ -198,6 +212,7 @@ export const LoginPage = () => {
               }
             }}
             title="Register"
+            disabled={disableButtons}
           />
         </ThemeProvider>
       </View>
