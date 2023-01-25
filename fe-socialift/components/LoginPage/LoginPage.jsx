@@ -79,7 +79,7 @@ export const LoginPage = () => {
     if (username && password) {
       signInWithEmailAndPassword(auth, username, password);
     }
-    console.log('Validating Login Details...');
+    
   };
 
   const registerUser = () => {
@@ -135,7 +135,6 @@ export const LoginPage = () => {
                 validateEmail(e);
               }}
               errorMessage={emailError ? 'Please enter a valid email' : ' '}
-              onFocus={(e) => console.log(e.target.placeholder)}
               autoCorrect={false}
               ref={emailRef}
             />
