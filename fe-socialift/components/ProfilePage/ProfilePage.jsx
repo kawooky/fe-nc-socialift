@@ -5,6 +5,7 @@ import {
     Text,
     Alert,
     TextInput,
+    Image
   } from "react-native";
 import React, { useState } from "react";
 import { styles } from "./ProfilePageStyle.js";

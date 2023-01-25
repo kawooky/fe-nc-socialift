@@ -5,10 +5,13 @@ import {
     Text,
     Alert,
     TextInput,
+    Image,
+    Picker
   } from "react-native";
 import * as React from 'react';
 import { styles } from "./GroupPageStyle.js";
-import { TextField, Button, Avatar, Stack, AvatarGroup, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Container } from "@mui/material";
+import { TextField, Stack, AvatarGroup, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Container } from "@mui/material";
+import { Avatar, Button } from '@rneui/themed';
 
 const exampleGroup = {
     groupName: 'Legend Lifterz',
@@ -43,23 +46,22 @@ export const GroupPage = () => {
 
             <Text style={styles.groupName}>{exampleGroup.groupName}</Text>
 
-            <Stack  style={styles.membersContainer} direction="row" spacing={2}>
-            <AvatarGroup max={6}>
+        <View style={styles.membersContainer}>
                 {exampleGroup.members.map((member)=>{
                     return (<Avatar
                     alt={member.name}
+                    rounded
                     key={member.name}
-                    src={member.profilePicture}
+                    source={member.profilePicture}
                     sx={{ width: 35, height: 35 }}
                   />)
                 })}
-        </AvatarGroup>
-        <Button variant="contained" size="small" style={styles.addToGroupButton}>Add to Group</Button>
-            </Stack>
+        <Button size="sm" style={styles.addToGroupButton}>Add to Group</Button>
+        </View>
 
 
         <View style={styles.exerciseDropdownContainer}>
-        <FormControl size="small" style={styles.exerciseDropDown} sx={{ m:1, minWidth: 300}}>
+        <FormControl size="small" style={styles.exerciseDropDown} sx={{ m:1}}>
         <InputLabel style={styles.exerciseDropDown}>Exercise</InputLabel>
 
         <Select
@@ -78,11 +80,34 @@ export const GroupPage = () => {
             })}
 
         </Select>
+
+        <Picker>
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+            <Picker.Item label="Python" value="python" />
+        </Picker>
       </FormControl> 
+        </View >
+        <View style={styles.graphContainer}>
+            <Text style={{color:'white'}}>Some Graph </Text>
+            <Image
+  source={{uri: 'https://www.tibco.com/sites/tibco/files/media_entity/2022-01/LineChart-01.svg'}}
+  style={{width: 200, height: 200}}
+/>
         </View>
-        {/* <Container maxWidth="sm">
-        <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} />
-      </Container> */}
+        <View style={styles.pbHistory}>
+        <Text style={{color:'white'}}>History</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
+        </View>
 
 
         </View>
