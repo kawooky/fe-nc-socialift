@@ -4,11 +4,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LoginPage } from "./components/LoginPage/LoginPage";
 import { ProfilePage } from "./components/ProfilePage/ProfilePage";
 import { GroupPage } from "./components/GroupPage/GroupPage.jsx";
-import { getAuth } from "firebase/auth";
+import { getFirebase } from "./firebase";
 
 const App = () => {
 
-  const auth = getAuth()
+  const { auth } = getFirebase()
   const loggedInUser = auth.currentUser
   const Stack = createNativeStackNavigator();
   return (

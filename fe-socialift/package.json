@@ -5,6 +5,7 @@
   "scripts": {
     "custom": "npx cross-env NODE_OPTIONS=--openssl-legacy-provider expo start --web",
     "start": "expo start",
+    "emulators": "firebase emulators:start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
@@ -20,6 +21,7 @@
     "expo": "~47.0.12",
     "expo-status-bar": "~1.4.2",
     "firebase": "^9.16.0",
+    "firebase-tools": "^11.21.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",

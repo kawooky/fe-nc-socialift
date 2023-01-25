@@ -2,7 +2,7 @@ import { View } from "react-native";
 import React, { createRef, useEffect, useState } from "react";
 import { styles, theme } from "./LoginPageStyle.js";
 import { Input, Button, ThemeProvider } from "@rneui/themed";
-import app from "../../firebase.js";
+import { getFirebase } from "../../firebase.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -56,7 +56,7 @@ export const LoginPage = ({ navigation }) => {
     });
   }, []);
 
-  const auth = getAuth(app);
+  const { auth } = getFirebase()
 
   const emailRef = createRef();
   const usernameRef = createRef();
