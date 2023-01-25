@@ -1,5 +1,4 @@
-import { Button } from '@rneui/base';
-import * as React from "react";
+import React, { useState } from 'react';
 import {
     StyleSheet,
     View,
@@ -8,54 +7,79 @@ import {
     Alert,
     TextInput,
   } from "react-native";
-  import { Avatar } from "@rneui/base";
-  import { Switch } from '@rneui/themed';
+  import { Switch, Button, Avatar, Input} from '@rneui/themed';
+  import { styles } from './EditProfilePageStyle.js';
+
   
   
+  
+  export const EditProfilePage = ({Navigation}) => {
+    
+    const [darkMode, setDarkMode] = React.useState();
+    const [privateMode, setPrivateMode] = React.useState();
+    
+    const togglePrivateMode = () => {
+      privateMode(!privateMode);
+    };
+    const toggleDarkMode = () => {
+      darkMode(!darkMode);
+    };
+  
+  return (
 
-export const ProfilePage = () => {
+    
+    <View style={styles.mainView}>
+      <View style={styles.formView}>
+        <View style={styles.avatar}>
+      <Avatar
 
+              activeOpacity={0.2}
+              avatarStyle={{}}
+              containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10 , alignItems: "center"}}
+              icon={{name: "pencil"}}
+              iconStyle={{}}
+              imageProps={{}}
+              onLongPress={() => alert("onLongPress")}
+              onPress={() => alert("uploadImage")}
+              overlayContainerStyle={{}}
+              placeholderStyle={{}}
+              rounded
+              size="large"
+              source={{ uri: "" }}
+              titleStyle={{}}
+            />
 
-    return (
-       <View>
-
-    <Avatar
-      activeOpacity={0.2}
-      avatarStyle={{}}
-      containerStyle={{ backgroundColor: "#BDBDBD" }}
-      icon={{}}
-      iconStyle={{}}
-      imageProps={{}}
-      onPress={() => alert("this should bring up a window to upload image")}
-      overlayContainerStyle={{}}
-      placeholderStyle={{}}
-      rounded
-      size="large"
-      source={{ uri: "https://media.licdn.com/dms/image/C4E03AQHdBJrM8dGH8Q/profile-displayphoto-shrink_800_800/0/1631551294002?e=1680134400&v=beta&t=VBpSXJVC_YPwxE1mGEYz-aW_jKLV6M4pJRfanEFvkVY" }}
-      title="P"
-      titleStyle={{}}
+</View>
+    <Input
+      containerStyle={{}}
+      disabledInputStyle={{ background: "#ddd" }}
+      placeholder="First Name"
+    />
+     <Input
+      containerStyle={{}}
+      disabledInputStyle={{ background: "#ddd" }}
+      placeholder="Last Name"
     />
  
-
-
- 
-    <Switch
-      color="#2089dc"
-      value={"false"}
-      onValueChange={() => setValue("true")}
-    />
-  
-
-
-
-        <Button title="SAVE" />
-      
-
-        </View>
-        )
-        
-     
-        
-    }
-    
-    
+ <View>
+<View style={styles.toggles}>
+      <Text>Dark Mode</Text>
+     <Switch
+        value={darkMode}
+        onValueChange={(value) => setDarkMode(!darkMode)}
+      />
+      </View>
+      <View style={styles.toggles}>
+      <Text>Private Account</Text>
+       <Switch
+        value={privateMode}
+        onValueChange={(value) => setPrivateMode(!privateMode)}
+      />
+      </View>
+      </View>
+            <Button title="SAVE" onPress={() => navigation.navigate('')}/>
+            
+    </View>
+    </View>
+  );
+  };
