@@ -6,6 +6,11 @@ import { ProfilePage } from "./components/ProfilePage/ProfilePage";
 import { GroupPage } from "./components/GroupPage/GroupPage.jsx";
 import { getFirebase } from "./firebase";
 
+import { WorkoutLogPage } from "./components/WorkoutLogPage/WorkoutLogPage.jsx"
+import { WorkoutLoggerPage } from "./components/WokoutLoggerPage/WorkoutLoggerPage";
+
+
+
 const App = () => {
 
   const { auth } = getFirebase()
@@ -16,11 +21,14 @@ const App = () => {
       
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName={loggedInUser ? "Group" : "Login"}
+          initialRouteName={loggedInUser ? "Group" : "WorkoutLog"}
         >
           <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="Profile" component={ProfilePage} />
           <Stack.Screen name="Group" component={GroupPage} />
+        <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
+        <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
+
         </Stack.Navigator>
       
     </NavigationContainer>
