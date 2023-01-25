@@ -2,9 +2,6 @@ import { View } from 'react-native';
 import React, { createRef, useState } from 'react';
 import { styles, theme } from './LoginPageStyle.js';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import app from '../../firebase.js';
 import {
   getAuth,
@@ -21,6 +18,7 @@ export const LoginPage = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(' ')
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
@@ -40,8 +38,10 @@ export const LoginPage = ({navigation}) => {
   const validateEmail = async (email) => {
     if (email !== '' && !emailRegex.test(email)) {
       setEmailError(true);
+      setEmailErrorMessage('Please enter a valid email')
     } else {
       setEmailError(false);
+      setEmailErrorMessage(' ')
     }
   };
 
@@ -72,14 +72,23 @@ export const LoginPage = ({navigation}) => {
   const currentUsers = ['steve', 'mark', 'phil', 'godfrey'];
 
   const validateLogin = () => {
-    if (!username) {
-      usernameRef.current.shake();
+    if (!email) {
+      emailRef.current.shake();
+      setEmailError(true)
     }
     if (!password) {
       passRef.current.shake();
     }
-    if (username && password) {
-      signInWithEmailAndPassword(auth, username, password);
+    if (email && password) {
+      setDisableButtons(true)
+      signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.navigate('Group')
+      })
+      .catch((err) => {
+        console.log(err)
+        setDisableButtons(false)
+      })
     }
     
   };
@@ -118,7 +127,13 @@ export const LoginPage = ({navigation}) => {
           navigation.navigate('Group')
         })
         .catch((error) => {
-          console.log(error);
+          if (error.code === "auth/email-already-in-use") {
+            setEmailError(true)
+            setEmailErrorMessage('An accont is already associated with this email address')
+          }
+          
+          console.log(error.code);
+          
           setDisableButtons(false);
         });
     }
@@ -131,21 +146,7 @@ export const LoginPage = ({navigation}) => {
     <View style={styles.mainView}>
       <View style={styles.formView}>
         <ThemeProvider theme={theme}>
-          {showRegister && (
-            <Input
-              value={email}
-              placeholder="Email"
-              onChangeText={(e) => {
-                handleChange(e, setEmail);
-                validateEmail(e);
-              }}
-              errorMessage={emailError ? 'Please enter a valid email' : ' '}
-              autoCorrect={false}
-              ref={emailRef}
-            />
-          )}
-
-          {(showRegister || showLogin) && (
+        {showRegister && (
             <Input
               placeholder="Username"
               onChangeText={(e) => {
@@ -161,6 +162,21 @@ export const LoginPage = ({navigation}) => {
               ref={usernameRef}
             />
           )}
+          {(showRegister || showLogin) && (
+            <Input
+              value={email}
+              placeholder="Email"
+              onChangeText={(e) => {
+                handleChange(e, setEmail);
+                validateEmail(e);
+              }}
+              errorMessage={emailErrorMessage}
+              autoCorrect={false}
+              ref={emailRef}
+            />
+          )}
+
+          
 
           {(showRegister || showLogin) && (
             <Input
