@@ -10,10 +10,33 @@ import {
   import { Switch, Button, Avatar, Input} from '@rneui/themed';
   import { styles } from './EditProfilePageStyle.js';
 
+
+/////////////////////////////////////////////////////////////////////////
+// import { getFirebase } from "../../firebase.js";
+
+
+// .then((userCredentials) => {
+//   updateProfile(auth.currentUser, {
+//     displayName: username,
+//   });
+// })
+
+  // SUBMIT FIRST NAME
+  // SUBMIT LAST NAME
+  // SUBMIT AVATAR PHOTO
+  // ADD FORM VALIDATION FOR THE NAMES TO BE REQUIRED
   
   
+
+  // const validateName = () => {
+  //   if (showRegister && username !== "" && currentUsers.includes(username)) {
+  //     setUsernameError(true);
+  //   } else {
+  //     setUsernameError(false);
+  //   }
+  // };
   
-  export const EditProfilePage = ({Navigation}) => {
+  export const EditProfilePage = ({navigation}) => {
     
     const [darkMode, setDarkMode] = React.useState();
     const [privateMode, setPrivateMode] = React.useState();
@@ -39,7 +62,6 @@ import {
               icon={{name: "pencil"}}
               iconStyle={{}}
               imageProps={{}}
-              onLongPress={() => alert("onLongPress")}
               onPress={() => alert("uploadImage")}
               overlayContainerStyle={{}}
               placeholderStyle={{}}
@@ -77,7 +99,7 @@ import {
       />
       </View>
       </View>
-            <Button title="SAVE" onPress={() => navigation.navigate('')}/>
+            <Button title="SAVE" onPress={() => navigation.navigate('Profile')}/>
             
     </View>
     </View>
