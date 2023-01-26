@@ -5,6 +5,7 @@ import {
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { config } from "./config";
 
 function initializeServices() {
@@ -12,11 +13,11 @@ function initializeServices() {
   const firebaseApp = initializeApp(config.firebase);
   const firestore = getFirestore(firebaseApp);
   const auth = getAuth(firebaseApp);
+  const functions = getFunctions(firebaseApp);
   return { firebaseApp, firestore, auth, isConfigured };
 }
 
 function connectToEmulators({ auth, firestore }) {
-  
   if (location.hostname === "localhost") {
     connectFirestoreEmulator(firestore, "localhost", 8080);
     connectAuthEmulator(auth, "http://localhost:9099");
@@ -31,11 +32,3 @@ export function getFirebase() {
   }
   return services;
 }
-
-// In LoginPage.jsx:
-//
-// Insted of "import app from '../../firebase.js';"
-// Do: import { getFirebase } from '../../firebase.js';
-//
-// Instead of "const auth = getAuth(app);"
-// Do: const {auth} = getFirebase();
