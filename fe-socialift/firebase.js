@@ -7,6 +7,7 @@ import {
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { config } from "./config";
+import { Platform } from "react-native";
 
 function initializeServices() {
   const isConfigured = getApps().length > 0;
@@ -18,10 +19,14 @@ function initializeServices() {
 }
 
 function connectToEmulators({ auth, firestore }) {
-
-  if (location.hostname === "localhost") {
-    connectFirestoreEmulator(firestore, "localhost", 8080);
-    connectAuthEmulator(auth, "http://localhost:9099");
+  if (Platform.OS === "web") {
+    if (location.hostname === "localhost") {
+      connectFirestoreEmulator(firestore, "localhost", 8080);
+      connectAuthEmulator(auth, "http://localhost:9099");
+    }
+  } else {
+    connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
+    connectAuthEmulator(auth, "http://127.0.0.1:9099");
   }
 }
 
