@@ -6,32 +6,28 @@ import { ProfilePage } from "./components/ProfilePage/ProfilePage";
 import { GroupPage } from "./components/GroupPage/GroupPage.jsx";
 import { getFirebase } from "./firebase";
 
-import { WorkoutLogPage } from "./components/WorkoutLogPage/WorkoutLogPage.jsx"
+import { WorkoutLogPage } from "./components/WorkoutLogPage/WorkoutLogPage.jsx";
 import { WorkoutLoggerPage } from "./components/WokoutLoggerPage/WorkoutLoggerPage";
 
-
+import { EditProfilePage } from "./components/EditProfilePage/EditProfilePage";
 
 const App = () => {
-
-  const { auth } = getFirebase()
-  const loggedInUser = auth.currentUser
+  const { auth } = getFirebase();
+  const loggedInUser = auth.currentUser;
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      
-        <Stack.Navigator
-          screenOptions={{ headerShown: false }}
-          initialRouteName='WorkoutLog'
-          // {loggedInUser ? "Group" : "Login"}
-          >
-          <Stack.Screen name="Login" component={LoginPage} />
-          <Stack.Screen name="Profile" component={ProfilePage} />
-          <Stack.Screen name="Group" component={GroupPage} />
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={loggedInUser ? "Group" : "Login"}
+      >
+        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="Profile" component={ProfilePage} />
+        <Stack.Screen name="EditProfile" component={EditProfilePage} />
+        <Stack.Screen name="Group" component={GroupPage} />
         <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
         <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
-
-        </Stack.Navigator>
-      
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
