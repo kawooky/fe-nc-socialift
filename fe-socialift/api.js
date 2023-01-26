@@ -8,7 +8,7 @@ const exercisesApi = axios.create({
 
 
 export const getExercisesByMuscle = (muscle) => {
-    return exercisesApi.get(`?muscle=${muscle}`).then((res) => {
+    return exercisesApi.get(`?type=strength&muscle=${muscle}`).then((res) => {
         return res.data
       });
 }
