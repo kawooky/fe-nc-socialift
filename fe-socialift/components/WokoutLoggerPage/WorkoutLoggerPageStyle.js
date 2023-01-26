@@ -3,6 +3,7 @@ import {createTheme} from '@rneui/themed'
 
 const styles = StyleSheet.create({
     mainView: {
+        display: 'flex',
         flex: 1,
         backgroundColor: "#f1f1f1",
         justifyContent: "center",
@@ -15,7 +16,29 @@ const styles = StyleSheet.create({
         paddingTop: 30,
         padding: 10,
         paddingRight: 10
-     }   
+     } 
+    ,stageOne: {
+        
+    }
+    ,stageTwo: {
+
+    }
+    ,muscleButtonList:{
+        flexDirection: 'row',
+        
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly'
+    }
+    ,muscleButton:{
+        width: 300,
+        flexGrow: 1,
+    }
+    ,stageThree: {
+        
+    } 
+    ,stageFour: {
+        
+    }
 
 })
 

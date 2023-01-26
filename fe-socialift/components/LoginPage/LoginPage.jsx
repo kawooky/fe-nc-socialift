@@ -11,10 +11,13 @@ import {
 } from "firebase/auth";
 
 import {
+  doc,
+  setDoc,
   getDocs,
   onSnapshot,
   collection,
   getFirestore,
+  serverTimestamp,
 } from "firebase/firestore";
 
 export const LoginPage = ({ navigation }) => {
@@ -155,6 +158,16 @@ export const LoginPage = ({ navigation }) => {
           updateProfile(auth.currentUser, {
             displayName: username,
           });
+          setDoc(doc(db, "usernames", username), {});
+          console.log(userCredentials, "<< userCredentials");
+          setDoc(doc(db, "users", userCredentials.user.uid), {
+            userDetails: {
+              username: username,
+              avatarImgURL: "",
+              createdAt: serverTimestamp(),
+              profileVisible: true,
+            },
+          });
         })
         .then(() => {
           navigation.navigate("Group");
@@ -163,11 +176,12 @@ export const LoginPage = ({ navigation }) => {
           if (error.code === "auth/email-already-in-use") {
             setEmailError(true);
             setEmailErrorMessage(
-              "An accont is already associated with this email address"
+              "An account is already associated with this email address"
             );
           }
 
           console.log(error.code);
+          console.log(error);
 
           setDisableButtons(false);
         });
