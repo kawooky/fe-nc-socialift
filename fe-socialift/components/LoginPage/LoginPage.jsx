@@ -170,7 +170,7 @@ export const LoginPage = ({ navigation }) => {
           });
         })
         .then(() => {
-          navigation.navigate("Group");
+          navigation.navigate("EditProfile");
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
