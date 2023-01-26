@@ -21,8 +21,9 @@ const App = () => {
       
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName={loggedInUser ? "Group" : "WorkoutLog"}
-        >
+          initialRouteName='WorkoutLog'
+          // {loggedInUser ? "Group" : "Login"}
+          >
           <Stack.Screen name="Login" component={LoginPage} />
           <Stack.Screen name="Profile" component={ProfilePage} />
           <Stack.Screen name="Group" component={GroupPage} />
