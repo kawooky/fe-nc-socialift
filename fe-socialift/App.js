@@ -9,6 +9,7 @@ import { getFirebase } from "./firebase";
 
 import { WorkoutLogPage } from "./components/WorkoutLogPage/WorkoutLogPage.jsx"
 import { WorkoutLoggerPage } from "./components/WokoutLoggerPage/WorkoutLoggerPage";
+import { GroupMessagingPage } from "./components/GroupMessagingPage/GroupMessagingPage";
 
 import { HomePage } from "./components/HomePage/HomePage";
 
@@ -30,8 +31,9 @@ const App = () => {
           <Stack.Screen name="Profile" component={ProfilePage} />
           <Stack.Screen name="EditProfile" component={EditProfilePage} />
           <Stack.Screen name="Group" component={GroupPage} />
-          <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
-          <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
+        <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
+        <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
+        <Stack.Screen name="GroupMessaging" component={GroupMessagingPage} />
 
         </Stack.Navigator>
       
