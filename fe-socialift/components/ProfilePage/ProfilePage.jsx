@@ -5,32 +5,89 @@ import {
     Text,
     Alert,
     TextInput,
-    Image
+    Image,
+    ViewBase
   } from "react-native";
 import React, { useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
-import { Avatar, Button} from '@rneui/themed';
+import { Avatar, Button, Icon} from '@rneui/themed';
+
+
 
 
 const exampleUser = {
-    name : 'Youssef Kawook',
+    name : 'youssefkawook',
     profilePicture: 'https://images.pexels.com/photos/4016173/pexels-photo-4016173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
 }
 
 
-export const ProfilePage = () => {
-    return (
-        <View style={styles.view }>
-            <Avatar
-  alt="Youssef Kawook"
-  src={exampleUser.profilePicture}
-  sx={{ width: 100, height: 100 }}
-/>
-            <Text style={styles.text}>{exampleUser.name}</Text>
-            <Button variant="contained">Feed</Button>
-            <Button variant="contained">Records</Button>
-            <Button variant="contained">Statistics</Button>
+export const ProfilePage = ({navigation}) => {
 
+    const [sectionOfProfile, setSectionOfProfile] = useState('feed')
+
+
+    return (
+        <View style={styles.mainView }>
+            <View style={styles.formView}>
+                <View style={styles.avatar}>
+            <Avatar 
+  alt="Username"
+  activeOpacity={0.2}
+  avatarStyle={{}}
+  containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10 , alignItems: "center"}}
+  icon={{}}
+  iconStyle={{}}
+  imageProps={{}}
+  onPress={() => navigation.navigate('EditProfile')}
+  overlayContainerStyle={{}}
+  placeholderStyle={{}}
+  rounded
+  size="large"
+  source={{ uri: exampleUser.profilePicture }}
+  titleStyle={{}}
+/>
+<View style={styles.username}>
+            <Text>{exampleUser.name}</Text>
+            </View>
+</View>
+
+<View style={styles.buttonContainer}>
+<View style={styles.button}>
+            <Button onPress={() => {
+                setSectionOfProfile("feed")
+            }} variant="contained">Feed</Button>
+</View>
+<View style={styles.button}>
+            <Button onPress={() => {
+                setSectionOfProfile("records")
+            }}variant="contained">Records</Button>
+</View>
+            <Button onPress={() => {
+                setSectionOfProfile("statistics")}} variant="contained">Statistics</Button>
+            </View>
+
+            { sectionOfProfile === "feed" && (
+                <View> 
+
+                    <Text>THIS IS THE FEED</Text>
+                </View>
+            )}
+
+{ sectionOfProfile === "records" && (
+                <View> 
+
+                    <Text>THIS IS THE RECORDS SECTION</Text>
+                </View>
+            )}
+
+{ sectionOfProfile === "statistics" && (
+                <View> 
+
+                    <Text>THIS IS THE STATISTICS SECTION</Text>
+                </View>
+            )}
+
+            </View>
         </View>
     )
 }

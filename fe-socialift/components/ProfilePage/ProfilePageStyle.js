@@ -2,30 +2,43 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 
-view: {
-    height: "100vh",
-    width: "100vw",
-    backgroundColor: "#151515",
-    display: "flex",
+mainView: {
+    flex: 1,
+    backgroundColor: "#f1f1f1",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: '100px',
+    
+  },
+  formView: {
+    width: 320,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 10,
+    paddingTop: 30,
+    padding: 10,
+    paddingRight: 10,
+    
+  },
+
+  avatar: {
+    flex: 1,
+    paddingBottom: 30,
+    justifyContent: 'flex-start',
+    flexDirection: "row"
 
   },
-input: {
-    width: "200px",
-    backgroundColor: "#f5f5f5",
-    borderRadius: "10px",
-    margin: "10px"
-},
-loginButton: {
-    width: "200px",
-    margin: "10px"
-},
-text: {
-    color: 'white'
-}
-   
+   button: {
+    flex: 1,
+   },
+   buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+   },
+
+   username: {
+    fontSize: 20,
+   }
 });
 
 export { styles }
