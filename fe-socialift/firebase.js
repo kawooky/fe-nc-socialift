@@ -17,10 +17,10 @@ function initializeServices() {
 
 function connectToEmulators({ auth, firestore }) {
   
-  if (location.hostname === "localhost") {
-    connectFirestoreEmulator(firestore, "localhost", 8080);
-    connectAuthEmulator(auth, "http://localhost:9099");
-  }
+  // if (location.hostname === "localhost") {
+  //   connectFirestoreEmulator(firestore, "localhost", 8080);
+  //   connectAuthEmulator(auth, "http://localhost:9099");
+  // }
 }
 
 export function getFirebase() {

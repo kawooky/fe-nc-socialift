@@ -9,6 +9,7 @@ import { getFirebase } from "./firebase";
 import { WorkoutLogPage } from "./components/WorkoutLogPage/WorkoutLogPage.jsx"
 import { WorkoutLoggerPage } from "./components/WokoutLoggerPage/WorkoutLoggerPage";
 
+import { HomePage } from "./components/HomePage/HomePage";
 
 
 const App = () => {
@@ -21,9 +22,10 @@ const App = () => {
       
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName={loggedInUser ? "Group" : "WorkoutLog"}
+          initialRouteName={loggedInUser ? "Group" : "Home"}
         >
           <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Profile" component={ProfilePage} />
           <Stack.Screen name="Group" component={GroupPage} />
         <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
