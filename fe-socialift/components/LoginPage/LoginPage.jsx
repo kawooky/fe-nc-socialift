@@ -116,7 +116,7 @@ export const LoginPage = ({ navigation }) => {
       setDisableButtons(true);
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          navigation.navigate("Group");
+          navigation.navigate("Home");
         })
         .catch((err) => {
           console.log(err);

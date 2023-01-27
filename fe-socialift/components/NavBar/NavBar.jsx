@@ -13,19 +13,11 @@ import {
 const NavBar = () => {
 	return (
 		<View style={styles.footer}>
-			<View
-				style={{
-					flexDirection: 'row',
-					width: '100%',
-					height: '4vh',
-				}}
-			>
-				<FontAwesomeIcon icon={faHouse} size="s" style={styles.icon} />
-				<FontAwesomeIcon icon={faUserGroup} size="s" style={styles.icon} />
-				<FontAwesomeIcon icon={faBookOpen} size="s" style={styles.icon} />
-				<FontAwesomeIcon icon={faMessage} size="s" style={styles.icon} />
-				<FontAwesomeIcon icon={faUser} size="s" style={styles.icon} />
-			</View>
+				<FontAwesomeIcon icon={faHouse} size={32} style={styles.icon} />
+				<FontAwesomeIcon icon={faUserGroup} size={32} style={styles.icon} />
+				<FontAwesomeIcon icon={faBookOpen} size={32} style={styles.icon} />
+				<FontAwesomeIcon icon={faMessage} size={32} style={styles.icon} />
+				<FontAwesomeIcon icon={faUser} size={32} style={styles.icon} />
 		</View>
 	);
 };

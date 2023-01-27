@@ -2,21 +2,16 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 	footer: {
-		flex: '1',
 		flexDirection: 'row',
-		width: '100%',
-		height: '6vh',
-		position: 'fixed',
-		bottom: '20px',
+		marginTop: "auto",
+		height: 75,
+		alignItems: "center",
+		justifyContent: "space-evenly",
 		backgroundColor: '#151515',
+		width: "100%"
 	},
 	icon: {
-		marginTop: '8px',
 		color: '#ffffff',
-		marginLeft: '8px',
-		marginRight: '8px',
-		border: '2px solid #242424',
-		borderRadius: '15%',
 	},
 });
 
