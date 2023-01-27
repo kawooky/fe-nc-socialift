@@ -2,6 +2,7 @@ import { Text, View, SafeAreaView, Image, ScrollView } from "react-native";
 import { getFirebase } from "../../firebase";
 import { styles } from '../someDefaultStyles'
 import { homeStyles } from "./HomePageStyle";
+import NavBar from "../NavBar/NavBar"
 import {  } from "@rneui/themed";
 
 export const HomePage = ({ navigation }) => {
@@ -51,6 +52,6 @@ export const HomePage = ({ navigation }) => {
                   })}
               </ScrollView>
               
-              
+              <NavBar />
           </SafeAreaView>;
 };
