@@ -87,7 +87,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
         />
         <Button
             onPress={() => {
-                navigation.navigate("WorkoutLog")
+                // navigation.navigate("WorkoutLog")
                 setFullExerciseHolder([])
             }}
             title="Log (Needs a function to add to users workout log array)"
