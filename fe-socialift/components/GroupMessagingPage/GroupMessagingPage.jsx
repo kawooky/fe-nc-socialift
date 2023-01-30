@@ -3,6 +3,7 @@ import { View , Text} from 'react-native';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { styles } from "./GroupMessagingPageStyle";
 import io from "socket.io-client"
+import NavBar from '../NavBar/NavBar';
 const socket = io.connect("http://localhost:3001");
 
 
@@ -75,7 +76,7 @@ export const GroupMessagingPage = ({navigation}) => {
         
 
 
-
+        <NavBar navigation={navigation} />
     </View>
   );
 }
