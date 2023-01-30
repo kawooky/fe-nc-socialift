@@ -24,6 +24,7 @@ const App = () => {
       
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
+
           initialRouteName={loggedInUser ? "Group" : "Home"}
           >
           <Stack.Screen name="Login" component={LoginPage} />
