@@ -210,7 +210,7 @@ export const HomePage = ({ navigation }) => {
         })}
         <Text style={{margin: 10}}>End of posts</Text>
       </ScrollView>
-      <NavBar />
+      <NavBar navigation={navigation}/>
     </SafeAreaView>
   );
 };
