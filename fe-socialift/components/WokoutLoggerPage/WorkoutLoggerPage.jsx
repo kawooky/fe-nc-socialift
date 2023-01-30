@@ -5,6 +5,7 @@ import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getExercisesByMuscle } from '../../api'
 import { doc, setDoc, addDoc, updateDoc, collection} from 'firebase/firestore'
 import { getFirebase } from "../../firebase.js";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const { firestore } = getFirebase()
 
@@ -32,6 +33,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
 
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+    const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
     const [stage, setStage] = useState(1)
     const [muscle, setMuscle] = useState('')
@@ -64,11 +66,6 @@ export const WorkoutLoggerPage = ({navigation}) => {
         <View style={styles.mainView}>
         <ThemeProvider theme={theme}>
 
-
-
-
-
-
         { stage ===1 && ( <View style={styles.stageOne}>
         <Button
         onPress={() => {
@@ -77,13 +74,20 @@ export const WorkoutLoggerPage = ({navigation}) => {
         title="Back"
         />
         <Text>Name</Text>
-        <Input
-              value={date}
-              placeholder="Date"
-              onChangeText={(event) => {setDate(event)}}
-              errorMessage={''}
-              autoCorrect={false}
-            />
+        <Text>Date: {date}</Text>
+        <Button
+        onPress={()=>{
+            setShowDatePicker(true)
+        }}
+        title='change date'/>
+        
+        {showDatePicker === true && (<DateTimePicker value={new Date()} onChange={(event, date)=>{
+            setShowDatePicker(false)
+            if (event.type === 'set') {
+                setDate(date.toISOString().slice(0, 10))
+            }
+            }}/>)}
+
         <Input
               value={notes}
               placeholder="Notes"
