@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
 import { Avatar, Button, Icon} from '@rneui/themed';
+import NavBar from "../NavBar/NavBar.jsx";
 
 
 
@@ -88,6 +89,7 @@ export const ProfilePage = ({navigation}) => {
             )}
 
             </View>
+            <NavBar navigation={navigation} />
         </View>
     )
 }
