@@ -13,6 +13,7 @@ const homeStyles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 5,
         maxHeight: 100,
+        minHeight: 100,
         width: "100%",
         marginBottom: "auto", 
     },
