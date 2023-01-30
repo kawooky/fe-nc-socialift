@@ -11,21 +11,36 @@ export const GroupMessagingPage = ({navigation}) => {
     const [message, setMessage] = useState("");
     const [messageReceived, setMessageReceived] = useState("");
     const [messageList, setMessageList] =useState([])
+    const [counter, setCounter] =useState(0)
 
+    // new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes()
 
 
   const sendMessage = () => {
+    // if(message !==''){
+
+    // }
+
+
+
     socket.emit("send_message", {message: message})
+    console.log('sent a message')
+    setCounter(counter+1)
+    console.log(messageList, '<<<message list in send')
+    // setMessageList((messageList)=>{[...messageList, {sender:'you', message:message}]})
     setMessageList([...messageList, {sender:'you', message:message}])
     setMessage('')
   }
 
   useEffect(() => {
       socket.on("receive_message", (data)=>{ 
-        setMessageList([...messageList, {sender:'somebody else', message:data.message}])
-      setMessageReceived(data.message)
+        // console.log(data, '<<< received message')
+        setMessageList((messageList)=>[...messageList, {sender:'somebody else', message:data.message}])
+        // setMessageReceived(data.message)
+        // console.log(messageReceived, '<<<message received')
+        // console.log(messageList, '<<<message list in receive')
     })
-
+  
     // socket.on("sockets", (data)=>{ 
     //   setSocketIDs(data.socketIDs)
       
@@ -40,7 +55,10 @@ export const GroupMessagingPage = ({navigation}) => {
         <Input
               value={message}
               placeholder="send message"
-              onChangeText={(event) => {setMessage(event)}}
+              onChangeText={(event) => {
+                console.log(event, '<<<<event') 
+                setMessage(event)
+                console.log(message, '<<<message')}}
               errorMessage={''}
               autoCorrect={false}
             />
