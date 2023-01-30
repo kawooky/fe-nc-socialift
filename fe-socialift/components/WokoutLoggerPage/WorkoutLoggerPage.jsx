@@ -130,8 +130,8 @@ export const WorkoutLoggerPage = ({navigation}) => {
                 console.log(workout, 'workoutttttt')
 
 
-                // navigation.navigate("WorkoutLog")
-                // setFullExerciseHolder([])
+                navigation.navigate("WorkoutLog")
+                setFullExerciseHolder([])
                 
 
                 postToDb()
