@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
 		marginTop: "auto",
 		height: 75,
 		alignItems: "center",
-		justifyContent: "space-evenly",
+		justifyContent: "space-around",
 		backgroundColor: '#151515',
 		width: "100%"
 	},
