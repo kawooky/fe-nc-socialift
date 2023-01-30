@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f1f1f1",
         justifyContent: "center",
-        alignItems: "center"
     },
     formView: {
         width: 320,
@@ -17,6 +16,13 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingRight: 10
      },
+     sentMessage: {
+      textAlign: "right"
+     },
+     receivedMessage: {
+      alignItems: "left",
+      backgroundColor: 'light-blue'
+     }
 
 })
 
