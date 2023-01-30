@@ -5,6 +5,7 @@ import { homeStyles } from "./HomePageStyle";
 import NavBar from "../NavBar/NavBar";
 import {Feed} from "../Feed/Feed.jsx"
 import { faCar } from "@fortawesome/free-solid-svg-icons";
+import { GroupsBar } from "../GroupsBar/GroupsBar";
 
 export const HomePage = ({ navigation }) => {
   const { auth } = getFirebase();
@@ -115,25 +116,7 @@ export const HomePage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.mainView}>
-      <ScrollView
-        horizontal={true}
-        style={homeStyles.groupBar}
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-      >
-        {groups.map((group) => {
-          return (
-            <View key={group.name} style={homeStyles.groupItem}>
-              <Image
-                source={{ uri: group.img_url }}
-                style={homeStyles.groupIcon}
-              />
-              <Text numberOfLines={1} style={homeStyles.groupName}>
-                {group.name}
-              </Text>
-            </View>
-          );
-        })}
-      </ScrollView>
+      <GroupsBar groups={groups}/>
       <Feed posts={posts}/>
       <NavBar navigation={navigation}/>
     </SafeAreaView>
