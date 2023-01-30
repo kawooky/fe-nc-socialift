@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Pressable } from 'react-native';
 import { styles } from './NavBarStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
 import {
 	faHouse,
 	faUserGroup,
@@ -10,7 +11,7 @@ import {
 	faUser,
 } from '@fortawesome/free-solid-svg-icons';
 
-const NavBar = ({ navigation }) => {
+const NavBar = ({navigation}) => {
 	return (
 		<View style={styles.footer}>
 			<Pressable onPress={() => navigation.navigate("Home")}><FontAwesomeIcon icon={faHouse} size={32} style={styles.icon} /></Pressable>
@@ -22,4 +23,4 @@ const NavBar = ({ navigation }) => {
 	);
 };
 
-export default NavBar;
+export default (NavBar);
