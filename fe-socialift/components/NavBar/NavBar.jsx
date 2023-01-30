@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { styles } from './NavBarStyle';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -10,14 +10,14 @@ import {
 	faUser,
 } from '@fortawesome/free-solid-svg-icons';
 
-const NavBar = () => {
+const NavBar = ({ navigation }) => {
 	return (
 		<View style={styles.footer}>
-				<FontAwesomeIcon icon={faHouse} size={32} style={styles.icon} />
-				<FontAwesomeIcon icon={faUserGroup} size={32} style={styles.icon} />
-				<FontAwesomeIcon icon={faBookOpen} size={32} style={styles.icon} />
-				<FontAwesomeIcon icon={faMessage} size={32} style={styles.icon} />
-				<FontAwesomeIcon icon={faUser} size={32} style={styles.icon} />
+			<Pressable onPress={() => navigation.navigate("Home")}><FontAwesomeIcon icon={faHouse} size={32} style={styles.icon} /></Pressable>
+			<Pressable onPress={() => navigation.navigate("GroupPage")}><FontAwesomeIcon icon={faUserGroup} size={32} style={styles.icon} /></Pressable>
+			<Pressable onPress={() => navigation.navigate("WorkoutLogger")}><FontAwesomeIcon icon={faBookOpen} size={32} style={styles.icon} /></Pressable>
+			<Pressable onPress={() => navigation.navigate("Friends")}><FontAwesomeIcon icon={faMessage} size={32} style={styles.icon} /></Pressable>
+			<Pressable onPress={() => navigation.navigate("Profile")}><FontAwesomeIcon icon={faUser} size={32} style={styles.icon} /></Pressable>
 		</View>
 	);
 };
