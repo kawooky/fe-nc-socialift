@@ -1,107 +1,125 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-    StyleSheet,
-    View,
-    SafeAreaView,
-    Text,
-    Alert,
-    TextInput,
-  } from "react-native";
-  import { Switch, Button, Avatar, Input} from '@rneui/themed';
-  import { styles } from './EditProfilePageStyle.js';
+  View,
+  Text,
+  Platform
+} from "react-native";
+import { Switch, Button, Avatar, Input } from "@rneui/themed";
+import { styles } from "./EditProfilePageStyle.js";
+import { getFirebase } from "../../firebase.js";
+import {
+  doc,
+  updateDoc
+} from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { pickImage, uploadImage } from "../../utils/pick-and-upload-images.js";
+import { updateProfile } from "firebase/auth";
 
-
-/////////////////////////////////////////////////////////////////////////
-// import { getFirebase } from "../../firebase.js";
-
-
-// .then((userCredentials) => {
-//   updateProfile(auth.currentUser, {
-//     displayName: username,
-//   });
-// })
-
-  // SUBMIT FIRST NAME
-  // SUBMIT LAST NAME
-  // SUBMIT AVATAR PHOTO
-  // ADD FORM VALIDATION FOR THE NAMES TO BE REQUIRED
+export const EditProfilePage = ({ navigation }) => {
+  const [photo, setPhoto] = React.useState(null);
+  const [darkMode, setDarkMode] = React.useState();
+  const [privateMode, setPrivateMode] = React.useState();
   
-  
+  const { auth, firestore, storage} = getFirebase();
+  const user = auth.currentUser;
+  console.log(user.uid, "<< user.uid");
+  const userRef = doc(firestore, "users", user.uid);
+  console.log(userRef, "<< userRef");
 
-  // const validateName = () => {
-  //   if (showRegister && username !== "" && currentUsers.includes(username)) {
-  //     setUsernameError(true);
-  //   } else {
-  //     setUsernameError(false);
-  //   }
-  // };
-  
-  export const EditProfilePage = ({navigation}) => {
-    
-    const [darkMode, setDarkMode] = React.useState();
-    const [privateMode, setPrivateMode] = React.useState();
-    
-    const togglePrivateMode = () => {
-      privateMode(!privateMode);
-    };
-    const toggleDarkMode = () => {
-      darkMode(!darkMode);
-    };
-  
+  function updateAvatar() {
+    pickImage()
+      .then((newAvatarURI) => {
+        console.log(newAvatarURI, "<< newAvatarURI")
+        setPhoto(newAvatarURI);
+
+        const fileRef = ref(storage, `avatars/${user.uid}.jpg`);
+
+        return uploadImage(newAvatarURI, fileRef);
+      })
+      .then((uploadedAvatarURL) => {
+        const updateObj = {
+          "userDetails.avatarImgURL": uploadedAvatarURL,
+        };
+
+        updateDoc(userRef, updateObj);
+        updateProfile(user, {
+          photoURL: "uploadedAvatarURL"
+        })
+      })
+      .catch((error) => {
+        setPhoto(null)
+        alert(error);
+      });
+  }
+
+  const togglePrivateMode = () => {
+    privateMode(!privateMode);
+  };
+  const toggleDarkMode = () => {
+    darkMode(!darkMode);
+  };
+
   return (
-
-    
     <View style={styles.mainView}>
       <View style={styles.formView}>
         <View style={styles.avatar}>
-      <Avatar
+          {/* <Avatar
+            activeOpacity={0.2}
+            avatarStyle={{}}
+            containerStyle={{
+              backgroundColor: "#BDBDBD",
+              marginBottom: 10,
+              alignItems: "center",
+            }}
+            imageProps={{}}
+            // onPress={() => alert("uploadImage")}
+            onPress={pickImage}
+            overlayContainerStyle={{}}
+            placeholderStyle={{}}
+            rounded
+            size="large"
+            source={{uri: photo}}
+            titleStyle={{}}
+          />*/}
+          <Avatar
+            size="large"
+            rounded
+            source={{ uri: photo }}
+            title={user.displayName}
+            containerStyle={{ backgroundColor: "grey" }}
+            onPress={updateAvatar}
+          >
+          </Avatar>
+        </View>
+        <Input
+          containerStyle={{}}
+          disabledInputStyle={{ background: "#ddd" }}
+          placeholder="First Name"
+        />
+        <Input
+          containerStyle={{}}
+          disabledInputStyle={{ background: "#ddd" }}
+          placeholder="Last Name"
+        />
 
-              activeOpacity={0.2}
-              avatarStyle={{}}
-              containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10 , alignItems: "center"}}
-              icon={{name: "pencil"}}
-              iconStyle={{}}
-              imageProps={{}}
-              onPress={() => alert("uploadImage")}
-              overlayContainerStyle={{}}
-              placeholderStyle={{}}
-              rounded
-              size="large"
-              source={{ uri: "" }}
-              titleStyle={{}}
+        <View>
+          <View style={styles.toggles}>
+            <Text>Dark Mode</Text>
+            <Switch
+              value={darkMode}
+              onValueChange={(value) => setDarkMode(!darkMode)}
             />
-
-</View>
-    <Input
-      containerStyle={{}}
-      disabledInputStyle={{ background: "#ddd" }}
-      placeholder="First Name"
-    />
-     <Input
-      containerStyle={{}}
-      disabledInputStyle={{ background: "#ddd" }}
-      placeholder="Last Name"
-    />
- 
- <View>
-<View style={styles.toggles}>
-      <Text>Dark Mode</Text>
-     <Switch
-        value={darkMode}
-        onValueChange={(value) => setDarkMode(!darkMode)}
-      />
+          </View>
+          <View style={styles.toggles}>
+            <Text>Private Account</Text>
+            <Switch
+              value={privateMode}
+              onValueChange={(value) => setPrivateMode(!privateMode)}
+            />
+          </View>
+        </View>
+        <Button title="SAVE" onPress={() => navigation.navigate("Profile")} />
       </View>
-      <View style={styles.toggles}>
-      <Text>Private Account</Text>
-       <Switch
-        value={privateMode}
-        onValueChange={(value) => setPrivateMode(!privateMode)}
-      />
-      </View>
-      </View>
-            <Button title="SAVE" onPress={() => navigation.navigate('Profile')}/>
-            
-    </View>
     </View>
   );
-  };
+};

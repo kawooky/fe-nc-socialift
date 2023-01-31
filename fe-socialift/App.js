@@ -15,27 +15,33 @@ import { HomePage } from './components/HomePage/HomePage';
 import { AddFriendsPage } from './components/AddFriendsPage/AddFriendsPage';
 
 const App = () => {
-	const { auth } = getFirebase();
-	const loggedInUser = auth.currentUser;
-	const Stack = createNativeStackNavigator();
-	return (
-		<NavigationContainer>
-			<Stack.Navigator
-				screenOptions={{ headerShown: false }}
-				initialRouteName={loggedInUser ? 'Group' : 'AddFriends'}
-			>
-				<Stack.Screen name="Login" component={LoginPage} />
-				<Stack.Screen name="Home" component={HomePage} />
-				<Stack.Screen name="Profile" component={ProfilePage} />
-				<Stack.Screen name="EditProfile" component={EditProfilePage} />
-				<Stack.Screen name="Group" component={GroupPage} />
-				<Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
-				<Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
-				<Stack.Screen name="GroupMessaging" component={GroupMessagingPage} />
-				<Stack.Screen name="AddFriends" component={AddFriendsPage} />
-			</Stack.Navigator>
-		</NavigationContainer>
-	);
+
+
+  const { auth } = getFirebase()
+  const loggedInUser = auth.currentUser
+  const Stack = createNativeStackNavigator();
+  return (
+    <NavigationContainer>
+      
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+
+          initialRouteName='GroupMessaging'
+
+          >
+          <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="Home" component={HomePage} />
+          <Stack.Screen name="Profile" component={ProfilePage} />
+          <Stack.Screen name="EditProfile" component={EditProfilePage} />
+          <Stack.Screen name="Group" component={GroupPage} />
+        <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
+        <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
+        <Stack.Screen name="GroupMessaging" component={GroupMessagingPage} />
+
+        </Stack.Navigator>
+      
+    </NavigationContainer>
+  );
 };
 
 export default App;

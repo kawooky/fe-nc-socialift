@@ -3,10 +3,9 @@ import { getFirebase } from "../../firebase";
 import { styles } from "../someDefaultStyles";
 import { homeStyles } from "./HomePageStyle";
 import NavBar from "../NavBar/NavBar";
-import { Button } from "@rneui/themed";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faThumbsUp, faComment, faCommentAlt} from "@fortawesome/free-regular-svg-icons";
+import {Feed} from "../Feed/Feed.jsx"
 import { faCar } from "@fortawesome/free-solid-svg-icons";
+import { GroupsBar } from "../GroupsBar/GroupsBar";
 
 export const HomePage = ({ navigation }) => {
   const { auth } = getFirebase();
@@ -117,100 +116,9 @@ export const HomePage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.mainView}>
-      <ScrollView
-        horizontal={true}
-        style={homeStyles.groupBar}
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-      >
-        {groups.map((group) => {
-          return (
-            <View key={group.name} style={homeStyles.groupItem}>
-              <Image
-                source={{ uri: group.img_url }}
-                style={homeStyles.groupIcon}
-              />
-              <Text numberOfLines={1} style={homeStyles.groupName}>
-                {group.name}
-              </Text>
-            </View>
-          );
-        })}
-      </ScrollView>
-      <ScrollView
-        style={homeStyles.mainContent}
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-      >
-        {posts.map((post) => {
-          return (
-            <View key={post.id} style={homeStyles.post}>
-              <View style={homeStyles.postUserDetails}>
-                <Image
-                  source={{ uri: post.user_img_url }}
-                  style={homeStyles.groupIcon}
-                />
-                <View>
-                  <Text>{post.user}</Text>
-                  <Text>{post.date}</Text>
-                </View>
-              </View>
-              <View style={homeStyles.postStatusDetails}>
-                {post.type === 'record' && (<><Text>
-                  {post.user} set a new record for their {post.exercise}!{" "}
-                  {post.weight}
-                  {post.units} for {post.reps} rep(s)!
-                </Text>
-                <Text numberOfLines={2}>"{post.notes}"</Text>
-                </>
-                )}
-                {post.type === 'logged-workout' && (
-                <><Text numberOfLines={7}>
-                  {post.user} logged a new workout!
-                
-                {post.exercises.map((exercise) => {
-                  return <>{'\n\n'}{exercise.sets} set(s) of {exercise.name} {'\n'}Average reps: {exercise.average_reps} {'\n'}Average weight: {exercise.average_weight}{exercise.units}</>
-                })}
-                </Text>
-                
-                <Text numberOfLines={3}>{'\n'}{post.notes}</Text></>)}
-                {post.type === 'fun-fact' && (
-                  <>
-                    <Text>{post.user} has {post.fact.exercise}ed {post.fact.weight}{post.fact.units} this {post.fact.timespan}! That's equivalent to {post.fact.n} {post.fact.comparison}(s)!</Text>
-                    <ScrollView pointerEvents="none" horizontal contentContainerStyle={{justifyContent: "flex-start"}} style={{alignSelf: 'center', overflow: 'hidden', maxHeight: 50, width: post.fact.n*45}}>
-                    {[...Array(Math.ceil(post.fact.n))].map(() => <FontAwesomeIcon icon={post.fact.icon} size={40} style={{margin: 2.5}} fixedWidth />)}
-                    </ScrollView>
-                  </>
-                )}
-              </View>
-              <View style={homeStyles.postLikesComments}>
-                <View style={homeStyles.button}>
-                <Button
-                  style={homeStyles.button}
-                  title={
-                    <Text>
-                      {post.likes} <FontAwesomeIcon icon={faThumbsUp} />
-                    </Text>
-                  }
-                  disabled={false}
-                />
-                </View>
-                <View style={homeStyles.button}>
-                <Button
-                  style={homeStyles.button}
-                  title={
-                    <Text>
-                      {post.comments} <FontAwesomeIcon icon={faCommentAlt} />
-                    </Text>
-                  }
-                  disabled={false}
-                />
-                </View>
-              </View>
-            </View>
-          );
-        })}
-        <Text style={{margin: 10}}>End of posts</Text>
-      </ScrollView>
-      <NavBar />
+      <GroupsBar groups={groups}/>
+      <Feed posts={posts}/>
+      <NavBar navigation={navigation}/>
     </SafeAreaView>
   );
 };

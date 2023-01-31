@@ -3,13 +3,49 @@ import { styles, theme } from './WorkoutLoggerPageStyle.js';
 import React, { useEffect, useState } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getExercisesByMuscle } from '../../api'
+import { doc, setDoc, addDoc, updateDoc, collection} from 'firebase/firestore'
+import { getFirebase } from "../../firebase.js";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+const { firestore } = getFirebase()
+const { auth } = getFirebase();
+
+
+
+///// OBSOLETE //////////////////////////////////////////////
+const workoutColRef = collection(firestore, "users", "GiYCJgUGDAsQGIq0z5UieZKOHEBF", "workouts")
+//// ////////////////////////////////////////////////////
 
 
 
 export const WorkoutLoggerPage = ({navigation}) => {
 
+    ///HAS TO BE INSIDE FUCNTION
+    const loggedInUser = auth.currentUser.uid
+
+console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
+    
+    const postToDb = () => {
+        console.log("hello from postToDB")
+        const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
+        addDoc(workoutColRefInside, workout)
+    }
+
+    const formatData = (workout) => {
+        const arr = []
+        workout.map((ex,index)=>{
+            arr.push({exercise:ex[0].exercise, sets:{}})
+            ex.map((set,nestedIndex)=>{
+                arr[index].sets[`set${nestedIndex+1}`]={reps:set.reps, weight:set.weight, singleSetNotes:set.singleSetNotes}
+            })
+        })
+        return arr
+    }
+
+
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+    const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
     const [stage, setStage] = useState(1)
     const [muscle, setMuscle] = useState('')
@@ -26,6 +62,10 @@ export const WorkoutLoggerPage = ({navigation}) => {
     //muscle options from ninja api
     const muscleList = ['abdominals', 'abductors', 'adductors', 'biceps' ,'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
 
+
+
+
+
     useEffect(()=>{
         getExercisesByMuscle(muscle).then((exercises)=>{
             setExercisesByMuscle(exercises)     
@@ -38,11 +78,6 @@ export const WorkoutLoggerPage = ({navigation}) => {
         <View style={styles.mainView}>
         <ThemeProvider theme={theme}>
 
-
-
-
-
-
         { stage ===1 && ( <View style={styles.stageOne}>
         <Button
         onPress={() => {
@@ -50,14 +85,22 @@ export const WorkoutLoggerPage = ({navigation}) => {
         }}
         title="Back"
         />
+
         <Text>Name</Text>
-        <Input
-              value={date}
-              placeholder="Date"
-              onChangeText={(event) => {setDate(event)}}
-              errorMessage={''}
-              autoCorrect={false}
-            />
+        <Text>Date: {date}</Text>
+        <Button
+        onPress={()=>{
+            setShowDatePicker(true)
+        }}
+        title='change date'/>
+        
+        {showDatePicker === true && (<DateTimePicker value={new Date()} onChange={(event, date)=>{
+            setShowDatePicker(false)
+            if (event.type === 'set') {
+                setDate(date.toISOString().slice(0, 10))
+            }
+            }}/>)}
+
         <Input
               value={notes}
               placeholder="Notes"
@@ -66,14 +109,26 @@ export const WorkoutLoggerPage = ({navigation}) => {
               autoCorrect={false}
             />
 
-        {fullExerciseHolder.map((singleExerciseSets)=>{
+        {fullExerciseHolder.map((singleExerciseSets, i)=>{
             return (<View>
             <Text>{`Exercise: ${singleExerciseSets[0].exercise}`}</Text> 
                 
             
             {singleExerciseSets.map((singleSet,index)=>{
-                return (<Text key={index}>{`Set: ${index+1} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>)
+                return (<View>
+                <Text key={index}>{`Set: ${index+1} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>
+
+                </View>)
             })}
+            <Button 
+                onPress={()=>{
+                    setFullExerciseHolder((currentFullExerciseHolder)=>{
+                        const copyOfCurrent = [...currentFullExerciseHolder]
+                        const newArr = copyOfCurrent.splice(i,1)
+                        return copyOfCurrent
+                    })
+                }}
+                title='delete exercise'/>
         </View>
         )
         })}
@@ -87,10 +142,17 @@ export const WorkoutLoggerPage = ({navigation}) => {
         />
         <Button
             onPress={() => {
+                setWorkout({date:date, notes:notes, workout:formatData(fullExerciseHolder)})
+                console.log(workout, 'workoutttttt')
+
+
                 navigation.navigate("WorkoutLog")
                 setFullExerciseHolder([])
+                
+
+                postToDb()
             }}
-            title="Log (Needs a function to add to users workout log array)"
+            title="Log"
         />
         <Button
             onPress={() => {
@@ -204,13 +266,26 @@ export const WorkoutLoggerPage = ({navigation}) => {
         <Button
             onPress={() => {
                 setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
-                console.log(exerciseSetsHolder)
+                console.log(exerciseSetsHolder, 'ex set holder')
             }}
             title="Add Set"
         />
 
         {exerciseSetsHolder.map((singleSet,index)=>{
-            return (<Text key={index}>{`Set: ${index+1} Exercise: ${singleSet.exercise} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>)
+            return (<View  key={index}>
+            <Text>{`Set: ${index+1} Exercise: ${singleSet.exercise} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>
+            <Button 
+            onPress={()=>{
+                setExerciseSetsHolder((currentExerciseSetsHolder)=>{
+                    const copyOfCurrent = [...currentExerciseSetsHolder]
+                    const newArr = copyOfCurrent.splice(index,1)
+                    return copyOfCurrent
+                })
+                                console.log(exerciseSetsHolder,'holder')
+            }}
+            title='delete set'/>
+            </View>
+            )
         })}
 
 
@@ -234,3 +309,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
             
     )
 }
+
+
+
+
