@@ -30,13 +30,12 @@ export const WorkoutLogPage = ({navigation}) => {
             return {...thing.data()}
         })
             
-        console.log(logs, "<<< LOGS")
 
         setWorkouts(logs)
         
     })
 
-console.log(workouts, "------workouts state")
+
 
 
     return (

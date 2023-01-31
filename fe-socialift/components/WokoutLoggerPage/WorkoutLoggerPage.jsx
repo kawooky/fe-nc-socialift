@@ -12,24 +12,19 @@ const { firestore } = getFirebase()
 const { auth } = getFirebase();
 
 
-
-///// OBSOLETE //////////////////////////////////////////////
-const workoutColRef = collection(firestore, "users", "GiYCJgUGDAsQGIq0z5UieZKOHEBF", "workouts")
-//// ////////////////////////////////////////////////////
-
-
-
 export const WorkoutLoggerPage = ({navigation}) => {
 
-    ///HAS TO BE INSIDE FUCNTION
     const loggedInUser = auth.currentUser.uid
+    const loggedInUserPP = auth.currentUser.photoURL
 
-console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
-    
     const postToDb = () => {
         console.log("hello from postToDB")
         const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
         addDoc(workoutColRefInside, workout)
+    }
+    const postToPostDb = () => {
+        const workoutColRefInside = collection(firestore, "users", loggedInUser, "workout-posts")
+        addDoc(workoutColRefInside, post)
     }
 
     const formatData = (workout) => {
@@ -44,11 +39,10 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     }
 
 
-
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
-    const [stage, setStage] = useState(4)
+    const [stage, setStage] = useState(1)
     const [muscle, setMuscle] = useState('')
     const [weight, setWeight] = useState('')
     const [reps, setReps ] = useState('')
@@ -57,8 +51,12 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const [fullExerciseHolder, setFullExerciseHolder] = useState([])
     const [workout, setWorkout] = useState({date:date, notes:notes, workout:fullExerciseHolder})
 
+/////Need to add active user image URL
+//// Need to add average reps + weight
+    const [post, setPost] = useState({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, exercises:[{fullExerciseHolder}], notes:notes, likes:0, comments:0})
+
     const [exercisesByMuscle, setExercisesByMuscle] = useState([])
-    const [exercise, setExercise] = useState('Incline Hammer Curls')
+    const [exercise, setExercise] = useState('')
 
     //muscle options from ninja api
     const muscleList = ['abdominals', 'abductors', 'adductors', 'biceps' ,'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
@@ -68,8 +66,6 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
 
     const weightRef = useRef()
     const repsRef = useRef()
-
-
 
     useEffect(()=>{
         getExercisesByMuscle(muscle).then((exercises)=>{
@@ -149,6 +145,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
             onPress={() => {
                 setWorkout({date:date, notes:notes, workout:formatData(fullExerciseHolder)})
                 console.log(workout, 'workoutttttt')
+                console.log("I AM THE LOG BUTTON <<<>>>>>>>>")
 
 
                 navigation.navigate("WorkoutLog")
@@ -161,6 +158,13 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         />
         <Button
             onPress={() => {
+                setPost({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, exercises:[{fullExerciseHolder}], notes:notes, likes:0, comments:0})
+
+                // navigation.navigate("WorkoutLog")
+                setFullExerciseHolder([])
+                
+
+                postToPostDb()
             }}
             title="Post (missing function)"
         />
@@ -279,7 +283,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         <Button
             onPress={() => {
                 if((/^\d+$/.test(weight) || weight === '') && (/^\d+$/.test(reps) || reps === '')) {
-                    setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
+                    setExerciseSetsHolder((exerciseSetsHolder) =>  {
+                        console.log(exerciseSetsHolder, "TESTING STAGE 3 WITH YOUSSEF EXSETHOL")
+                        return [...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}]})
                 } 
                 if (!/^\d+$/.test(weight) && weight !== '') {
                     weightRef.current.shake()
@@ -314,7 +320,8 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         <Button
             onPress={() => {
                 setStage(1)
-                setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
+                setFullExerciseHolder((fullExerciseHolder) => {return [...fullExerciseHolder, exerciseSetsHolder]})
+                console.log(fullExerciseHolder, "FULL EX STAGE 4")
                 setExercise('')
                 setWeight('')
                 setReps('')
