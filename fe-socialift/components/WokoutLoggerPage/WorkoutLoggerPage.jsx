@@ -31,18 +31,38 @@ export const WorkoutLoggerPage = ({navigation}) => {
         return arr
     }
 
-//////////////////////////////////////////////////   
-/////////////AVERAGE WEIGHT + REPS FORMULA
-///////////// NEEDS TO EXPORT AN ARRAY WITH OBJECTS IN THE FOLLOWING FORMAT
 
-// EXAMPLE [{name: "Bench Press", sets: 3, average_reps: 12, average_weight: 50, units:'kg'},    {name: "Weighted Squat", sets: 5, average_reps: 20, average_weight: 150, units: 'kg'}]
+const dataAverage = (workout) => {
+    const workoutAverage = workout.map((exercise)=>{
+        const setPropNames = Object.keys(exercise.sets)
+        const numberOfSets =  Object.keys(exercise.sets).length
+        let sumOfReps = 0
+        for (const i of setPropNames) {
+            sumOfReps+= exercise.sets[i].reps
+        }
+        const averageReps = sumOfReps/numberOfSets
 
 
-    const dataAverage = (workout) => {
-        
-    
-    }
-///////////////////////////////////////////////
+        let sumOfWeight = 0
+        for (const i of setPropNames) {
+            sumOfWeight+= exercise.sets[i].weight
+        }
+        const averageWeight = sumOfWeight/numberOfSets
+
+
+        return {
+
+            name: exercise.exercise,
+            sets: numberOfSets,
+            average_reps: averageReps,
+            average_weight: averageWeight,
+            units: 'kg'
+        }
+    })
+
+    return workoutAverage
+}
+
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -82,10 +102,17 @@ export const WorkoutLoggerPage = ({navigation}) => {
     const postToPostDb = () => {
 
         const workoutColRefPost = collection(firestore, "users", loggedInUser, "posts")
-        addDoc(workoutColRefPost, workout, post)
 
-        navigation.navigate("WorkoutLog")
-    }
+            addDoc(workoutColRefPost, workout)
+        .then(() => {
+
+            navigation.navigate("WorkoutLog")
+        })
+
+
+        }
+
+    
 
     const handleLog = () => {
         
@@ -338,9 +365,7 @@ const handlePost = () => {
             onPress={() => {
                 setStage(1)
                 setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
-
-            //// ADD FORMATTED AVERAGES IN DIFFERENT NESTED ARRAY
-                setWorkout({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder]), exercises:"insert averages and names"})
+                setWorkout({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder]), exercises: dataAverage(formatData([...fullExerciseHolder, exerciseSetsHolder]))})
                 setExercise('')
                 setWeight('')
                 setReps('')
