@@ -54,8 +54,6 @@ export const LoginPage = ({ navigation }) => {
         return thing.id;
       });
       setCurrentUsers(usernames);
-      console.log(usernames);
-      console.log(currentUsers);
     });
   }, []);
 
