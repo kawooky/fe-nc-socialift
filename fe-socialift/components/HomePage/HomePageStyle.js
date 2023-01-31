@@ -15,7 +15,6 @@ const homeStyles = StyleSheet.create({
         maxHeight: 100,
         width: "100%",
         marginBottom: "auto", 
-        
     },
     groupIcon: {
         height: 50,

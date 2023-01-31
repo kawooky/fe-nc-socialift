@@ -5,6 +5,7 @@ import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getExercisesByMuscle } from '../../api'
 import { doc, setDoc, addDoc, updateDoc, collection} from 'firebase/firestore'
 import { getFirebase } from "../../firebase.js";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const { firestore } = getFirebase()
 const { auth } = getFirebase();
@@ -44,6 +45,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
 
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+    const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
     const [stage, setStage] = useState(1)
     const [muscle, setMuscle] = useState('')
@@ -76,11 +78,6 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         <View style={styles.mainView}>
         <ThemeProvider theme={theme}>
 
-
-
-
-
-
         { stage ===1 && ( <View style={styles.stageOne}>
         <Button
         onPress={() => {
@@ -88,13 +85,22 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         }}
         title="Back"
         />
-        <Input
-              value={date}
-              placeholder="Date"
-              onChangeText={(event) => {setDate(event)}}
-              errorMessage={''}
-              autoCorrect={false}
-            />
+
+        <Text>Name</Text>
+        <Text>Date: {date}</Text>
+        <Button
+        onPress={()=>{
+            setShowDatePicker(true)
+        }}
+        title='change date'/>
+        
+        {showDatePicker === true && (<DateTimePicker value={new Date()} onChange={(event, date)=>{
+            setShowDatePicker(false)
+            if (event.type === 'set') {
+                setDate(date.toISOString().slice(0, 10))
+            }
+            }}/>)}
+
         <Input
               value={notes}
               placeholder="Notes"
@@ -140,8 +146,8 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
                 console.log(workout, 'workoutttttt')
 
 
-                // navigation.navigate("WorkoutLog")
-                // setFullExerciseHolder([])
+                navigation.navigate("WorkoutLog")
+                setFullExerciseHolder([])
                 
 
                 postToDb()

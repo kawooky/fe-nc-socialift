@@ -5,6 +5,9 @@ import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getFirebase } from "../../firebase.js";
 import {collection, getFirestore, getDocs} from "firebase/firestore"
 
+import NavBar from '../NavBar/NavBar.jsx';
+
+
 
 
 const { auth } = getFirebase();
@@ -65,6 +68,7 @@ console.log(workouts, "------workouts state")
 
 
             </ThemeProvider>
+            <NavBar navigation={navigation}/>
         </View>
         
         
