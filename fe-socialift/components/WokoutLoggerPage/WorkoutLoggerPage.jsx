@@ -12,20 +12,11 @@ const { firestore } = getFirebase()
 const { auth } = getFirebase();
 
 
-
-///// OBSOLETE //////////////////////////////////////////////
-const workoutColRef = collection(firestore, "users", "GiYCJgUGDAsQGIq0z5UieZKOHEBF", "workouts")
-//// ////////////////////////////////////////////////////
-
-
-
 export const WorkoutLoggerPage = ({navigation}) => {
 
-    ///HAS TO BE INSIDE FUCNTION
     const loggedInUser = auth.currentUser.uid
+    const loggedInUserPP = auth.currentUser.photoURL
 
-console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
-    
 
 
     const formatData = (workout) => {
@@ -37,16 +28,46 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
                 arr[index].sets[`set${nestedIndex+1}`]={reps:set.reps, weight:set.weight, singleSetNotes:set.singleSetNotes}
             })
         })
-        console.log(arr[0] + 'Formatted data')
         return arr
     }
 
+
+const dataAverage = (workout) => {
+    const workoutAverage = workout.map((exercise)=>{
+        const setPropNames = Object.keys(exercise.sets)
+        const numberOfSets =  Object.keys(exercise.sets).length
+        let sumOfReps = 0
+        for (const i of setPropNames) {
+            sumOfReps+= exercise.sets[i].reps
+        }
+        const averageReps = sumOfReps/numberOfSets
+
+
+        let sumOfWeight = 0
+        for (const i of setPropNames) {
+            sumOfWeight+= exercise.sets[i].weight
+        }
+        const averageWeight = sumOfWeight/numberOfSets
+
+
+        return {
+
+            name: exercise.exercise,
+            sets: numberOfSets,
+            average_reps: averageReps,
+            average_weight: averageWeight,
+            units: 'kg'
+        }
+    })
+
+    return workoutAverage
+}
 
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
-    const [stage, setStage] = useState(4)
+    const [stage, setStage] = useState(1)
     const [muscle, setMuscle] = useState('')
     const [weight, setWeight] = useState('')
     const [reps, setReps ] = useState('')
@@ -56,7 +77,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const [workout, setWorkout] = useState(null)
 
     const [exercisesByMuscle, setExercisesByMuscle] = useState([])
-    const [exercise, setExercise] = useState('Incline Hammer Curls')
+    const [exercise, setExercise] = useState([])
+
+    const[post, setPost] = useState({...workout ,type:"logged-workout"})
 
     //muscle options from ninja api
     const muscleList = ['abdominals', 'abductors', 'adductors', 'biceps' ,'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
@@ -68,9 +91,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const repsRef = useRef()
 
     const postToDb = () => {
-        
-        console.log(workout, 'workoutttttt')
-        console.log("hello from postToDB")
+
         const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
         addDoc(workoutColRefInside, workout).then(() => {
 
@@ -78,11 +99,31 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         })
     }
 
+    const postToPostDb = () => {
+
+        const workoutColRefPost = collection(firestore, "users", loggedInUser, "posts")
+
+            addDoc(workoutColRefPost, workout)
+        .then(() => {
+
+            navigation.navigate("WorkoutLog")
+        })
+
+
+        }
+
+    
+
     const handleLog = () => {
         
         postToDb()
                 
     }
+
+const handlePost = () => {
+
+    postToPostDb()
+}
 
     useEffect(()=>{
         getExercisesByMuscle(muscle).then((exercises)=>{
@@ -169,8 +210,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         />
         <Button
             onPress={() => {
+                handlePost()
             }}
-            title="Post (missing function)"
+            title="Post"
         />
         <Text>hi ur about to log a workout</Text>
         </View>)}
@@ -323,7 +365,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
             onPress={() => {
                 setStage(1)
                 setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
-                setWorkout({date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder])})
+                setWorkout({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder]), exercises: dataAverage(formatData([...fullExerciseHolder, exerciseSetsHolder]))})
                 setExercise('')
                 setWeight('')
                 setReps('')
