@@ -1,5 +1,6 @@
 import { Image, ScrollView, Text, View, Pressable } from "react-native";
 import { homeStyles } from "../HomePage/HomePageStyle";
+import NavBar from "../NavBar/NavBar";
 
 
 export const GroupsBar = ({groups, navigation}) => {
