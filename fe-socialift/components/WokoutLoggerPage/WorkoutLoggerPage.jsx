@@ -1,21 +1,35 @@
 import { View , Text} from 'react-native';
 import { styles, theme } from './WorkoutLoggerPageStyle.js';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getExercisesByMuscle } from '../../api'
 import { doc, setDoc, addDoc, updateDoc, collection} from 'firebase/firestore'
 import { getFirebase } from "../../firebase.js";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { firestore } = getFirebase()
+const { auth } = getFirebase();
 
+
+
+///// OBSOLETE //////////////////////////////////////////////
 const workoutColRef = collection(firestore, "users", "GiYCJgUGDAsQGIq0z5UieZKOHEBF", "workouts")
+//// ////////////////////////////////////////////////////
+
 
 
 export const WorkoutLoggerPage = ({navigation}) => {
+
+    ///HAS TO BE INSIDE FUCNTION
+    const loggedInUser = auth.currentUser.uid
+
+console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     
     const postToDb = () => {
         console.log("hello from postToDB")
-        addDoc(workoutColRef, workout)
+        const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
+        addDoc(workoutColRefInside, workout)
     }
 
     const formatData = (workout) => {
@@ -32,8 +46,9 @@ export const WorkoutLoggerPage = ({navigation}) => {
 
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+    const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
-    const [stage, setStage] = useState(1)
+    const [stage, setStage] = useState(4)
     const [muscle, setMuscle] = useState('')
     const [weight, setWeight] = useState('')
     const [reps, setReps ] = useState('')
@@ -48,7 +63,11 @@ export const WorkoutLoggerPage = ({navigation}) => {
     //muscle options from ninja api
     const muscleList = ['abdominals', 'abductors', 'adductors', 'biceps' ,'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
 
+    const [weightError, setWeightError] = useState('')
+    const [repsError, setRepsError] = useState('')
 
+    const weightRef = useRef()
+    const repsRef = useRef()
 
 
 
@@ -64,11 +83,6 @@ export const WorkoutLoggerPage = ({navigation}) => {
         <View style={styles.mainView}>
         <ThemeProvider theme={theme}>
 
-
-
-
-
-
         { stage ===1 && ( <View style={styles.stageOne}>
         <Button
         onPress={() => {
@@ -76,14 +90,22 @@ export const WorkoutLoggerPage = ({navigation}) => {
         }}
         title="Back"
         />
+
         <Text>Name</Text>
-        <Input
-              value={date}
-              placeholder="Date"
-              onChangeText={(event) => {setDate(event)}}
-              errorMessage={''}
-              autoCorrect={false}
-            />
+        <Text>Date: {date}</Text>
+        <Button
+        onPress={()=>{
+            setShowDatePicker(true)
+        }}
+        title='change date'/>
+        
+        {showDatePicker === true && (<DateTimePicker value={new Date()} onChange={(event, date)=>{
+            setShowDatePicker(false)
+            if (event.type === 'set') {
+                setDate(date.toISOString().slice(0, 10))
+            }
+            }}/>)}
+
         <Input
               value={notes}
               placeholder="Notes"
@@ -125,7 +147,6 @@ export const WorkoutLoggerPage = ({navigation}) => {
         />
         <Button
             onPress={() => {
-                console.log(fullExerciseHolder,'<<<<full ex holder')
                 setWorkout({date:date, notes:notes, workout:formatData(fullExerciseHolder)})
                 console.log(workout, 'workoutttttt')
 
@@ -136,7 +157,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
 
                 postToDb()
             }}
-            title="Log (Needs a function to add to users workout log array)"
+            title="Log"
         />
         <Button
             onPress={() => {
@@ -229,16 +250,24 @@ export const WorkoutLoggerPage = ({navigation}) => {
         <Input
               value={weight}
               placeholder="Weight"
-              onChangeText={(event) => {setWeight(event)}}
-              errorMessage={''}
+              onChangeText={(event) => {
+                setWeight(event)
+                setWeightError('')}}
+              errorMessage={weightError}
               autoCorrect={false}
+              ref={weightRef}
+              leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="black" />}
             />
         <Input
               value={reps}
               placeholder="Reps"
-              onChangeText={(event) => {setReps(event)}}
-              errorMessage={''}
+              onChangeText={(event) => {
+                setReps(event)
+                setRepsError('')}}
+              errorMessage={repsError}
               autoCorrect={false}
+              ref={repsRef}
+              leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="black" />}
             />
         <Input
               value={singleSetNotes}
@@ -249,8 +278,17 @@ export const WorkoutLoggerPage = ({navigation}) => {
             />
         <Button
             onPress={() => {
-                setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
-                console.log(exerciseSetsHolder, 'ex set holder')
+                if((/^\d+$/.test(weight) || weight === '') && (/^\d+$/.test(reps) || reps === '')) {
+                    setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
+                } 
+                if (!/^\d+$/.test(weight) && weight !== '') {
+                    weightRef.current.shake()
+                    setWeightError('Weight must be a number or left blank')
+                } 
+                if (!/^\d+$/.test(reps) && reps!=='') {
+                    repsRef.current.shake()
+                    setRepsError('Reps must be a number or left blank')
+                }
             }}
             title="Add Set"
         />

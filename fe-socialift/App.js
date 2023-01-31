@@ -1,21 +1,22 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LoginPage } from "./components/LoginPage/LoginPage";
-import { EditProfilePage } from "./components/EditProfilePage/EditProfilePage"
-import { ProfilePage } from "./components/ProfilePage/ProfilePage";
-import { GroupPage } from "./components/GroupPage/GroupPage.jsx";
-import { getFirebase } from "./firebase";
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LoginPage } from './components/LoginPage/LoginPage';
+import { EditProfilePage } from './components/EditProfilePage/EditProfilePage';
+import { ProfilePage } from './components/ProfilePage/ProfilePage';
+import { GroupPage } from './components/GroupPage/GroupPage.jsx';
+import { getFirebase } from './firebase';
 
-import { WorkoutLogPage } from "./components/WorkoutLogPage/WorkoutLogPage.jsx"
-import { WorkoutLoggerPage } from "./components/WokoutLoggerPage/WorkoutLoggerPage";
-import { GroupMessagingPage } from "./components/GroupMessagingPage/GroupMessagingPage";
+import { WorkoutLogPage } from './components/WorkoutLogPage/WorkoutLogPage.jsx';
+import { WorkoutLoggerPage } from './components/WokoutLoggerPage/WorkoutLoggerPage';
+import { GroupMessagingPage } from './components/GroupMessagingPage/GroupMessagingPage';
 
-import { HomePage } from "./components/HomePage/HomePage";
+import { HomePage } from './components/HomePage/HomePage';
 import { CreateGroup } from "./components/CreateGroup/CreateGroup";
-
+import { AddFriendsPage } from './components/AddFriendsPage/AddFriendsPage';
 
 const App = () => {
+
 
   const { auth } = getFirebase()
   const loggedInUser = auth.currentUser
