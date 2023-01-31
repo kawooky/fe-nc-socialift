@@ -12,20 +12,11 @@ const { firestore } = getFirebase()
 const { auth } = getFirebase();
 
 
-
-///// OBSOLETE //////////////////////////////////////////////
-const workoutColRef = collection(firestore, "users", "GiYCJgUGDAsQGIq0z5UieZKOHEBF", "workouts")
-//// ////////////////////////////////////////////////////
-
-
-
 export const WorkoutLoggerPage = ({navigation}) => {
 
-    ///HAS TO BE INSIDE FUCNTION
     const loggedInUser = auth.currentUser.uid
+    const loggedInUserPP = auth.currentUser.photoURL
 
-console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
-    
 
 
     const formatData = (workout) => {
@@ -37,16 +28,26 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
                 arr[index].sets[`set${nestedIndex+1}`]={reps:set.reps, weight:set.weight, singleSetNotes:set.singleSetNotes}
             })
         })
-        console.log(arr[0] + 'Formatted data')
         return arr
     }
 
+//////////////////////////////////////////////////   
+/////////////AVERAGE WEIGHT + REPS FORMULA
+///////////// NEEDS TO EXPORT AN ARRAY WITH OBJECTS IN THE FOLLOWING FORMAT
 
+// EXAMPLE [{name: "Bench Press", sets: 3, average_reps: 12, average_weight: 50, units:'kg'},    {name: "Weighted Squat", sets: 5, average_reps: 20, average_weight: 150, units: 'kg'}]
+
+
+    const dataAverage = (workout) => {
+        
+    
+    }
+///////////////////////////////////////////////
 
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
-    const [stage, setStage] = useState(4)
+    const [stage, setStage] = useState(1)
     const [muscle, setMuscle] = useState('')
     const [weight, setWeight] = useState('')
     const [reps, setReps ] = useState('')
@@ -56,7 +57,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const [workout, setWorkout] = useState(null)
 
     const [exercisesByMuscle, setExercisesByMuscle] = useState([])
-    const [exercise, setExercise] = useState('Incline Hammer Curls')
+    const [exercise, setExercise] = useState([])
+
+    const[post, setPost] = useState({...workout ,type:"logged-workout"})
 
     //muscle options from ninja api
     const muscleList = ['abdominals', 'abductors', 'adductors', 'biceps' ,'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
@@ -68,9 +71,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const repsRef = useRef()
 
     const postToDb = () => {
-        
-        console.log(workout, 'workoutttttt')
-        console.log("hello from postToDB")
+
         const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
         addDoc(workoutColRefInside, workout).then(() => {
 
@@ -78,11 +79,24 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         })
     }
 
+    const postToPostDb = () => {
+
+        const workoutColRefPost = collection(firestore, "users", loggedInUser, "posts")
+        addDoc(workoutColRefPost, workout, post)
+
+        navigation.navigate("WorkoutLog")
+    }
+
     const handleLog = () => {
         
         postToDb()
                 
     }
+
+const handlePost = () => {
+
+    postToPostDb()
+}
 
     useEffect(()=>{
         getExercisesByMuscle(muscle).then((exercises)=>{
@@ -169,8 +183,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         />
         <Button
             onPress={() => {
+                handlePost()
             }}
-            title="Post (missing function)"
+            title="Post"
         />
         <Text>hi ur about to log a workout</Text>
         </View>)}
@@ -323,7 +338,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
             onPress={() => {
                 setStage(1)
                 setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
-                setWorkout({date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder])})
+
+            //// ADD FORMATTED AVERAGES IN DIFFERENT NESTED ARRAY
+                setWorkout({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder]), exercises:"insert averages and names"})
                 setExercise('')
                 setWeight('')
                 setReps('')
