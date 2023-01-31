@@ -1,6 +1,6 @@
 import { View , Text, ScrollView, SafeAreaView} from 'react-native';
 import { styles, theme } from './WorkoutLogPageStyle.js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getFirebase } from "../../firebase.js";
 import {collection, getFirestore, getDocs} from "firebase/firestore"
@@ -30,13 +30,18 @@ export const WorkoutLogPage = ({navigation}) => {
             return {...thing.data()}
         })
             
-        console.log(logs, "<<< LOGS")
+       
 
         setWorkouts(logs)
         
     })
 
-console.log(workouts, "------workouts state")
+
+
+useEffect(() => {
+    console.log(workouts, "------workouts state")
+    
+}, [])
 
 
     return (

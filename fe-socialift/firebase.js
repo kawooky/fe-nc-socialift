@@ -19,15 +19,15 @@ function initializeServices() {
 }
 
 function connectToEmulators({ auth, firestore }) {
-  if (Platform.OS === "web") {
-    if (location.hostname === "localhost") {
-      connectFirestoreEmulator(firestore, "localhost", 8080);
-      connectAuthEmulator(auth, "http://localhost:9099");
-    }
-  } else {
-    connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
-    connectAuthEmulator(auth, "http://127.0.0.1:9099");
-  }
+  // if (Platform.OS === "web") {
+  //   if (location.hostname === "localhost") {
+  //     connectFirestoreEmulator(firestore, "localhost", 8080);
+  //     connectAuthEmulator(auth, "http://localhost:9099");
+  //   }
+  // } else {
+  //   connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
+  //   connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  // }
 }
 
 export function getFirebase() {

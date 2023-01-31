@@ -26,20 +26,18 @@ export const WorkoutLoggerPage = ({navigation}) => {
 
 console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     
-    const postToDb = () => {
-        console.log("hello from postToDB")
-        const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
-        addDoc(workoutColRefInside, workout)
-    }
+
 
     const formatData = (workout) => {
         const arr = []
         workout.map((ex,index)=>{
             arr.push({exercise:ex[0].exercise, sets:{}})
+            
             ex.map((set,nestedIndex)=>{
                 arr[index].sets[`set${nestedIndex+1}`]={reps:set.reps, weight:set.weight, singleSetNotes:set.singleSetNotes}
             })
         })
+        console.log(arr[0] + 'Formatted data')
         return arr
     }
 
@@ -55,7 +53,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const [singleSetNotes, setSingleSetNotes ] = useState('')
     const [exerciseSetsHolder, setExerciseSetsHolder] = useState([])
     const [fullExerciseHolder, setFullExerciseHolder] = useState([])
-    const [workout, setWorkout] = useState({date:date, notes:notes, workout:fullExerciseHolder})
+    const [workout, setWorkout] = useState(null)
 
     const [exercisesByMuscle, setExercisesByMuscle] = useState([])
     const [exercise, setExercise] = useState('Incline Hammer Curls')
@@ -69,7 +67,22 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     const weightRef = useRef()
     const repsRef = useRef()
 
+    const postToDb = () => {
+        
+        console.log(workout, 'workoutttttt')
+        console.log("hello from postToDB")
+        const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
+        addDoc(workoutColRefInside, workout).then(() => {
 
+            navigation.navigate("WorkoutLog")
+        })
+    }
+
+    const handleLog = () => {
+        
+        postToDb()
+                
+    }
 
     useEffect(()=>{
         getExercisesByMuscle(muscle).then((exercises)=>{
@@ -109,7 +122,9 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         <Input
               value={notes}
               placeholder="Notes"
-              onChangeText={(event) => {setNotes(event)}}
+              onChangeText={(event) => {
+                setNotes(event)
+                setWorkout((workout) => {return {...workout, notes: event}})}}
               errorMessage={''}
               autoCorrect={false}
             />
@@ -147,15 +162,8 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
         />
         <Button
             onPress={() => {
-                setWorkout({date:date, notes:notes, workout:formatData(fullExerciseHolder)})
-                console.log(workout, 'workoutttttt')
-
-
-                navigation.navigate("WorkoutLog")
-                setFullExerciseHolder([])
+                handleLog()
                 
-
-                postToDb()
             }}
             title="Log"
         />
@@ -315,6 +323,7 @@ console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
             onPress={() => {
                 setStage(1)
                 setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
+                setWorkout({date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder])})
                 setExercise('')
                 setWeight('')
                 setReps('')
