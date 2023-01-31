@@ -38,6 +38,7 @@ export const GroupMessagingPage = ({navigation}) => {
       setMessage('')
     } else {
       setMessageError(()=>{return 'add a message'})
+      messageRef.current.shake()
     }
   }
 
@@ -73,7 +74,7 @@ export const GroupMessagingPage = ({navigation}) => {
               onChangeText={(event) => {
                 setMessageError('')
                 setMessage(event)}}
-              // ref={messageRef}
+              ref={messageRef}
               errorMessage={messageError}
               autoCorrect={false}
             />
