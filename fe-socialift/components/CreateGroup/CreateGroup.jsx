@@ -1,6 +1,12 @@
-import { SafeAreaView, Text, View } from "react-native"
+import { Pressable, SafeAreaView, Text, View } from "react-native"
 import { Button, Input, SearchBar } from "@rneui/themed"
 import { useState } from "react"
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {styles} from './CreateGroupStyles'
+
+import {
+	faUserGroup
+} from '@fortawesome/free-solid-svg-icons';
 
 
 export const CreateGroup = ({navigation}) => {
@@ -24,6 +30,10 @@ export const CreateGroup = ({navigation}) => {
 
 
             <Text>Actual Group Creation Stuff</Text>
+
+            <Pressable>
+                <FontAwesomeIcon icon={faUserGroup} size={48} style={styles.groupImage}/>
+            </Pressable>
 
             <Input 
             value={groupName}
