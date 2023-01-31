@@ -8,15 +8,27 @@ import { getFirebase } from "../../firebase.js";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const { firestore } = getFirebase()
+const { auth } = getFirebase();
 
+
+
+///// OBSOLETE //////////////////////////////////////////////
 const workoutColRef = collection(firestore, "users", "GiYCJgUGDAsQGIq0z5UieZKOHEBF", "workouts")
+//// ////////////////////////////////////////////////////
+
 
 
 export const WorkoutLoggerPage = ({navigation}) => {
+
+    ///HAS TO BE INSIDE FUCNTION
+    const loggedInUser = auth.currentUser.uid
+
+console.log(loggedInUser , "<<<<<<<< CURRENT USER ID")
     
     const postToDb = () => {
         console.log("hello from postToDB")
-        addDoc(workoutColRef, workout)
+        const workoutColRefInside = collection(firestore, "users", loggedInUser, "workouts")
+        addDoc(workoutColRefInside, workout)
     }
 
     const formatData = (workout) => {
@@ -73,6 +85,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
         }}
         title="Back"
         />
+
         <Text>Name</Text>
         <Text>Date: {date}</Text>
         <Button
@@ -129,7 +142,6 @@ export const WorkoutLoggerPage = ({navigation}) => {
         />
         <Button
             onPress={() => {
-                console.log(fullExerciseHolder,'<<<<full ex holder')
                 setWorkout({date:date, notes:notes, workout:formatData(fullExerciseHolder)})
                 console.log(workout, 'workoutttttt')
 
@@ -140,7 +152,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
 
                 postToDb()
             }}
-            title="Log (Needs a function to add to users workout log array)"
+            title="Log"
         />
         <Button
             onPress={() => {
