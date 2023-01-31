@@ -43,7 +43,7 @@ export const EditProfilePage = ({ navigation }) => {
 
         updateDoc(userRef, updateObj);
         updateProfile(user, {
-          photoURL: "uploadedAvatarURL"
+          photoURL: uploadedAvatarURL
         })
       })
       .catch((error) => {

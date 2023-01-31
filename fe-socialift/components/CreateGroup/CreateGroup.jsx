@@ -16,9 +16,14 @@ import {
   query,
   where,
   collectionGroup,
+  addDoc,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import { getFirebase } from "../../firebase";
-import { pickImage } from "../../utils/pick-and-upload-images";
+import { pickImage, uploadImage } from "../../utils/pick-and-upload-images";
+import { ref } from "firebase/storage";
+
 
 export const CreateGroup = ({ navigation }) => {
   const [groupImage, setGroupImage] = useState("");
@@ -26,6 +31,7 @@ export const CreateGroup = ({ navigation }) => {
   const [searchFriends, setSearchFriends] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
+  const [groupId, setGroupId] = useState('')
 
   function updateAvatar() {
     pickImage()
@@ -39,13 +45,42 @@ export const CreateGroup = ({ navigation }) => {
       });
   }
 
-  const { auth } = getFirebase();
+  const { auth, storage } = getFirebase();
   const db = getFirestore();
-  // const loggedInUser = auth.currentUser.uid
-  const loggedInUser = "wCFrOUI00RVNkskYoU51UNbXAew1";
+  const loggedInUser = auth.currentUser.uid
+  
 
   const handleGroupCreate = () => {
-    console.log("creating group...");
+    
+    addDoc(collection(db, 'groups'), {
+      group_name: groupName,
+      group_img_url: 'test',
+      created_at: new Date
+    })
+    .then((newGroup) => {
+      return Promise.all([
+      uploadImage(groupImage, ref(storage, `groups/${newGroup.id}.jpg`))
+      .then((newImgUrl) => {
+        updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl})
+      }),
+      groupMembers.forEach((member) => {
+        addDoc(collection(db, 'groups', newGroup.id, 'members'), {
+          ...member
+        })
+      }),
+      addDoc(collection(db, 'groups', newGroup.id, 'members'), {
+        id: loggedInUser,
+        name: auth.currentUser.displayName,
+        img_url: auth.currentUser.photoURL
+      }
+      ),
+      setGroupId(newGroup.id)])
+      
+      
+    })
+    .then(() => {
+      navigation.navigate("Group", {groupId: groupId})
+    })
   };
 
   const retrieveSearchResults = () => {
@@ -173,7 +208,7 @@ export const CreateGroup = ({ navigation }) => {
           handleGroupCreate();
         }}
         title="Create Group"
-        disabled={false}
+        disabled={(groupName !== '' && groupImage !== '' )? false : true}
       />
     </SafeAreaView>
   );
