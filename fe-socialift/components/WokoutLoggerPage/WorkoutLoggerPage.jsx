@@ -1,11 +1,12 @@
 import { View , Text} from 'react-native';
 import { styles, theme } from './WorkoutLoggerPageStyle.js';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getExercisesByMuscle } from '../../api'
 import { doc, setDoc, addDoc, updateDoc, collection} from 'firebase/firestore'
 import { getFirebase } from "../../firebase.js";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { firestore } = getFirebase()
 
@@ -35,7 +36,7 @@ export const WorkoutLoggerPage = ({navigation}) => {
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [notes, setNotes] = useState('')
-    const [stage, setStage] = useState(1)
+    const [stage, setStage] = useState(4)
     const [muscle, setMuscle] = useState('')
     const [weight, setWeight] = useState('')
     const [reps, setReps ] = useState('')
@@ -50,7 +51,11 @@ export const WorkoutLoggerPage = ({navigation}) => {
     //muscle options from ninja api
     const muscleList = ['abdominals', 'abductors', 'adductors', 'biceps' ,'calves', 'chest', 'forearms', 'glutes', 'hamstrings', 'lats', 'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps']
 
+    const [weightError, setWeightError] = useState('')
+    const [repsError, setRepsError] = useState('')
 
+    const weightRef = useRef()
+    const repsRef = useRef()
 
 
 
@@ -233,16 +238,24 @@ export const WorkoutLoggerPage = ({navigation}) => {
         <Input
               value={weight}
               placeholder="Weight"
-              onChangeText={(event) => {setWeight(event)}}
-              errorMessage={''}
+              onChangeText={(event) => {
+                setWeight(event)
+                setWeightError('')}}
+              errorMessage={weightError}
               autoCorrect={false}
+              ref={weightRef}
+              leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="black" />}
             />
         <Input
               value={reps}
               placeholder="Reps"
-              onChangeText={(event) => {setReps(event)}}
-              errorMessage={''}
+              onChangeText={(event) => {
+                setReps(event)
+                setRepsError('')}}
+              errorMessage={repsError}
               autoCorrect={false}
+              ref={repsRef}
+              leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="black" />}
             />
         <Input
               value={singleSetNotes}
@@ -253,8 +266,17 @@ export const WorkoutLoggerPage = ({navigation}) => {
             />
         <Button
             onPress={() => {
-                setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
-                console.log(exerciseSetsHolder, 'ex set holder')
+                if((/^\d+$/.test(weight) || weight === '') && (/^\d+$/.test(reps) || reps === '')) {
+                    setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
+                } 
+                if (!/^\d+$/.test(weight) && weight !== '') {
+                    weightRef.current.shake()
+                    setWeightError('Weight must be a number or left blank')
+                } 
+                if (!/^\d+$/.test(reps) && reps!=='') {
+                    repsRef.current.shake()
+                    setRepsError('Reps must be a number or left blank')
+                }
             }}
             title="Add Set"
         />
