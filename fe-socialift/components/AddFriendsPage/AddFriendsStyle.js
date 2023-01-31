@@ -14,6 +14,7 @@ const AddFriendsstyles = StyleSheet.create({
 		padding: 5,
 		marginBottom: 5,
 		backgroundColor: '#f2f2f2',
+		borderRadius: 15,
 	},
 	icon: {
 		height: 50,
