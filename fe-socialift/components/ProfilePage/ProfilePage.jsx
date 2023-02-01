@@ -12,20 +12,17 @@ import React, { useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
 import { Avatar, Button, Icon} from '@rneui/themed';
 import NavBar from "../NavBar/NavBar.jsx";
+import { getFirebase } from "../../firebase.js";
 
-
-
-
-const exampleUser = {
-    name : 'youssefkawook',
-    profilePicture: 'https://images.pexels.com/photos/4016173/pexels-photo-4016173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-}
+const { auth } = getFirebase();
 
 
 export const ProfilePage = ({navigation}) => {
-
+    
     const [sectionOfProfile, setSectionOfProfile] = useState('feed')
-
+    
+    const loggedInUserName = auth.currentUser.displayName
+        const loggedInUserPP = auth.currentUser.photoURL
 
     return (
         <View style={styles.mainView }>
@@ -44,11 +41,11 @@ export const ProfilePage = ({navigation}) => {
   placeholderStyle={{}}
   rounded
   size="large"
-  source={{ uri: exampleUser.profilePicture }}
+  source={{ uri: loggedInUserPP }}
   titleStyle={{}}
 />
 <View style={styles.username}>
-            <Text>{exampleUser.name}</Text>
+            <Text>{loggedInUserName}</Text>
             </View>
 </View>
 

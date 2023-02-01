@@ -54,8 +54,6 @@ export const LoginPage = ({ navigation }) => {
         return thing.id;
       });
       setCurrentUsers(usernames);
-      console.log(usernames);
-      console.log(currentUsers);
     });
   }, []);
 
@@ -161,12 +159,10 @@ export const LoginPage = ({ navigation }) => {
           setDoc(doc(db, "usernames", username), {});
           console.log(userCredentials, "<< userCredentials");
           setDoc(doc(db, "users", userCredentials.user.uid), {
-            userDetails: {
               username: username,
               avatarImgURL: "",
               createdAt: serverTimestamp(),
               profileVisible: true,
-            },
           });
         })
         .then(() => {

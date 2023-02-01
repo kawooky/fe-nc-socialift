@@ -12,6 +12,7 @@ import { WorkoutLoggerPage } from './components/WokoutLoggerPage/WorkoutLoggerPa
 import { GroupMessagingPage } from './components/GroupMessagingPage/GroupMessagingPage';
 
 import { HomePage } from './components/HomePage/HomePage';
+import { CreateGroup } from "./components/CreateGroup/CreateGroup";
 import { AddFriendsPage } from './components/AddFriendsPage/AddFriendsPage';
 
 const App = () => {
@@ -26,16 +27,17 @@ const App = () => {
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
 
-          initialRouteName='WorkoutLogger'
-          >
+          initialRouteName={loggedInUser ? "Group" : "Login"}>
           <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="AddFriends" component={AddFriendsPage} />
           <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Profile" component={ProfilePage} />
           <Stack.Screen name="EditProfile" component={EditProfilePage} />
           <Stack.Screen name="Group" component={GroupPage} />
-        <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
-        <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
-        <Stack.Screen name="GroupMessaging" component={GroupMessagingPage} />
+          <Stack.Screen name="CreateGroup" component={CreateGroup}/>
+          <Stack.Screen name="WorkoutLog" component={WorkoutLogPage} />
+          <Stack.Screen name="WorkoutLogger" component={WorkoutLoggerPage} />
+          <Stack.Screen name="GroupMessaging" component={GroupMessagingPage} />
 
         </Stack.Navigator>
       

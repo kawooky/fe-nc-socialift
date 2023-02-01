@@ -1,27 +1,34 @@
 import { View , Text, ScrollView, SafeAreaView} from 'react-native';
 import { styles, theme } from './WorkoutLogPageStyle.js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getFirebase } from "../../firebase.js";
-import {collection, getFirestore, getDocs} from "firebase/firestore"
+import {collection, getFirestore, getDocs, addDoc} from "firebase/firestore"
 
 import NavBar from '../NavBar/NavBar.jsx';
 
 
 
 
-const { auth } = getFirebase();
+const { auth, firestore } = getFirebase();
+
+
+
+
 
 export const WorkoutLogPage = ({navigation}) => {
 
+    // Use States \\
     const [workouts, setWorkouts] = useState([])
+
     
+    // Credentials \\
     const loggedInUser = auth.currentUser.uid
 
+
+    // Data Collection \\
     const db = getFirestore();
       const workoutsColRef = collection(db, "users", loggedInUser, "workouts")
-
-
 
       getDocs(workoutsColRef)
       .then((stuff) => {
@@ -30,13 +37,15 @@ export const WorkoutLogPage = ({navigation}) => {
             return {...thing.data()}
         })
             
-        console.log(logs, "<<< LOGS")
-
         setWorkouts(logs)
         
     })
 
-console.log(workouts, "------workouts state")
+
+useEffect(() => {
+    console.log(workouts, "------workouts state")
+    
+}, [])
 
 
     return (
@@ -50,7 +59,11 @@ console.log(workouts, "------workouts state")
         <View style={styles.formView}> 
         <Text>{workout.date}</Text>
         <Text>{workout.notes}</Text>
-        <Button>Share</Button> 
+        <Button onPress={() => {
+                const workoutColRefPost = collection(firestore, "users", loggedInUser, "posts")
+
+                addDoc(workoutColRefPost, workout)
+            }}>Share</Button> 
         </View>
     )
 })}
