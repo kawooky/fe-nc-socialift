@@ -23,7 +23,6 @@ export const EditProfilePage = ({ navigation }) => {
 
   React.useEffect(() => {
     setPhoto(user.photoURL)
-    
   }, [navigation])
 
   function changeAvatar() {
@@ -76,7 +75,7 @@ export const EditProfilePage = ({ navigation }) => {
         setNewPhoto(null);
         setFileRef(null);
         setIsChanged(false);
-        navigation.navigate("Profile");
+        navigation.navigate("Profile", {userId: user.uid});
       })
       .catch((error) => {
         setNewPhoto(null);
@@ -92,7 +91,7 @@ export const EditProfilePage = ({ navigation }) => {
     setNewPhoto(null);
     setFileRef(null);
     setIsChanged(false);
-    navigation.navigate("Profile");
+    navigation.navigate("Profile", {userId: user.uid});
   }
 
   return (

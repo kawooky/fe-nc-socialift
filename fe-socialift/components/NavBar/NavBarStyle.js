@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-around",
 		backgroundColor: '#151515',
-		width: "100%"
+		width: "100%",
+		alignSelf: "flex-end"
 	},
 	icon: {
 		color: '#ffffff',

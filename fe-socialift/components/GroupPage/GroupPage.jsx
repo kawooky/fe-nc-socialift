@@ -33,6 +33,7 @@ export const GroupPage = ({ route, navigation}) => {
     const [members, setMembers] = useState([])
     const db = getFirestore();
 
+
     const { auth } = getFirebase();
     const loggedInUser = auth.currentUser
     const loggedInUserName = loggedInUser.displayName
