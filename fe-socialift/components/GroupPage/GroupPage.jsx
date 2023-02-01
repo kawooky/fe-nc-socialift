@@ -32,6 +32,12 @@ export const GroupPage = ({ route, navigation}) => {
     const [groupObj, setGroupObj] = useState({})
     const [members, setMembers] = useState([])
     const db = getFirestore();
+    // const [chartLegend, setChartLegend] = useState(['1','1','1'])
+    // const [chartData, setChartData] =useState([[1,1,1],[2,2,2]])
+    // const [chartLabels, setChartLabels] = useState(['2','2','2'])
+    // const chartLegend = ['1','1','1']
+    // const chartData = [[1,1,1],[2,2,2]]
+    // const chartLabels = ['2','2','2']
 
 
     const { auth } = getFirebase();
@@ -72,15 +78,32 @@ console.log(loggedInUser, '<<< logged in user')
 
     //for the bar chart
     // const chartLabels= [...tableTitle]
-    const legend = ['Squat', 'Deadlift', 'Bench Press']
-    const chartData = members.map((member)=>{
-      return [ member.squatMax, member.chestMax, member.deadliftMax ]})
+    // useEffect(()=>{
+      // setChartLegend( ['Squat', 'Deadlift', 'Bench Press'])
+      // setChartData( members.map((member)=>{
+      //   return [ member.squatMax, member.chestMax, member.deadliftMax ]}))
+  
+      // //   console.log(chartLabels, '<<<chart labels')
+      // // console.log(chartData, '<<<chart data')
+  
+      // setChartLabels ( members.map((member)=>{
+      //   return member.username}))
 
-    //   console.log(chartLabels, '<<<chart labels')
-    // console.log(chartData, '<<<chart data')
+    // },[])
 
-    const chartLabels = members.map((member)=>{
-      return member.username})
+      const chartLegend = ['Squat', 'Deadlift', 'Bench Press']
+      const chartData = members.map((member)=>{
+        return [ member.squatMax, member.chestMax, member.deadliftMax ]})
+  
+      //   console.log(chartLabels, '<<<chart labels')
+      // console.log(chartData, '<<<chart data')
+  
+      const chartLabels = members.map((member)=>{
+        return member.username})
+
+
+
+    
 
 
 
@@ -122,16 +145,55 @@ console.log(loggedInUser, '<<< logged in user')
         <Button >Edit Group</Button>
         </View>
 
+
         { graphOrTable === 'graph' && (
+          <View>
           <Button 
           onPress={()=>{
             setGraphOrTable('table')
             console.log(chartLabels, '<<<chart labels')
             console.log(chartData, '<<<chart data')
           }}
-        title='Switch to table'/>
-        )}
+          title='Switch to table'/>
+          <StackedBarChart
+          data={{
+          labels: chartLabels,
+          legend: chartLegend,
+          data: chartData,
+          barColors: ["#0000FF", "#1E90FF", "#00BFFF"]
+          }}
+          width={Dimensions.get("window").width - 50} // from react-native
+          height={220}
+          yAxisLabel={"Kg"}
+          chartConfig={{
+            backgroundColor: "#white",
+            backgroundGradientFrom: "white",
+            backgroundGradientTo: "white",
+          decimalPlaces: 0,
+          color: (opacity = 1) => `black`,
+          labelColor: (opacity = 1) => `black`,
+          style: {
+          borderRadius: 16
+          }
+          }}
+          style={{
+          marginVertical: 0,
+          borderRadius: 16
+          }}
+          /> 
+          </View>
+          )
+          
+          }
+
+
+
+
+
+
+
         { graphOrTable === 'table' && (
+          <View>
           <Button 
           onPress={()=>{
             setGraphOrTable('graph')
@@ -140,9 +202,6 @@ console.log(loggedInUser, '<<< logged in user')
 
           }}
         title='Switch to graph'/>
-        )}
-
-
       <View>
         <Table>
           <Row data={tableHead} flexArr={[1, 1, 1, 1]} />
@@ -153,75 +212,10 @@ console.log(loggedInUser, '<<< logged in user')
         </Table>
       </View> 
 
+    </View>
 
+  )}
 
-
-
-      {/* <StackedBarChart
-  data={chartData}
-  width={340}
-  height={220}
-  strokeWidth={16}
-  radius={20}
-  style={{
-    marginVertical: 8,
-    borderRadius: 16
-  }}
-  hideLegend={false}
-/> */}
-{/* <StackedBarChart
-    data={{
-        labels: chartLabels,
-        legend: legend,
-        data: {chartData},
-        barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"]
-    }}
-    width={Dimensions.get("window").width - 50} // from react-native
-    height={220}
-    yAxisLabel={"Rp"}
-    chartConfig={{
-    backgroundColor: "blue",
-    backgroundGradientFrom: "blue",
-    backgroundGradientTo: "blue",
-    decimalPlaces: 2, // optional, defaults to 2dp
-    color: (opacity = 1) => `white`,
-    labelColor: (opacity = 1) => `white`,
-    style: {
-        borderRadius: 16
-    }
-    }}
-    style={{
-    marginVertical: 8,
-    borderRadius: 16
-    }}
-/> */}
-
-
-
-
-
-
-
-        <View style={styles.graphContainer}>
-            <Text style={{color:'white'}}>Some Graph </Text>
-            <Image
-  source={{uri: 'https://www.tibco.com/sites/tibco/files/media_entity/2022-01/LineChart-01.svg'}}
-  style={{width: 200, height: 200}}
-/>
-        </View>
-        <View style={styles.pbHistory}>
-        <Text style={{color:'white'}}>History</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
-        </View>
 
         <NavBar navigation={navigation}/>
 
