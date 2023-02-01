@@ -23,6 +23,7 @@ export const EditProfilePage = ({ navigation }) => {
 
   React.useEffect(() => {
     setPhoto(user.photoURL)
+    
   }, [navigation])
 
   function changeAvatar() {

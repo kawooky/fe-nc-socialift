@@ -49,12 +49,15 @@ export const LoginPage = ({ navigation }) => {
     });
 
   useEffect(() => {
+    console.log('hi')
     onSnapshot(usernamesColRef, (stuff) => {
       const usernames = stuff.docs.map((thing) => {
         return thing.id;
       });
       setCurrentUsers(usernames);
+      
     });
+    
   }, []);
 
   const { auth } = getFirebase()
@@ -165,6 +168,9 @@ export const LoginPage = ({ navigation }) => {
                 avatarImgURL: "https://firebasestorage.googleapis.com/v0/b/socialift1.appspot.com/o/avatars%2Fuser.png?alt=media&token=06055620-0611-486b-94f4-c98a7534aa67",
                 createdAt: serverTimestamp(),
                 profileVisible: true,
+                squatMax: Math.ceil(Math.random * 80) + 30,
+                chestMax: Math.ceil(Math.random * 80) + 30,
+                deadliftMax: Math.ceil(Math.random * 80) + 30
             })
           ])
         })

@@ -13,7 +13,9 @@ export const HomePage = ({ navigation }) => {
   const [groups, setGroups] = useState([])
 
 
-  const usersGroups = []
+  const usersGroups = [
+    
+  ]
 
   const testGroups = [
     {

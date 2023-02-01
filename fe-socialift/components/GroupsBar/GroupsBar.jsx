@@ -1,9 +1,27 @@
+import { getDocs, collection, getFirestore } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View, Pressable } from "react-native";
 import { homeStyles } from "../HomePage/HomePageStyle";
-import NavBar from "../NavBar/NavBar";
+import { getFirebase } from "../../firebase";
 
 
-export const GroupsBar = ({groups, navigation}) => {
+
+export const GroupsBar = ({navigation}) => {
+
+    const [groups, setGroups] = useState([])
+    const { auth } = getFirebase()
+    const loggedInUser = auth.currentUser
+    const db = getFirestore()
+
+    useEffect(() => {
+      getDocs(collection(db, 'users', loggedInUser.uid, 'groups'))
+      .then((userGroups) => {
+        setGroups(userGroups.docs.map((group) => {
+          return group.data()
+        }))
+      })
+    }, [])
+
     return (<ScrollView
         horizontal={true}
         style={homeStyles.groupBar}

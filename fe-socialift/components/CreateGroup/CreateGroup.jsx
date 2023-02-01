@@ -14,12 +14,10 @@ import {
   getDocs,
   getDoc,
   getFirestore,
-  query,
-  where,
-  collectionGroup,
   addDoc,
   doc,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 import { getFirebase } from "../../firebase";
 import { pickImage, uploadImage } from "../../utils/pick-and-upload-images";
@@ -62,15 +60,24 @@ export const CreateGroup = ({ navigation }) => {
       return Promise.all([
       uploadImage(groupImage, ref(storage, `groups/${newGroup.id}.jpg`))
       .then((newImgUrl) => {
-        updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl})
+        return Promise.all([
+          updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl}),
+          groupMembers.forEach((member) => {
+            setDoc(collection(db, 'users', member.id, 'groups', newGroup.id), {
+              group_id: groupId,
+              group_name: groupName,
+              group_img_url: newImgUrl
+            })
+          }),
+          setDoc(collection(db, 'users', loggedInUser.uid, 'groups'))
+        ])
       }),
       groupMembers.forEach((member) => {
-        addDoc(collection(db, 'groups', newGroup.id, 'members'), {
+        setDoc(collection(db, 'groups', newGroup.id, 'members', member.id), {
           ...member
         })
-        
       }),
-      addDoc(collection(db, 'groups', newGroup.id, 'members'), loggedInUserObject),
+      setDoc(collection(db, 'groups', newGroup.id, 'members', loggedInUser.uid), loggedInUserObject),
       setGroupId(newGroup.id)])
     })
     .then(() => {

@@ -21,31 +21,31 @@ function initializeServices() {
 }
 
 function connectToEmulators({ auth, firestore, functions, storage }) {
-  // if (Platform.OS === "web") {
-  //   if (location.hostname === "localhost") {
-  //     connectFirestoreEmulator(firestore, "localhost", 8080);
-  //     connectAuthEmulator(auth, "http://localhost:9099");
-  //     connectFunctionsEmulator(functions, "localhost", 5001);
-  //     connectStorageEmulator(storage, "localhost", 9199);
-  //   }
-  // } else if (Platform.OS === "ios") {
-  //   connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
-  //   connectAuthEmulator(auth, "http://127.0.0.1:9099");
-  //   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
-  //   connectStorageEmulator(storage, "127.0.0.1", 9199);
-  // } else if (Platform.OS === "android") {
-  //   connectFirestoreEmulator(firestore, "10.0.2.2", 8080);
-  //   connectAuthEmulator(auth, "10.0.2.2:9099");
-  //   connectFunctionsEmulator(functions, "10.0.2.2", 5001);
-  //   connectStorageEmulator(storage, "10.0.2.2", 9199);
-  // }
+  if (Platform.OS === "web") {
+    if (location.hostname === "localhost") {
+      connectFirestoreEmulator(firestore, "localhost", 8080);
+      connectAuthEmulator(auth, "http://localhost:9099");
+      connectFunctionsEmulator(functions, "localhost", 5001);
+      connectStorageEmulator(storage, "localhost", 9199);
+    }
+  } else if (Platform.OS === "ios") {
+    connectFirestoreEmulator(firestore, "127.0.0.1", 8080);
+    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+    connectStorageEmulator(storage, "127.0.0.1", 9199);
+  } else if (Platform.OS === "android") {
+    connectFirestoreEmulator(firestore, "10.0.2.2", 8080);
+    connectAuthEmulator(auth, "10.0.2.2:9099");
+    connectFunctionsEmulator(functions, "10.0.2.2", 5001);
+    connectStorageEmulator(storage, "10.0.2.2", 9199);
+  }
 }
 
 export function getFirebase() {
   const services = initializeServices();
   if (!services.isConfigured) {
     // Uncomment the following line to use Firebase Emulator:
-    // connectToEmulators(services);
+    connectToEmulators(services);
   }
   return services;
 }
