@@ -38,6 +38,13 @@ mainView: {
 
    username: {
     fontSize: 20,
+   },
+   profilePic: {
+    height: 75,
+        width: 75,
+        borderColor: "black",
+        borderWidth: 2,
+        borderRadius: 100
    }
 });
 

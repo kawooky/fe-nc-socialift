@@ -12,11 +12,7 @@ import { Button } from '@rneui/themed';
 export const HomePage = ({ navigation }) => {
   const { auth } = getFirebase();
   const [groups, setGroups] = useState([])
-
-
-  const usersGroups = [
-    
-  ]
+  const loggedInUser = auth.currentUser
 
   const testGroups = [
     {
@@ -124,9 +120,6 @@ export const HomePage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.mainView}>
-      <Button onPress={()=>{
-        navigation.navigate('Group', {groupId:'8QSR2sRGUff35YuzLHM9'})
-      }}/>
       <GroupsBar groups={testGroups} navigation={navigation}/>
       <Feed posts={posts}/>
       <NavBar navigation={navigation}/>
