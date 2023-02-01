@@ -13,8 +13,9 @@ import { styles } from "./ProfilePageStyle.js";
 import { Avatar, Button, Icon} from '@rneui/themed';
 import NavBar from "../NavBar/NavBar.jsx";
 import { getFirebase } from "../../firebase.js";
-import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 import { Feed } from "../Feed/Feed.jsx";
+import { Loading } from "../Loading/Loading.jsx";
 
 
 export const ProfilePage = ({route, navigation}) => {
@@ -31,6 +32,7 @@ export const ProfilePage = ({route, navigation}) => {
     const [username, setUsername] = useState('')
     const [profilePic, setProfilePic] = useState('')    
     const [loggedInUserProfile, setLoggedInUserProfile] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const loggedInUserId = auth.currentUser.uid
     
@@ -38,35 +40,39 @@ export const ProfilePage = ({route, navigation}) => {
     
     
 
-    const feedRef = collection(db, "users", loggedInUserId, "posts")
+    const feedRef = collection(db, "users", userId, "posts")
 
     useEffect(() => {
-        getDoc(doc(db, 'users', userId)).then((userDoc) =>{
-            const user = userDoc.data()
-            setUser(user)
-            setUsername(user.username)
-            setProfilePic(user.avatarImgURL)
-        })
-        getDocs(feedRef).then((posts) => {
-            setPosts(posts.docs.map((post) => {
-                return post.data()
-            }))
-        })
+        setLoading(true)
         if (loggedInUserId === userId) {
             setLoggedInUserProfile(true)
         }
-        console.log(posts, "<<< posts")
-    }, [])
+        Promise.all([
+            getDoc(doc(db, 'users', userId)).then((userDoc) =>{
+                const user = userDoc.data()
+                setUser(user)
+                setUsername(user.username)
+                setProfilePic(user.avatarImgURL)
+            }),
+            getDocs(feedRef).then((posts) => {
+                setPosts(posts.docs.map((post) => {
+                    return post.data()
+                }))
+            })
+        ]).then(() => {
+            setLoading(false)
+        })
+    }, [userId])
 
 
 	const handleAddUser = (userToAdd) => {
-		
-		
 		setDoc(doc(db, 'users', loggedInUserId, 'friends', userToAdd.id), userToAdd)
 		setDoc(doc(db, 'users', userToAdd.id, 'friends', loggedInUserId), user)
 	}
   
-    
+    if (loading) {
+        return <Loading></Loading>
+    }
 
     return (
         <View style={styles.mainView }>

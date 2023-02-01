@@ -75,7 +75,7 @@ export const EditProfilePage = ({ navigation }) => {
         setNewPhoto(null);
         setFileRef(null);
         setIsChanged(false);
-        navigation.navigate("Profile");
+        navigation.navigate("Profile", {userId: user.uid});
       })
       .catch((error) => {
         setNewPhoto(null);
