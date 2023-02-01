@@ -22,15 +22,42 @@ import {
 import { getFirebase } from "../../firebase";
 import { pickImage, uploadImage } from "../../utils/pick-and-upload-images";
 import { ref } from "firebase/storage";
+import { Loading } from "../Loading/Loading";
 
 
-export const CreateGroup = ({ navigation }) => {
+export const CreateGroup = ({ route, navigation }) => {
   const [groupImage, setGroupImage] = useState("");
   const [groupName, setGroupName] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
   const [groupId, setGroupId] = useState('')
   const [loggedInUserObject, setLoggedInUserObject] = useState({})
+  const [loading, setLoading] = useState(true)
+ 
+  const groupIdEdit = route.params.groupId
+
+  console.log(groupIdEdit)
+
+  useEffect(() => {
+    if (groupIdEdit) {
+      setLoading(true)
+      Promise.all([
+        getDocs(collection(db, 'groups', groupIdEdit, 'members'))
+        .then((memberDocs) => {
+          setGroupMembers(memberDocs.docs.map((member) => {
+            return member.data()
+          }))
+        }),
+        getDoc(doc(db, 'groups', groupIdEdit)).then((groupDoc) => {
+          
+          setGroupImage(groupDoc.data().group_img_url)
+          setGroupName(groupDoc.data().group_name)
+        })
+      ]).then(() => {
+        setLoading(false)
+      })
+    }
+  }, [])
 
   function updateAvatar() {
     pickImage()
@@ -50,46 +77,58 @@ export const CreateGroup = ({ navigation }) => {
   
 
   const handleGroupCreate = () => {
-    
-    addDoc(collection(db, 'groups'), {
-      group_name: groupName,
-      group_img_url: 'test',
-      created_at: new Date
-    })
-    .then((newGroup) => {
+    if (!groupIdEdit) {
+      addDoc(collection(db, 'groups'), {
+        group_name: groupName,
+        group_img_url: 'test',
+        created_at: new Date
+      })
+      .then((newGroup) => {
+        return Promise.all([
+        uploadImage(groupImage, ref(storage, `groups/${newGroup.id}.jpg`))
+        .then((newImgUrl) => {
+          Promise.all([
+            updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl}),
+            groupMembers.forEach((member) => {
+              setDoc(doc(db, 'users', member.id, 'groups', newGroup.id), {
+                group_id: newGroup.id,
+                group_name: groupName,
+                group_img_url: newImgUrl
+              })
+            }),
+            setDoc(doc(db, 'users', loggedInUser.uid, 'groups', newGroup.id), {
+                group_id: newGroup.id,
+                group_name: groupName,
+                group_img_url: newImgUrl
+            }),
+            setGroupId(newGroup.id)
+          ])
+        }),
+        groupMembers.forEach((member) => {
+          setDoc(doc(db, 'groups', newGroup.id, 'members', member.id), {
+            ...member
+          })
+        }),
+        setDoc(doc(db, 'groups', newGroup.id, 'members', loggedInUser.uid), {...loggedInUserObject})
+      ]).then(() => {
+        return newGroup.id
+      })
+      })
+      .then((newGroupId) => {
+        navigation.navigate("Group", {groupId: newGroupId})
+      })
+    } else {
+      console.log(groupImage)
       return Promise.all([
-      uploadImage(groupImage, ref(storage, `groups/${newGroup.id}.jpg`))
-      .then((newImgUrl) => {
-        Promise.all([
-          updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl}),
-          groupMembers.forEach((member) => {
-            setDoc(doc(db, 'users', member.id, 'groups', newGroup.id), {
-              group_id: newGroup.id,
-              group_name: groupName,
-              group_img_url: newImgUrl
-            })
-          }),
-          setDoc(doc(db, 'users', loggedInUser.uid, 'groups', newGroup.id), {
-              group_id: newGroup.id,
-              group_name: groupName,
-              group_img_url: newImgUrl
-          }),
-          setGroupId(newGroup.id)
-        ])
-      }),
-      groupMembers.forEach((member) => {
-        setDoc(doc(db, 'groups', newGroup.id, 'members', member.id), {
-          ...member
-        })
-      }),
-      setDoc(doc(db, 'groups', newGroup.id, 'members', loggedInUser.uid), {...loggedInUserObject})
-    ]).then(() => {
-      return newGroup.id
-    })
-    })
-    .then((newGroupId) => {
-      navigation.navigate("Group", {groupId: newGroupId})
-    })
+
+        uploadImage(groupImage, ref(storage, `groups/${groupIdEdit}.jpg`)),
+        updateDoc(doc(db, 'groups', groupIdEdit), {group_name: groupName})
+      ])
+      .then(() => {
+        navigation.navigate("Group", {groupId: groupIdEdit})
+      })
+
+    }
   };
 
   const retrieveSearchResults = () => {
@@ -129,6 +168,10 @@ export const CreateGroup = ({ navigation }) => {
 			setLoggedInUserObject({...user.data()})
 		})
   }, []);
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <SafeAreaView style={styles.createGroupContainer}>
@@ -220,7 +263,7 @@ export const CreateGroup = ({ navigation }) => {
         onPress={() => {
           handleGroupCreate();
         }}
-        title="Create Group"
+        title={groupIdEdit ? "Save Group": "Create Group"}
         disabled={(groupName !== '' && groupImage !== '' )? false : true}
       />
     </SafeAreaView>
