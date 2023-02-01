@@ -6,9 +6,13 @@ import {
     Alert,
     TextInput,
     Image,
-    Picker
+    Picker,
+    Dimensions
   } from "react-native";
+  import { MaterialCommunityIcons } from '@expo/vector-icons';
+  import {BarChart, PieChart, StackedBarChart} from "react-native-chart-kit";
   import { styles } from "./GroupPageStyle.js";
+  import NavBar from "../NavBar/NavBar";
   import { Avatar, Button } from '@rneui/themed';
   import React, { useEffect, useState } from 'react';
   import { getFirebase } from "../../firebase.js";
@@ -20,6 +24,9 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 
 
 export const GroupPage = ({ route, navigation}) => {
+  const {groupId} = route.params
+  console.log(groupId, '<groupid')
+
     const [exercise, setExercise] = useState('');
     const [graphOrTable, setGraphOrTable] = useState('table')
     const [groupObj, setGroupObj] = useState({})
@@ -28,13 +35,11 @@ export const GroupPage = ({ route, navigation}) => {
 
 
     const { auth } = getFirebase();
-const loggedInUser = auth.currentUser
-const loggedInUserName = loggedInUser.displayName
-console.log(loggedInUser, '<<< logged in user')
+    const loggedInUser = auth.currentUser
+    const loggedInUserName = loggedInUser.displayName
+    console.log(loggedInUser, '<<< logged in user')
 
-    const {groupId} = route.params
-    console.log(groupId, '<<< params')
-  // console.log(groupId)
+
     useEffect(()=>{
       getDoc(doc(db, 'groups', groupId))
       .then((group)=>{
@@ -48,22 +53,35 @@ console.log(loggedInUser, '<<< logged in user')
         }))
       })
 
+      const { auth } = getFirebase();
+const loggedInUser = auth.currentUser
+const loggedInUserName = loggedInUser.displayName
+console.log(loggedInUser, '<<< logged in user')
+
     }, [])
 
-
+    //for the table
     const tableHead = ['Members', 'Squat', 'Deadlift', 'Bench Press', 'Total'];
     const tableTitle = members.map((member)=>{
       return member.username})
-    const tableDta = [
-      ['qw', 'we', 'r'],
-      ['qw', 'wq', 'w'],
-    ];
+
     const tableData = members.map((member)=>{
-      return [member.SquatMax, member.ChestMax, member.DeadliftMax, member.SquatMax+ member.ChestMax+ member.DeadliftMax ]
+      return [member.squatMax, member.chestMax, member.deadliftMax, member.squatMax+ member.chestMax+ member.deadliftMax ]
     })
 
 
-  
+    //for the bar chart
+    // const chartLabels= [...tableTitle]
+    const legend = ['Squat', 'Deadlift', 'Bench Press']
+    const chartData = members.map((member)=>{
+      return [ member.squatMax, member.chestMax, member.deadliftMax ]})
+
+    //   console.log(chartLabels, '<<<chart labels')
+    // console.log(chartData, '<<<chart data')
+
+    const chartLabels = members.map((member)=>{
+      return member.username})
+
 
 
 
@@ -87,7 +105,7 @@ console.log(loggedInUser, '<<< logged in user')
 
           <Button
           onPress={()=>{
-            navigation.navigate('GroupMessaging', {groupId, groupName: groupObj.group_name})
+            navigation.navigate('GroupMessaging', {groupId, groupName: groupObj.group_name , loggedInUserName})
           }}
           title='Message'/>
         <View style={styles.membersContainer}>
@@ -100,13 +118,16 @@ console.log(loggedInUser, '<<< logged in user')
                     sx={{ width: 35, height: 35 }}
                   />)
                 })}
-        <Button >Add to Group</Button>
+          
+        <Button >Edit Group</Button>
         </View>
 
         { graphOrTable === 'graph' && (
           <Button 
           onPress={()=>{
             setGraphOrTable('table')
+            console.log(chartLabels, '<<<chart labels')
+            console.log(chartData, '<<<chart data')
           }}
         title='Switch to table'/>
         )}
@@ -115,6 +136,8 @@ console.log(loggedInUser, '<<< logged in user')
           onPress={()=>{
             setGraphOrTable('graph')
             console.log(loggedInUser, '<<<logged in user')
+            console.log(loggedInUserName, '<<<name')
+
           }}
         title='Switch to graph'/>
         )}
@@ -130,6 +153,48 @@ console.log(loggedInUser, '<<< logged in user')
         </Table>
       </View> 
 
+
+
+
+
+      {/* <StackedBarChart
+  data={chartData}
+  width={340}
+  height={220}
+  strokeWidth={16}
+  radius={20}
+  style={{
+    marginVertical: 8,
+    borderRadius: 16
+  }}
+  hideLegend={false}
+/> */}
+{/* <StackedBarChart
+    data={{
+        labels: chartLabels,
+        legend: legend,
+        data: {chartData},
+        barColors: ["#dfe4ea", "#ced6e0", "#a4b0be"]
+    }}
+    width={Dimensions.get("window").width - 50} // from react-native
+    height={220}
+    yAxisLabel={"Rp"}
+    chartConfig={{
+    backgroundColor: "blue",
+    backgroundGradientFrom: "blue",
+    backgroundGradientTo: "blue",
+    decimalPlaces: 2, // optional, defaults to 2dp
+    color: (opacity = 1) => `white`,
+    labelColor: (opacity = 1) => `white`,
+    style: {
+        borderRadius: 16
+    }
+    }}
+    style={{
+    marginVertical: 8,
+    borderRadius: 16
+    }}
+/> */}
 
 
 
@@ -158,6 +223,7 @@ console.log(loggedInUser, '<<< logged in user')
         <Text style={{color:'white'}}>Name, Date, Exercise,Weight</Text>
         </View>
 
+        <NavBar navigation={navigation}/>
 
         </View>
     )

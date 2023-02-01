@@ -64,13 +64,13 @@ export const CreateGroup = ({ navigation }) => {
           updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl}),
           groupMembers.forEach((member) => {
             setDoc(doc(db, 'users', member.id, 'groups', newGroup.id), {
-              group_id: groupId,
+              group_id: newGroup.id,
               group_name: groupName,
               group_img_url: newImgUrl
             })
           }),
           setDoc(doc(db, 'users', loggedInUser.uid, 'groups', newGroup.id), {
-            group_id: groupId,
+              group_id: newGroup.id,
               group_name: groupName,
               group_img_url: newImgUrl
           }),
@@ -81,7 +81,8 @@ export const CreateGroup = ({ navigation }) => {
         setDoc(doc(db, 'groups', newGroup.id, 'members', member.id), {
           ...member
         })
-      })
+      }),
+      setDoc(doc(db, 'groups', newGroup.id, 'members', loggedInUser.uid), {...loggedInUserObject})
     ]).then(() => {
       return newGroup.id
     })

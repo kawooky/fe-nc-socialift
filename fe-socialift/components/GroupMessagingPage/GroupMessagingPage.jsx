@@ -9,12 +9,11 @@ const socket = io.connect("http://localhost:3001");
 
 
 export const GroupMessagingPage = ({route, navigation}) => {
-  const {groupId, groupName} = route.params
+  const {groupId, groupName, loggedInUserName} = route.params
 
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] =useState([])
     const [group, setGroup] = useState(groupId)
-    const [name, setName] =useState('')
     const [messageError, setMessageError] = useState('')
     
 
@@ -37,8 +36,8 @@ export const GroupMessagingPage = ({route, navigation}) => {
   const sendMessage = () => {
     if(message !==''){
       const timeSent = new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes()
-      socket.emit("send_message", {name: name, room: group, time: timeSent, message: message})
-      setMessageList([...messageList, {sender:'You', message:message, time: timeSent}])
+      socket.emit("send_message", {name: loggedInUserName, room: group, time: timeSent, message: message})
+      setMessageList([...messageList, {sender:loggedInUserName, message:message, time: timeSent}])
       setMessage('')
     } else {
       setMessageError(()=>{return 'add a message'})
@@ -48,7 +47,7 @@ export const GroupMessagingPage = ({route, navigation}) => {
 
   useEffect(() => {
       socket.on("receive_message", (data)=>{ 
-        setMessageList((messageList)=>[...messageList, {sender:'somebody else', message:data.message}])
+        setMessageList((messageList)=>[...messageList, {sender:data.name, message:data.message}])
     })
   }, [socket])
   
@@ -57,14 +56,6 @@ export const GroupMessagingPage = ({route, navigation}) => {
   return (
     <View style={styles.mainView}>
         <Text>{groupName}</Text>
-        <Input
-              value={name}
-              placeholder="name"
-              onChangeText={(event) => {
-                setName(event)}}
-              errorMessage={''}
-              autoCorrect={false}
-        />
         <Input
               value={message}
               placeholder="send message"
@@ -84,7 +75,7 @@ export const GroupMessagingPage = ({route, navigation}) => {
         
 
         {messageList.map((singleMessage, index)=>{
-          if (singleMessage.sender === 'You') {
+          if (singleMessage.sender === 'loggedInUserName') {
             return (<Text style={styles.sentMessage} key={index}>{`Sender:${singleMessage.sender} Message: ${singleMessage.message}`}</Text>)
           } else {
             return (<Text style={styles.receivedMessage} key={index}>{`Sender:${singleMessage.sender} Message: ${singleMessage.message}`}</Text>)
