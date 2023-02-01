@@ -208,7 +208,7 @@ export const LoginPage = ({ navigation }) => {
                   : " "
               }
               autoCorrect={false}
-              autoCapitalize={false}
+              autoCapitalize='none'
               ref={usernameRef}
             />
           )}
@@ -222,7 +222,7 @@ export const LoginPage = ({ navigation }) => {
               }}
               errorMessage={emailErrorMessage}
               autoCorrect={false}
-              autoCapitalize={false}
+              autoCapitalize='none'
               ref={emailRef}
             />
           )}
@@ -238,7 +238,7 @@ export const LoginPage = ({ navigation }) => {
                 passwordError ? "Password must be at least 8 characters" : " "
               }
               autoCorrect={false}
-              autoCapitalize={false}
+              autoCapitalize='none'
               secureTextEntry={true}
               ref={passRef}
             />
@@ -254,7 +254,7 @@ export const LoginPage = ({ navigation }) => {
               errorMessage={confirmError ? "Passwords must match" : " "}
               autoCorrect={false}
               secureTextEntry={true}
-              autoCapitalize={false}
+              autoCapitalize='none'
               ref={confirmRef}
             />
           )}
