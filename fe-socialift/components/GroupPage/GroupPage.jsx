@@ -8,85 +8,131 @@ import {
     Image,
     Picker
   } from "react-native";
-import * as React from 'react';
-import { styles } from "./GroupPageStyle.js";
-import { Avatar, Button } from '@rneui/themed';
+  import { styles } from "./GroupPageStyle.js";
+  import { Avatar, Button } from '@rneui/themed';
+  import React, { useEffect, useState } from 'react';
+  import { getFirebase } from "../../firebase.js";
+import {collection, getFirestore, getDocs, getDoc, addDoc, doc} from "firebase/firestore"
+import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
-const exampleGroup = {
-    groupName: 'Legend Lifterz',
-    members: [
-{
-    name : 'Youssef Kawook',
-    profilePicture: 'https://images.pexels.com/photos/4016173/pexels-photo-4016173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-},
-{
-    name : 'Tomasz Krupa',
-    profilePicture: 'https://images.pexels.com/photos/1722198/pexels-photo-1722198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-}
-]
-}
-//D-D-C = sum of squat deadlift and chestpress
-const exampleExercises = ['S-D-C', 'Deadlift', 'Squat', 'Chest Press' ]
+const db = getFirestore();
+// const { auth } = getFirebase();
+// const loggedInUser = auth.currentUser
+// const loggedInUserName = loggedInUser.displayName
+// console.log(loggedInUser, '<<< logged in user')
 
 
+export const GroupPage = ({ route, navigation}) => {
+    const [exercise, setExercise] = useState('');
+    const [graphOrTable, setGraphOrTable] = useState('table')
+    const [groupObj, setGroupObj] = useState({})
+    const [members, setMembers] = useState([])
+
+    const {groupId} = route.params
+    console.log(groupId, '<<< params')
+  // console.log(groupId)
+    useEffect(()=>{
+      getDoc(doc(db, 'groups', groupId))
+      .then((group)=>{
+        setGroupObj(group.data())
+      })
+      getDocs(collection(db, 'groups', groupId, 'members'))
+      .then((members)=>{
+        console.log(members.docs[0].data())
+        setMembers(members.docs.map((member)=>{
+          return member.data()
+        }))
+      })
+
+    }, [])
+
+
+    const tableHead = ['Members', 'Squat', 'Deadlift', 'Bench Press', 'Total'];
+    const tableTitle = members.map((member)=>{
+      return member.username})
+    const tableDta = [
+      ['qw', 'we', 'r'],
+      ['qw', 'wq', 'w'],
+    ];
+    const tableData = members.map((member)=>{
+      return [member.SquatMax, member.ChestMax, member.DeadliftMax, member.SquatMax+ member.ChestMax+ member.DeadliftMax ]
+    })
+
+
+  
 
 
 
 
-export const GroupPage = () => {
-    const [exercise, setExercise] = React.useState('');
+
 
 
 
     return (
 
-        <View style={styles.view }>
+        <View style={styles.mainVeiw }>
 
 
-            <Text style={styles.groupName}>{exampleGroup.groupName}</Text>
-
-        <View style={styles.membersContainer}>
-                {exampleGroup.members.map((member)=>{
-                    return (<Avatar
-                    alt={member.name}
+            <Text>{groupObj.group_name}</Text>
+          <Avatar
+                    alt='group picture'
                     rounded
-                    key={member.name}
-                    source={member.profilePicture}
+                    source={groupObj.group_img_url}
+                    sx={{ width: 100, height: 100 }}
+                  />
+
+          <Button
+          onPress={()=>{
+            navigation.navigate('GroupMessaging', {groupId, groupName: groupObj.group_name})
+          }}
+          title='Message'/>
+        <View style={styles.membersContainer}>
+                {members.map((member)=>{
+                    return (<Avatar
+                    alt={member.username}
+                    rounded
+                    key={member.username}
+                    source={member.avatarImgURL}
                     sx={{ width: 35, height: 35 }}
                   />)
                 })}
-        <Button size="sm" style={styles.addToGroupButton}>Add to Group</Button>
+        <Button >Add to Group</Button>
         </View>
 
+        { graphOrTable === 'graph' && (
+          <Button 
+          onPress={()=>{
+            setGraphOrTable('table')
+          }}
+        title='Switch to table'/>
+        )}
+        { graphOrTable === 'table' && (
+          <Button 
+          onPress={()=>{
+            setGraphOrTable('graph')
+            console.log(loggedInUser, '<<<logged in user')
+          }}
+        title='Switch to graph'/>
+        )}
 
-        <View style={styles.exerciseDropdownContainer}>
-        {/* <FormControl size="small" style={styles.exerciseDropDown} sx={{ m:1}}>
-        <InputLabel style={styles.exerciseDropDown}>Exercise</InputLabel>
 
-        <Select
-        style={styles.exerciseDropDown}
-          value={exercise}
-          onChange={(event)=>{
-            setExercise(event.target.value)
-}}
-          autoWidth
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-            {exampleExercises.map((exercise)=>{
-                return (<MenuItem  key ={exercise} value={exercise}>{exercise}</MenuItem>)
-            })}
+      <View>
+        <Table>
+          <Row data={tableHead} flexArr={[1, 1, 1, 1]} />
+          <TableWrapper style={{flexDirection: 'row'}}>
+            <Col data={tableTitle} />
+            <Rows data={tableData} flexArr={[1, 1, 1]} />
+          </TableWrapper>
+        </Table>
+      </View> 
 
-        </Select>
 
-        <Picker>
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-            <Picker.Item label="Python" value="python" />
-        </Picker>
-      </FormControl>  */}
-        </View >
+
+
+
+
+
+
         <View style={styles.graphContainer}>
             <Text style={{color:'white'}}>Some Graph </Text>
             <Image

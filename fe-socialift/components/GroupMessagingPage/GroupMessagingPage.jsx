@@ -8,24 +8,28 @@ const socket = io.connect("http://localhost:3001");
 
 
 
-export const GroupMessagingPage = ({navigation}) => {
+export const GroupMessagingPage = ({route, navigation}) => {
+  const {groupId, groupName} = route.params
+
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] =useState([])
-    const [group, setGroup] = useState("")
+    const [group, setGroup] = useState(groupId)
     const [name, setName] =useState('')
     const [messageError, setMessageError] = useState('')
+    
+
 
 
     const messageRef = useRef()
 
 
     // new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes()
-    useEffect(() => {
-      socket.emit('room', group)
-      setMessageList([])
-    }, [group])
+    // useEffect(() => {
+    //   socket.emit('room', group)
+    //   setMessageList([])
+    // }, [group])
 
-    //socket.emit('room', group)
+    socket.emit('room', group)
 
 
     
@@ -52,14 +56,7 @@ export const GroupMessagingPage = ({navigation}) => {
 
   return (
     <View style={styles.mainView}>
-        <Input
-              value={group}
-              placeholder="group"
-              onChangeText={(event) => {
-                setGroup(event)}}
-              errorMessage={''}
-              autoCorrect={false}
-        />
+        <Text>{groupName}</Text>
         <Input
               value={name}
               placeholder="name"
