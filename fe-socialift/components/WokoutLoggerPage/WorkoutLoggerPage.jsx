@@ -13,11 +13,15 @@ const { auth } = getFirebase();
 
 
 export const WorkoutLoggerPage = ({navigation}) => {
+    
 
     const loggedInUser = auth.currentUser.uid
     const loggedInUserPP = auth.currentUser.photoURL
+    const loggedInUserName = auth.currentUser.displayName
 
+    console.log(loggedInUserName, "<<<Logged in User name")
 
+       
 
     const formatData = (workout) => {
         const arr = []
@@ -365,7 +369,7 @@ const handlePost = () => {
             onPress={() => {
                 setStage(1)
                 setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
-                setWorkout({type:"logged-workout", user:loggedInUser, user_img_url:loggedInUserPP, date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder]), exercises: dataAverage(formatData([...fullExerciseHolder, exerciseSetsHolder]))})
+                setWorkout({type:"logged-workout", user:loggedInUserName, user_img_url:loggedInUserPP, date:date, notes:notes, workout:formatData([...fullExerciseHolder, exerciseSetsHolder]), exercises: dataAverage(formatData([...fullExerciseHolder, exerciseSetsHolder])), comments: 0, likes: 0})
                 setExercise('')
                 setWeight('')
                 setReps('')
