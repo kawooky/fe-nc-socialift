@@ -109,7 +109,7 @@ export const LoginPage = ({ navigation }) => {
     if (email && password) {
       setDisableButtons(true);
       console.log('Signing in')
-      signInWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(auth, email.trim(), password)
         .then(() => {
           navigation.navigate("Home");
         })

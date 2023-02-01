@@ -10,7 +10,7 @@ import {
   } from "react-native";
 import React, { useEffect, useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
-import { Avatar, Button, Icon} from '@rneui/themed';
+import { Avatar, Icon, Button, ButtonGroup} from '@rneui/themed';
 import NavBar from "../NavBar/NavBar.jsx";
 import { getFirebase } from "../../firebase.js";
 import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
@@ -26,7 +26,7 @@ export const ProfilePage = ({route, navigation}) => {
        
     const db = getFirestore();
 
-    const [sectionOfProfile, setSectionOfProfile] = useState('feed')
+    const [sectionOfProfile, setSectionOfProfile] = useState(0)
     const [posts, setPosts] = useState([])
     const [user, setUser] = useState({})
     const [username, setUsername] = useState('')
@@ -43,13 +43,14 @@ export const ProfilePage = ({route, navigation}) => {
     const feedRef = collection(db, "users", userId, "posts")
 
     useEffect(() => {
+        setLoggedInUserProfile(false)
         setLoading(true)
         if (loggedInUserId === userId) {
             setLoggedInUserProfile(true)
         }
         Promise.all([
             getDoc(doc(db, 'users', userId)).then((userDoc) =>{
-                const user = userDoc.data()
+                const user = {...userDoc.data(), id: userDoc.id}
                 setUser(user)
                 setUsername(user.username)
                 setProfilePic(user.avatarImgURL)
@@ -71,67 +72,50 @@ export const ProfilePage = ({route, navigation}) => {
 	}
   
     if (loading) {
-        return <Loading></Loading>
+        return <Loading />
     }
 
     return (
-        <View style={styles.mainView }>
+        <SafeAreaView style={styles.mainView }>
             <View style={styles.formView}>
-                <View style={styles.avatar}>
+            <View style={styles.banner}>
             <Image 
   alt="Username"
   style={styles.profilePic}
-//   activeOpacity={0.2}
-//   avatarStyle={{}}
-//   containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10}}
-//   icon={{}}
-//   iconStyle={{}}
-//   imageProps={{}}
-//   onPress={() => navigation.navigate('EditProfile')}
-//   overlayContainerStyle={{}}
-//   placeholderStyle={{}}
-//   rounded
-//   size="large"
+
   source={{ uri: profilePic }}
-//   titleStyle={{}}
+
 />
-<View style={styles.username}>
-            <Text>{username}</Text>
-            </View>
-</View>
-{loggedInUserProfile && <Button onPress={() => {navigation.navigate('EditProfile')}} title="Edit profile"/>}
-{!loggedInUserProfile && <Button onPress={() => {handleAddUser(user)}} title="Add friend"/>}
-<View style={styles.buttonContainer}>
-<View style={styles.button}>
-            <Button onPress={() => {
-                setSectionOfProfile("feed")
-            }} variant="contained">Feed</Button>
-</View>
-<View style={styles.button}>
-            <Button onPress={() => {
-                setSectionOfProfile("records")
-            }}variant="contained">Records</Button>
-</View>
-            <Button onPress={() => {
-                setSectionOfProfile("statistics")}} variant="contained">Statistics</Button>
-            </View>
 
-            { sectionOfProfile === "feed" && (
-                <View> 
+            <Text style={styles.username}>{username[0].toUpperCase()}{username.slice(1)}'s Profile</Text>
+            </View>
+            
+            
+            
+{loggedInUserProfile && <Button onPress={() => {navigation.navigate('EditProfile')}} title="Edit profile" buttonStyle={styles.button}/>}
+{!loggedInUserProfile && <Button onPress={() => {handleAddUser(user)}} title="Add friend" buttonStyle={styles.button}/>}
 
-                    <Text>THIS IS THE FEED</Text>
+
+
+<ButtonGroup buttons={['Feed', 'Records', 'Statistics']} selectedIndex={sectionOfProfile} onPress={(e) => {setSectionOfProfile(e)}} containerStyle={{width: "100%", alignSelf: "center"}}/>
+
+
+            { sectionOfProfile === 0 && (
+                
+
+                    
                     <Feed posts={posts}/>
-                </View>
+                
             )}
 
-{ sectionOfProfile === "records" && (
+{ sectionOfProfile === 1 && (
                 <View> 
 
                     <Text>THIS IS THE RECORDS SECTION</Text>
                 </View>
             )}
 
-{ sectionOfProfile === "statistics" && (
+{ sectionOfProfile === 2 && (
                 <View> 
 
                     <Text>THIS IS THE STATISTICS SECTION</Text>
@@ -140,6 +124,6 @@ export const ProfilePage = ({route, navigation}) => {
 
             </View>
             <NavBar navigation={navigation} />
-        </View>
+        </SafeAreaView>
     )
 }

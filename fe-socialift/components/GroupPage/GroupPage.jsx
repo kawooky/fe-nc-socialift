@@ -16,10 +16,7 @@ import {collection, getFirestore, getDocs, getDoc, addDoc, doc} from "firebase/f
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 
-// const { auth } = getFirebase();
-// const loggedInUser = auth.currentUser
-// const loggedInUserName = loggedInUser.displayName
-// console.log(loggedInUser, '<<< logged in user')
+
 
 
 export const GroupPage = ({ route, navigation}) => {
@@ -28,6 +25,12 @@ export const GroupPage = ({ route, navigation}) => {
     const [groupObj, setGroupObj] = useState({})
     const [members, setMembers] = useState([])
     const db = getFirestore();
+
+
+    const { auth } = getFirebase();
+const loggedInUser = auth.currentUser
+const loggedInUserName = loggedInUser.displayName
+console.log(loggedInUser, '<<< logged in user')
 
     const {groupId} = route.params
     console.log(groupId, '<<< params')

@@ -96,14 +96,12 @@ export const AddFriendsPage = ({ navigation }) => {
 
 	//get friends list
 	useEffect(() => {
-		getDocs(collection(db, 'users', loggedInUser.uid, 'friends')).then(
-			(friends) => {
-				const friendsData = friends.docs.map((doc) => {
-					return { ...doc.data() };
-				});
-				setFriendsList(friendsData);
-			}
-		);
+		onSnapshot(collection(db, 'users', loggedInUser.uid, 'friends'), (friends) => {
+			const friendsData = friends.docs.map((doc) => {
+				return { ...doc.data() };
+			});
+			setFriendsList(friendsData);
+		})
 	}, []);
 
 	//functions
@@ -150,7 +148,7 @@ export const AddFriendsPage = ({ navigation }) => {
 										>
 											Add Friends
 										</Button>
-										<Button size="sm" style={AddFriendsstyles.button} onPress={() =>{
+										<Button size="sm" color="#249e45" style={AddFriendsstyles.button} onPress={() =>{
 											navigation.navigate("Profile", {userId: user.id})
 										}} >
 											View Profile
@@ -179,6 +177,9 @@ export const AddFriendsPage = ({ navigation }) => {
 											size="sm"
 											color="#249e45"
 											style={AddFriendsstyles.button}
+											onPress={() =>{
+												navigation.navigate("Profile", {userId: user.id})
+											}}
 										>
 											View Profile
 										</Button>
