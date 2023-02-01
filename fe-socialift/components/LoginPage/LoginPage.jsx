@@ -63,6 +63,8 @@ export const LoginPage = ({ navigation }) => {
     setter(event);
   };
 
+  
+
   const validateEmail = (email) => {
     if (email !== "" && !emailRegex.test(email)) {
       setEmailError(true);
@@ -160,9 +162,9 @@ export const LoginPage = ({ navigation }) => {
                 avatarImgURL: "https://firebasestorage.googleapis.com/v0/b/socialift1.appspot.com/o/avatars%2Fuser.png?alt=media&token=06055620-0611-486b-94f4-c98a7534aa67",
                 createdAt: serverTimestamp(),
                 profileVisible: true,
-                squatMax: Math.ceil(Math.random * 80) + 30,
-                chestMax: Math.ceil(Math.random * 80) + 30,
-                deadliftMax: Math.ceil(Math.random * 80) + 30
+                squatMax: (Math.ceil(Math.random() * 80) + 30),
+                chestMax: (Math.ceil(Math.random() * 80) + 30),
+                deadliftMax: (Math.ceil(Math.random() * 80) + 30)
             })
           ])
         })

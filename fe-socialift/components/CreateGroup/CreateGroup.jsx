@@ -63,21 +63,25 @@ export const CreateGroup = ({ navigation }) => {
         return Promise.all([
           updateDoc(doc(db, 'groups', newGroup.id), {group_img_url: newImgUrl}),
           groupMembers.forEach((member) => {
-            setDoc(collection(db, 'users', member.id, 'groups', newGroup.id), {
+            setDoc(doc(db, 'users', member.id, 'groups', newGroup.id), {
               group_id: groupId,
               group_name: groupName,
               group_img_url: newImgUrl
             })
           }),
-          setDoc(collection(db, 'users', loggedInUser.uid, 'groups'))
+          setDoc(doc(db, 'users', loggedInUser.uid, 'groups', newGrou.id), {
+            group_id: groupId,
+              group_name: groupName,
+              group_img_url: newImgUrl
+          })
         ])
       }),
       groupMembers.forEach((member) => {
-        setDoc(collection(db, 'groups', newGroup.id, 'members', member.id), {
+        setDoc(doc(db, 'groups', newGroup.id, 'members', member.id), {
           ...member
         })
       }),
-      setDoc(collection(db, 'groups', newGroup.id, 'members', loggedInUser.uid), loggedInUserObject),
+      setDoc(doc(db, 'groups', newGroup.id, 'members', loggedInUser.uid), loggedInUserObject),
       setGroupId(newGroup.id)])
     })
     .then(() => {
