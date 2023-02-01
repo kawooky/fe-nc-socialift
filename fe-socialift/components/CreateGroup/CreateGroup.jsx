@@ -12,6 +12,7 @@ import {
 import {
   collection,
   getDocs,
+  getDoc,
   getFirestore,
   query,
   where,
@@ -28,10 +29,10 @@ import { ref } from "firebase/storage";
 export const CreateGroup = ({ navigation }) => {
   const [groupImage, setGroupImage] = useState("");
   const [groupName, setGroupName] = useState("");
-  const [searchFriends, setSearchFriends] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
   const [groupId, setGroupId] = useState('')
+  const [loggedInUserObject, setLoggedInUserObject] = useState({})
 
   function updateAvatar() {
     pickImage()
@@ -47,7 +48,7 @@ export const CreateGroup = ({ navigation }) => {
 
   const { auth, storage } = getFirebase();
   const db = getFirestore();
-  const loggedInUser = auth.currentUser.uid
+  const loggedInUser = auth.currentUser
   
 
   const handleGroupCreate = () => {
@@ -67,16 +68,10 @@ export const CreateGroup = ({ navigation }) => {
         addDoc(collection(db, 'groups', newGroup.id, 'members'), {
           ...member
         })
+        
       }),
-      addDoc(collection(db, 'groups', newGroup.id, 'members'), {
-        id: loggedInUser,
-        name: auth.currentUser.displayName,
-        img_url: auth.currentUser.photoURL
-      }
-      ),
+      addDoc(collection(db, 'groups', newGroup.id, 'members'), loggedInUserObject),
       setGroupId(newGroup.id)])
-      
-      
     })
     .then(() => {
       navigation.navigate("Group", {groupId: groupId})
@@ -84,7 +79,7 @@ export const CreateGroup = ({ navigation }) => {
   };
 
   const retrieveSearchResults = () => {
-    const friendsRef = collection(db, "users", loggedInUser, "friends");
+    const friendsRef = collection(db, "users", loggedInUser.uid, "friends");
 
     getDocs(friendsRef).then((friends) => {
       setSearchResults(
@@ -115,7 +110,11 @@ export const CreateGroup = ({ navigation }) => {
 
   useEffect(() => {
     retrieveSearchResults();
-  });
+    getDoc(doc(db, "users", loggedInUser.uid))
+		.then((user) => {
+			setLoggedInUserObject({...user.data()})
+		})
+  }, []);
 
   return (
     <SafeAreaView style={styles.createGroupContainer}>
@@ -159,8 +158,8 @@ export const CreateGroup = ({ navigation }) => {
       {searchResults.map((result) => {
         return (
           <View style={styles.friendCard}>
-            <Image source={{ uri: result.img_url }} style={styles.friendIcon} />
-            <Text>{result.name}</Text>
+            <Image source={{ uri: result.avatarImgURL }} style={styles.friendIcon} />
+            <Text>{result.username}</Text>
 
             <Button
               style={styles.addButton}

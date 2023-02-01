@@ -9,9 +9,9 @@ import { GroupsBar } from '../GroupsBar/GroupsBar';
 import { consoleUrl } from 'firebase-tools/lib/utils';
 import { getFirebase } from '../../firebase';
 
-export const AddFriendsPage = () => {
+export const AddFriendsPage = ({navigation}) => {
 	const [search, setSearch] = useState('');
-	const [resultsVisible, setResultsVisible] = useState(false);
+	const [resultsVisible, setResultsVisible] = useState(true);
 	const [fetchedUsers, setFetchedUsers] = useState([]);
 	const [friendsList, setFriendsList] = useState([]);
 	const [loggedInUserObject, setLoggedInUserObject] = useState({})
@@ -53,11 +53,6 @@ export const AddFriendsPage = () => {
 
 	const groups = [
 		{
-			name: 'Make Group',
-			img_url:
-				'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAaVBMVEUAAAD///+1tbW9vb2Xl5eSkpLNzc2xsbH6+vq5ubmPj4+tra3n5+c4ODg9PT0nJycxMTEfHx99fX2FhYUXFxdTU1Pp6ene3t5ZWVmoqKhLS0vY2NihoaFlZWUODg5FRUXHx8cUFBR0dHT1zzs3AAADOklEQVR4nO3ci3LaMBBAUYvYYAwO4RUgL1L+/yOb0E6nTXhoVx525d7zAZ29U4NFbKkoAAAAAAAAAAA31i6b8qhqFg/Ww3RuvhiGfw2Xfap8G9XhhPHKerCulKfyjl6sR+vEanM2MITp3Hq8dE8nL9A/6rX1gKmeLvZ9yjyxvRoYwr31kEkeIwofrYdMMYoIDGFiPabePiowhNZ6ULWv65hz7qwH1Yr9LwxhZj2q0iS6sLQeVSnmi/SXjfWoOjH3wrwv04WgcGs9rEr8xzCExnpYlTtBYZ43fUnh2HpYFUlhnvd8Cin0j0IK/aOQQv8opNA/Cin0j0IK/aOQQv8opNA/Cin0j0IK/aOQQv8opNA/Cin0j0IK/aMw/8KxoNDBu4mzbbUbDSRGU0HhVPhv75ptp7veZi+XdthZ2ZRdRe5jN4bc3nsnu8JerDMuSt+pcR+/acLGNHHD9PUNkubqpCt1az1+lCd94Mx69jj1m7pQckez9KwN9P0t+jfllptMrtEjXaFk35I11a6i+eWjAnypNQs4yeY6ewtFod/V6ClDRaH1zELywLn1yEI/xIWv1iMLvYoLl9YjCy3FhY31yELyZU1lPbJQRSGF7lH4Xf+/S/tf2P81TU6/8D8pfiBajywkD/wPfh/m9Rv/oChcZfV3GtUfhXfWYwvoDkJ9sx5bQBV46exYb9THTHl8tn2K+rlFLnf9OuHE5bX18FH2+sCrpwB7kPYMuCgevD9D3KQfSOj7EdQuue9D+26dcda4qxMlW5fvRD2XnZ7MP9tWE0fvtU06fq9NJ7N3ExX6/34phRT6RyGF/lFIoX8UUugfhRT6RyGF/lFIoX8UUugfhRT6RyGF/lFIoX8UUugfhRT6RyGF/lGYf2H/300cCApH1sOqSPZN6fYtWTsICuV7XD1oBYWdvrF9O/FHLk6tR1UaRRfm+TEsin3fL9KieI4MfLceVC1261snJ8naiFu45Xm7/y3m6/TResgkMWfYJm2QtHf9AJG19YipriTW2Qd+LN4ufRY3DnagdeD82ibXtcw3D4OTG6YH+hOO/Zkvvh4GM1xmu1Q7q1025VHVHPpXBwAAAAAAAADu/QSUjkQ29VZYFgAAAABJRU5ErkJggg==',
-		},
-		{
 			name: 'NorthLifters',
 			img_url:
 				'https://pbs.twimg.com/profile_images/1333392601450426370/x_DT51WI_400x400.jpg',
@@ -91,7 +86,9 @@ export const AddFriendsPage = () => {
 				return { ...doc.data(), id: doc.id };
 			});
 			if (search === '') {
-				setFetchedUsers(fetchedData)
+				setFetchedUsers(fetchedData.filter((user) => {
+					return user.id !== loggedInUser.uid
+				}))
 			} else {
 				setFriendsList(fetchedData[0].friends);
 				const filteredData = fetchedData.filter((user) => {
@@ -114,12 +111,12 @@ export const AddFriendsPage = () => {
 	//functions
 	const updateSearch = (search) => {
 		setSearch(search);
-		if (!resultsVisible) {
-			setResultsVisible(true);
-		}
-		if (!search) {
-			setResultsVisible(false);
-		}
+		// if (!resultsVisible) {
+		// 	setResultsVisible(true);
+		// }
+		// if (!search) {
+		// 	setResultsVisible(false);
+		// }
 	};
 
 	const handleAddUser = (user) => {
@@ -132,7 +129,7 @@ export const AddFriendsPage = () => {
 	return (
 		<SafeAreaView style={styles.mainView}>
 			<ScrollView style={{ width: '100%' }}>
-				<GroupsBar groups={groups} />
+				<GroupsBar groups={groups} navigation={navigation}/>
 				<View>
 					<SearchBar
 						placeholder="Search for friends..."
@@ -165,6 +162,7 @@ export const AddFriendsPage = () => {
 									</View>
 								);
 							})}
+							<Text>End of results</Text>
 						</Card>
 					</View>
 				) : null}
@@ -195,7 +193,7 @@ export const AddFriendsPage = () => {
 					</Card>
 				</View>
 			</ScrollView>
-			<NavBar />
+			<NavBar navigation={navigation}/>
 		</SafeAreaView>
 	);
 };
