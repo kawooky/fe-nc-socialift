@@ -124,9 +124,6 @@ export const HomePage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.mainView}>
-      <Button onPress={()=>{
-        navigation.navigate('Group', {groupId:'8QSR2sRGUff35YuzLHM9'})
-      }}/>
       <GroupsBar groups={testGroups} navigation={navigation}/>
       <Feed posts={posts}/>
       <NavBar navigation={navigation}/>
