@@ -119,7 +119,7 @@ console.log(loggedInUser, '<<< logged in user')
                   />)
                 })}
           
-        <Button >Edit Group</Button>
+        <Button onPress={() => {navigation.navigate("CreateGroup", {groupId})}}>Edit Group</Button>
         </View>
 
         { graphOrTable === 'graph' && (

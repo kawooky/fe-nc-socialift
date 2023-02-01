@@ -5,7 +5,10 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         maxWidth: 360,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        maxHeight: "100%",
+        overflow: "scroll",
+        padding: 15
     },
     groupImageContainer: {
         height: 75,
