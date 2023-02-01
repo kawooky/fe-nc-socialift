@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -26,6 +26,10 @@ export const EditProfilePage = ({ navigation }) => {
   const userRef = doc(firestore, "users", user.uid);
   console.log(userRef, "<< userRef");
 
+  useEffect(() => {
+    setPhoto(user.photoURL)
+  }, [])
+
   function updateAvatar() {
     pickImage()
       .then((newAvatarURI) => {
@@ -38,7 +42,7 @@ export const EditProfilePage = ({ navigation }) => {
       })
       .then((uploadedAvatarURL) => {
         const updateObj = {
-          "userDetails.avatarImgURL": uploadedAvatarURL,
+          "avatarImgURL": uploadedAvatarURL,
         };
 
         updateDoc(userRef, updateObj);
