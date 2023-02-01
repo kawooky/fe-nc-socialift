@@ -154,13 +154,13 @@ export const LoginPage = ({ navigation }) => {
           return Promise.all([
             updateProfile(auth.currentUser, {
               displayName: username,
-              photoURL: "https://firebasestorage.googleapis.com/v0/b/socialift1.appspot.com/o/avatars%2Fuser.png?alt=media&token=06055620-0611-486b-94f4-c98a7534aa67"
+              photoURL: "https://firebasestorage.googleapis.com/v0/b/socialift2.appspot.com/o/user.png?alt=media&token=bd2dfd1e-705c-4143-a133-30455d9d279d"
             }),
             setDoc(doc(db, "usernames", username), {}),
             
             setDoc(doc(db, "users", userCredentials.user.uid), {
                 username: username,
-                avatarImgURL: "https://firebasestorage.googleapis.com/v0/b/socialift1.appspot.com/o/avatars%2Fuser.png?alt=media&token=06055620-0611-486b-94f4-c98a7534aa67",
+                avatarImgURL: "https://firebasestorage.googleapis.com/v0/b/socialift2.appspot.com/o/user.png?alt=media&token=bd2dfd1e-705c-4143-a133-30455d9d279d",
                 createdAt: serverTimestamp(),
                 profileVisible: true,
                 squatMax: (Math.ceil(Math.random() * 80) + 30),
