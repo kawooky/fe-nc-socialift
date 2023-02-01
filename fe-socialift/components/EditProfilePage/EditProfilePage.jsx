@@ -12,8 +12,8 @@ export const EditProfilePage = ({ navigation }) => {
   const { auth, firestore, storage } = getFirebase();
   const user = auth.currentUser;
   const userRef = doc(firestore, "users", user.uid);
-
-  const [photo, setPhoto] = React.useState(user.photoURL);
+  
+  const [photo, setPhoto] = React.useState(null);
   const [newPhoto, setNewPhoto] = React.useState(null);
   const [fileRef, setFileRef] = React.useState(null);
   const [isChanged, setIsChanged] = React.useState(false);
@@ -21,18 +21,17 @@ export const EditProfilePage = ({ navigation }) => {
   const [darkMode, setDarkMode] = React.useState(false);
   const [privateMode, setPrivateMode] = React.useState(false);
 
-  onAuthStateChanged(auth, (user) => {
-    setPhoto(user.photoURL);
-  });
+  React.useEffect(() => {
+    setPhoto(user.photoURL)
+  }, [navigation])
 
   function changeAvatar() {
     return pickImage()
       .then((newAvatarURI) => {
-        setNewPhoto(newAvatarURI);
-
         const newFileRef = ref(storage, `avatars/${user.uid}.jpg`);
-        setFileRef(newFileRef);
 
+        setNewPhoto(newAvatarURI);
+        setFileRef(newFileRef);
         setIsChanged(true);
       })
       .catch((error) => {
@@ -43,14 +42,14 @@ export const EditProfilePage = ({ navigation }) => {
 
   function updateAvatar() {
     return uploadImage(newPhoto, fileRef).then((uploadedAvatarURL) => {
-      const updateObj = {
-        "userDetails.avatarImgURL": uploadedAvatarURL,
-      };
-
-      updateDoc(userRef, updateObj);
-      updateProfile(user, {
-        photoURL: uploadedAvatarURL,
-      });
+      return Promise.all([
+        updateDoc(userRef, {
+          avatarImgURL: uploadedAvatarURL,
+        }),
+        updateProfile(user, {
+          photoURL: uploadedAvatarURL,
+        }),
+      ]);
     });
   }
 
@@ -107,8 +106,8 @@ export const EditProfilePage = ({ navigation }) => {
             containerStyle={{ backgroundColor: "grey", marginBottom: 20 }}
             onPress={changeAvatar}
           >
-            <Avatar.Accessory size={50} />
           </Avatar>
+          <Text>Hint: Tap your avatar circle above to edit it</Text>
         </View>
         <Divider />
         <View>
