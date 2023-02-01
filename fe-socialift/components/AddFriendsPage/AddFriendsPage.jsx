@@ -4,51 +4,30 @@ import { styles } from '../someDefaultStyles';
 import { SearchBar, Card, Button } from '@rneui/themed';
 import { useState, useEffect } from 'react';
 import NavBar from '../NavBar/NavBar';
-import { collection, onSnapshot, getFirestore, setDoc, getDoc, doc } from 'firebase/firestore';
-import { GroupsBar } from '../GroupsBar/GroupsBar'
+import {
+	collection,
+	onSnapshot,
+	getFirestore,
+	setDoc,
+	getDoc,
+	getDocs,
+	doc,
+} from 'firebase/firestore';
+import { GroupsBar } from '../GroupsBar/GroupsBar';
 import { getFirebase } from '../../firebase';
 
-export const AddFriendsPage = ({navigation}) => {
+export const AddFriendsPage = ({ navigation }) => {
 	const [search, setSearch] = useState('');
 	const [resultsVisible, setResultsVisible] = useState(true);
 	const [fetchedUsers, setFetchedUsers] = useState([]);
 	const [friendsList, setFriendsList] = useState([]);
-	const [loggedInUserObject, setLoggedInUserObject] = useState({})
-	const [friendsStatic, setFriendsStatic] = useState([
-		{
-			
-				avatarImgURL:
-					'https://static.independent.co.uk/2022/11/01/19/newFile.jpg',
-				createdAt: '',
-				profileVisible: true,
-				username: 'Alan',
-			
-		},
-		{
-			
-				avatarImgURL:
-					'https://cdn.vox-cdn.com/thumbor/c_0rq2VdOQREgRRlHg3TqWcdG10=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/24387084/1357388423.jpg',
-				createdAt: '',
-				profileVisible: true,
-				username: 'Mike',
-			
-		},
-		{
-			
-				avatarImgURL:
-					'https://static.wikia.nocookie.net/villainsfanon/images/4/4e/Troll-Face-Meme-PNG.png',
-				createdAt: '',
-				profileVisible: true,
-				username: 'Harold',
-			
-		},
-	]);
-	
-	
+	const [loggedInUserObject, setLoggedInUserObject] = useState({});
+	const [friends, setFriends] = useState([]);
+
 	const db = getFirestore();
 	const { auth } = getFirebase();
 	const usersColRef = collection(db, 'users');
-	const loggedInUser = auth.currentUser
+	const loggedInUser = auth.currentUser;
 
 	const groups = [
 		{
@@ -85,50 +64,65 @@ export const AddFriendsPage = ({navigation}) => {
 				return { ...doc.data(), id: doc.id };
 			});
 			if (search === '') {
-				setFetchedUsers(fetchedData.filter((user) => {
-					return user.id !== loggedInUser.uid
-				}))
+				setFetchedUsers(
+					fetchedData.filter((user) => {
+						return (
+							user.id !== loggedInUser.uid &&
+							!friendsList
+								.map((friend) => {
+									return friend.id;
+								})
+								.includes(user.id)
+						);
+					})
+				);
 			} else {
-				setFriendsList(fetchedData[0].friends);
 				const filteredData = fetchedData.filter((user) => {
 					if (user.username.includes(search)) {
 						return user;
 					}
 				});
+
 				setFetchedUsers(filteredData);
 			}
 		});
-	}, [search]);
+	}, [search, friendsList]);
 
 	useEffect(() => {
-		getDoc(doc(db, "users", loggedInUser.uid))
-		.then((user) => {
-			setLoggedInUserObject({...user.data()})
-		})
-	}, [])
+		getDoc(doc(db, 'users', loggedInUser.uid)).then((user) => {
+			setLoggedInUserObject({ ...user.data(), id: user.id });
+		});
+	}, []);
+
+	//get friends list
+	useEffect(() => {
+		getDocs(collection(db, 'users', loggedInUser.uid, 'friends')).then(
+			(friends) => {
+				const friendsData = friends.docs.map((doc) => {
+					return { ...doc.data() };
+				});
+				setFriendsList(friendsData);
+			}
+		);
+	}, []);
 
 	//functions
 	const updateSearch = (search) => {
 		setSearch(search);
-		// if (!resultsVisible) {
-		// 	setResultsVisible(true);
-		// }
-		// if (!search) {
-		// 	setResultsVisible(false);
-		// }
 	};
 
 	const handleAddUser = (user) => {
-		console.log(user + '<<< friend to add')
-		console.log(loggedInUserObject + '<<< user adding friend')
-		setDoc(doc(db, 'users', loggedInUser.uid, 'friends', user.id), user)
-		setDoc(doc(db, 'users', user.id, 'friends', loggedInUser.uid), loggedInUserObject)
-	}
+		setDoc(doc(db, 'users', loggedInUser.uid, 'friends', user.id), user);
+		setDoc(
+			doc(db, 'users', user.id, 'friends', loggedInUser.uid),
+			loggedInUserObject
+		);
+	};
 
 	return (
 		<SafeAreaView style={styles.mainView}>
 			<ScrollView style={{ width: '100%' }}>
-				<GroupsBar groups={groups} navigation={navigation}/>
+				<GroupsBar groups={groups} navigation={navigation} />
 				<View>
 					<SearchBar
 						placeholder="Search for friends..."
@@ -146,12 +140,14 @@ export const AddFriendsPage = ({navigation}) => {
 							{fetchedUsers.map((user, index) => {
 								return (
 									<View style={AddFriendsstyles.result} key={index}>
-										<Text style={AddFriendsstyles.text}>
-											{user.username}
-										</Text>
-										<Button size="sm" style={AddFriendsstyles.button} onPress={() =>{
-											handleAddUser(user)
-										}} >
+										<Text style={AddFriendsstyles.text}>{user.username}</Text>
+										<Button
+											size="sm"
+											style={AddFriendsstyles.button}
+											onPress={() => {
+												handleAddUser(user);
+											}}
+										>
 											Add Friends
 										</Button>
 										<Image
@@ -166,33 +162,33 @@ export const AddFriendsPage = ({navigation}) => {
 					</View>
 				) : null}
 
-				<View>
-					<Card>
-						<Card.Title>Friends list:</Card.Title>
-						{friendsStatic.map((user, index) => {
-							return (
-								<View style={AddFriendsstyles.result} key={index}>
-									<Text style={AddFriendsstyles.text}>
-										{user.username}
-									</Text>
-									<Button
-										size="sm"
-										color="#249e45"
-										style={AddFriendsstyles.button}
-									>
-										View Profile
-									</Button>
-									<Image
-										source={{ uri: user.avatarImgURL }}
-										style={AddFriendsstyles.icon}
-									/>
-								</View>
-							);
-						})}
-					</Card>
-				</View>
+				{friends ? (
+					<View>
+						<Card>
+							<Card.Title>Friends list:</Card.Title>
+							{friendsList.map((user, index) => {
+								return (
+									<View style={AddFriendsstyles.result} key={index}>
+										<Text style={AddFriendsstyles.text}>{user.username}</Text>
+										<Button
+											size="sm"
+											color="#249e45"
+											style={AddFriendsstyles.button}
+										>
+											View Profile
+										</Button>
+										<Image
+											source={{ uri: user.avatarImgURL }}
+											style={AddFriendsstyles.icon}
+										/>
+									</View>
+								);
+							})}
+						</Card>
+					</View>
+				) : null}
 			</ScrollView>
-			<NavBar navigation={navigation}/>
+			<NavBar navigation={navigation} />
 		</SafeAreaView>
 	);
 };
