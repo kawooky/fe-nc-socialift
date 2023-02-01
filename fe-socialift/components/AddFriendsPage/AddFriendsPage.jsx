@@ -5,8 +5,7 @@ import { SearchBar, Card, Button } from '@rneui/themed';
 import { useState, useEffect } from 'react';
 import NavBar from '../NavBar/NavBar';
 import { collection, onSnapshot, getFirestore, setDoc, getDoc, doc } from 'firebase/firestore';
-import { GroupsBar } from '../GroupsBar/GroupsBar';
-import { consoleUrl } from 'firebase-tools/lib/utils';
+import { GroupsBar } from '../GroupsBar/GroupsBar'
 import { getFirebase } from '../../firebase';
 
 export const AddFriendsPage = ({navigation}) => {

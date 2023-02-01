@@ -153,17 +153,20 @@ export const LoginPage = ({ navigation }) => {
       setDisableButtons(true);
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
-          updateProfile(auth.currentUser, {
-            displayName: username,
-          });
-          setDoc(doc(db, "usernames", username), {});
-          console.log(userCredentials, "<< userCredentials");
-          setDoc(doc(db, "users", userCredentials.user.uid), {
-              username: username,
-              avatarImgURL: "",
-              createdAt: serverTimestamp(),
-              profileVisible: true,
-          });
+          return Promise.all([
+            updateProfile(auth.currentUser, {
+              displayName: username,
+              photoURL: "https://firebasestorage.googleapis.com/v0/b/socialift1.appspot.com/o/avatars%2Fuser.png?alt=media&token=06055620-0611-486b-94f4-c98a7534aa67"
+            }),
+            setDoc(doc(db, "usernames", username), {}),
+            
+            setDoc(doc(db, "users", userCredentials.user.uid), {
+                username: username,
+                avatarImgURL: "https://firebasestorage.googleapis.com/v0/b/socialift1.appspot.com/o/avatars%2Fuser.png?alt=media&token=06055620-0611-486b-94f4-c98a7534aa67",
+                createdAt: serverTimestamp(),
+                profileVisible: true,
+            })
+          ])
         })
         .then(() => {
           navigation.navigate("EditProfile");
