@@ -21,7 +21,7 @@ export function uploadImage(uri, fileRef) {
     })
     .then(([fileRef]) => {
       return getDownloadURL(fileRef);
-    })
+    });
 }
 
 export function pickImage() {
@@ -31,15 +31,15 @@ export function pickImage() {
     aspect: [1, 1],
     quality: 1,
   }).then((result) => {
-    const uri =
-      Platform.OS === "ios"
-        ? result.assets[0].uri.replace("file://", "")
-        : result.assets[0].uri;
-
     if (!result.canceled) {
+      const uri =
+        Platform.OS === "ios"
+          ? result.assets[0].uri.replace("file://", "")
+          : result.assets[0].uri;
+
       return uri;
     } else {
-      return new Promise.reject("You have not selected an image")
+      return new Promise.reject("You have not selected an image");
     }
   });
 }
