@@ -119,8 +119,9 @@ export const AddFriendsPage = ({ navigation }) => {
 
 	return (
 		<SafeAreaView style={styles.mainView}>
-			<ScrollView style={{ width: '100%' }}>
 				<GroupsBar groups={groups} navigation={navigation} />
+			<ScrollView style={{ width: '100%',
+		maxWidth: 420}}>
 				<View>
 					<SearchBar
 						placeholder="Search for friends..."
@@ -138,29 +139,36 @@ export const AddFriendsPage = ({ navigation }) => {
 							{fetchedUsers.map((user, index) => {
 								return (
 									<View style={AddFriendsstyles.result} key={index}>
-										<Text style={AddFriendsstyles.text}>{user.username}</Text>
-										<Button
-											size="sm"
-											style={AddFriendsstyles.button}
-											onPress={() => {
-												handleAddUser(user);
-											}}
-										>
-											Add Friends
-										</Button>
-										<Button size="sm" color="#249e45" style={AddFriendsstyles.button} onPress={() =>{
-											navigation.navigate("Profile", {userId: user.id})
-										}} >
-											View Profile
-										</Button>
+										<View style={AddFriendsstyles.banner}>
+
 										<Image
 											source={{ uri: user.avatarImgURL }}
 											style={AddFriendsstyles.icon}
 										/>
+										<Text style={AddFriendsstyles.username}>{user.username[0].toUpperCase()}{user.username.slice(1)}</Text>
+										</View>
+										
+
+										
+										<Button
+											buttonStyle={AddFriendsstyles.button}
+											onPress={() => {
+												handleAddUser(user);
+											}}
+											title="Add Friend"
+										/>
+										<Button color="#249e45" buttonStyle={AddFriendsstyles.button} onPress={() =>{
+											navigation.navigate("Profile", {userId: user.id})
+										}} title="View Profile"/>
+										
+										
 									</View>
 								);
 							})}
-							<Text>End of results</Text>
+							<View style={AddFriendsstyles.result}>
+
+							<Text style={AddFriendsstyles.text}>End of results</Text>
+							</View>
 						</Card>
 					</View>
 				) : null}
@@ -172,21 +180,24 @@ export const AddFriendsPage = ({ navigation }) => {
 							{friendsList.map((user, index) => {
 								return (
 									<View style={AddFriendsstyles.result} key={index}>
-										<Text style={AddFriendsstyles.text}>{user.username}</Text>
+										<View style={AddFriendsstyles.banner}>
+										<Image
+											source={{ uri: user.avatarImgURL }}
+											style={AddFriendsstyles.icon}
+										/>
+										<Text style={AddFriendsstyles.username}>{user.username}</Text>
+										</View>
 										<Button
 											size="sm"
 											color="#249e45"
-											style={AddFriendsstyles.button}
+											buttonStyle={AddFriendsstyles.button}
 											onPress={() =>{
 												navigation.navigate("Profile", {userId: user.id})
 											}}
 										>
 											View Profile
 										</Button>
-										<Image
-											source={{ uri: user.avatarImgURL }}
-											style={AddFriendsstyles.icon}
-										/>
+										
 									</View>
 								);
 							})}

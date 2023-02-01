@@ -8,29 +8,55 @@ const AddFriendsstyles = StyleSheet.create({
 		maxHeight: mainAreaHeight,
 	},
 	result: {
+		width: "100%",
 		borderWidth: 1,
 		borderColor: '#9e9d9b',
-		display: 'flex',
-		padding: 5,
-		marginBottom: 5,
+		alignItems: "center",
+		marginBottom: 10,
 		backgroundColor: '#f2f2f2',
-		borderRadius: 15,
+		borderRadius: 10,
+		paddingBottom: 10
 	},
 	icon: {
-		height: 50,
-		width: 50,
+		height: 75,
+		width: 75,
 		borderRadius: 100,
 	},
 	button: {
-		width: '60%',
-		marginHorizontal: 100,
+		width: 340,
+		alignItems: "center",
+		margin: 5,
+		borderRadius: 10
 	},
 	text: {
+		marginTop: 10,
 		fontWeight: 'bold',
 		display: 'flex',
 		justifyContent: 'center',
 		fontSize: 17,
 	},
+	banner: {
+		width: "100%",
+		backgroundColor: '#222322',
+		padding: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+		marginBottom: 10
+	  },
+	  buttonGroup: {
+		width: 460,
+		flexDirection: "column",
+		marginBottom: 15,
+		justifyConten: "center",
+		alignItems: "center"
+	  },
+
+	  username: {
+		margin: 5,
+	   fontSize: 20,
+	   color: '#f4f4f5'
+	  },
 });
 
 export { AddFriendsstyles };
