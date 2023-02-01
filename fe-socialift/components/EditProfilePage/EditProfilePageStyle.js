@@ -17,15 +17,27 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
 
-  toggles: {
-    flex: 1,
+  infoContainer: {
+    margin: 10,
+    flexDirection: "row",
     justifyContent: "space-between",
+    fontSize: 20
+  },
+
+  infoText: {
+    fontSize: 20
+  },
+
+  toggleContainer: {
+    justifyContent: "space-between",
+    alignItems: "center",
     flexDirection: "row",
     padding: 1,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 20,
+    margin: 10
+  },
+
+  toggleText: {
+    fontSize: 20,
   },
 
   avatar: {
