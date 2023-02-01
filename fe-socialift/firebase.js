@@ -45,7 +45,7 @@ export function getFirebase() {
   const services = initializeServices();
   if (!services.isConfigured) {
     // Uncomment the following line to use Firebase Emulator:
-    connectToEmulators(services);
+    // connectToEmulators(services);
   }
   return services;
 }

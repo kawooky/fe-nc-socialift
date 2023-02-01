@@ -35,13 +35,13 @@ export const GroupsBar = ({navigation}) => {
         </Pressable>
         {groups.map((group) => {
           return (
-            <Pressable style={homeStyles.groupItem} onPress={() => navigation.navigate("Group", {groupId : group.id})}>
+            <Pressable style={homeStyles.groupItem} onPress={() => navigation.navigate("Group", {groupId : group.group_id})}>
               <Image
-                source={{ uri: group.img_url }}
+                source={{ uri: group.group_img_url }}
                 style={homeStyles.groupIcon}
               />
               <Text numberOfLines={1} style={homeStyles.groupName}>
-                {group.name}
+                {group.group_name}
               </Text>
             </Pressable>
           );
