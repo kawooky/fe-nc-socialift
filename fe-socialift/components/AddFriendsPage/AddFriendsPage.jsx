@@ -44,7 +44,7 @@ export const AddFriendsPage = ({navigation}) => {
 		},
 	]);
 	
-
+	
 	const db = getFirestore();
 	const { auth } = getFirebase();
 	const usersColRef = collection(db, 'users');

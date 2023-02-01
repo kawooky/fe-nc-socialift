@@ -41,7 +41,7 @@ export const LoginPage = ({ navigation }) => {
   
 
   useEffect(() => {
-    console.log('hi')
+    console.log('Getting username list')
     onSnapshot(usernamesColRef, (stuff) => {
       const usernames = stuff.docs.map((thing) => {
         return thing.id;
@@ -53,7 +53,6 @@ export const LoginPage = ({ navigation }) => {
   }, []);
 
   const { auth } = getFirebase()
-
   const emailRef = createRef();
   const usernameRef = createRef();
   const passRef = createRef();
@@ -109,6 +108,7 @@ export const LoginPage = ({ navigation }) => {
     }
     if (email && password) {
       setDisableButtons(true);
+      console.log('Signing in')
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           navigation.navigate("Home");
@@ -148,6 +148,7 @@ export const LoginPage = ({ navigation }) => {
       passwordConfirm
     ) {
       setDisableButtons(true);
+      console.log('Creating new user')
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
           return Promise.all([
