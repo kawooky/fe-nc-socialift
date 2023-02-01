@@ -154,6 +154,11 @@ export const AddFriendsPage = ({navigation}) => {
 										}} >
 											Add Friends
 										</Button>
+										<Button size="sm" style={AddFriendsstyles.button} onPress={() =>{
+											navigation.navigate("Profile", {userId: user.id})
+										}} >
+											View Profile
+										</Button>
 										<Image
 											source={{ uri: user.avatarImgURL }}
 											style={AddFriendsstyles.icon}

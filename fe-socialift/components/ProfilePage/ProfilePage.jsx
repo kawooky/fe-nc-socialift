@@ -13,63 +13,58 @@ import { styles } from "./ProfilePageStyle.js";
 import { Avatar, Button, Icon} from '@rneui/themed';
 import NavBar from "../NavBar/NavBar.jsx";
 import { getFirebase } from "../../firebase.js";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 import { Feed } from "../Feed/Feed.jsx";
 
 
+export const ProfilePage = ({route, navigation}) => {
 
-
-
-
-
-
-export const ProfilePage = ({navigation}) => {
+    const {userId} = route.params
     const { auth } = getFirebase();
     ///// POST EXAMPLE
-    let postsExample = [{
-        id: 302,
-        type: "logged-workout",
-        user: "bohdan",
-        user_img_url:
-          "https://www.themoviedb.org/t/p/w500/dhv9f3AaozOjpvjAwVzOWlmmT2V.jpg",
-        date: "2023-01-12",
-        exercises: [{name: "Bicep Curl",
-                    sets: 3,
-                    average_reps: 12,
-                    average_weight: 50,
-                    units: 'kg'},
-                    {name: "Weighted Squat",
-                    sets: 5,
-                    average_reps: 20,
-                    average_weight: 150,
-                    units: 'lbs'}],
-        notes: "Need to make this one more than two lines long so I can test the ellipsis so I'm just going to keep typing. How are you today? Ate a can of spinach, did a deadlift, simple as.",
-        likes: 10,
-        comments: 6,
-      }]
-    
-      const db = getFirestore();
+       
+    const db = getFirestore();
 
     const [sectionOfProfile, setSectionOfProfile] = useState('feed')
     const [posts, setPosts] = useState([])
-    
-    const loggedInUserName = auth.currentUser.displayName
-    const loggedInUserPP = auth.currentUser.photoURL
+    const [user, setUser] = useState({})
+    const [username, setUsername] = useState('')
+    const [profilePic, setProfilePic] = useState('')    
+    const [loggedInUserProfile, setLoggedInUserProfile] = useState(false)
+
     const loggedInUserId = auth.currentUser.uid
+    
+    
+    
+    
 
     const feedRef = collection(db, "users", loggedInUserId, "posts")
 
     useEffect(() => {
+        getDoc(doc(db, 'users', userId)).then((userDoc) =>{
+            const user = userDoc.data()
+            setUser(user)
+            setUsername(user.username)
+            setProfilePic(user.avatarImgURL)
+        })
         getDocs(feedRef).then((posts) => {
             setPosts(posts.docs.map((post) => {
                 return post.data()
             }))
         })
+        if (loggedInUserId === userId) {
+            setLoggedInUserProfile(true)
+        }
         console.log(posts, "<<< posts")
     }, [])
 
 
-
+	const handleAddUser = (userToAdd) => {
+		
+		
+		setDoc(doc(db, 'users', loggedInUserId, 'friends', userToAdd.id), userToAdd)
+		setDoc(doc(db, 'users', userToAdd.id, 'friends', loggedInUserId), user)
+	}
   
     
 
@@ -77,27 +72,29 @@ export const ProfilePage = ({navigation}) => {
         <View style={styles.mainView }>
             <View style={styles.formView}>
                 <View style={styles.avatar}>
-            <Avatar 
+            <Image 
   alt="Username"
-  activeOpacity={0.2}
-  avatarStyle={{}}
-  containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10}}
-  icon={{}}
-  iconStyle={{}}
-  imageProps={{}}
-  onPress={() => navigation.navigate('EditProfile')}
-  overlayContainerStyle={{}}
-  placeholderStyle={{}}
-  rounded
-  size="large"
-  source={{ uri: loggedInUserPP }}
-  titleStyle={{}}
+  style={styles.profilePic}
+//   activeOpacity={0.2}
+//   avatarStyle={{}}
+//   containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10}}
+//   icon={{}}
+//   iconStyle={{}}
+//   imageProps={{}}
+//   onPress={() => navigation.navigate('EditProfile')}
+//   overlayContainerStyle={{}}
+//   placeholderStyle={{}}
+//   rounded
+//   size="large"
+  source={{ uri: profilePic }}
+//   titleStyle={{}}
 />
 <View style={styles.username}>
-            <Text>{loggedInUserName}</Text>
+            <Text>{username}</Text>
             </View>
 </View>
-
+{loggedInUserProfile && <Button onPress={() => {navigation.navigate('EditProfile')}} title="Edit profile"/>}
+{!loggedInUserProfile && <Button onPress={() => {handleAddUser(user)}} title="Add friend"/>}
 <View style={styles.buttonContainer}>
 <View style={styles.button}>
             <Button onPress={() => {
