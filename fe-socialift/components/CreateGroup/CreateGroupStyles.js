@@ -22,8 +22,8 @@ export const styles = StyleSheet.create({
         alignItems: "center"
     },
     groupImage : {
-        height: 50,
-        width: 50,
+        height: 75,
+        width: 75,
         
     },
     friendCard: {

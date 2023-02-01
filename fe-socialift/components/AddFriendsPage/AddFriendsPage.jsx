@@ -4,46 +4,52 @@ import { styles } from '../someDefaultStyles';
 import { SearchBar, Card, Button } from '@rneui/themed';
 import { useState, useEffect } from 'react';
 import NavBar from '../NavBar/NavBar';
-import { collection, onSnapshot, getFirestore } from 'firebase/firestore';
+import { collection, onSnapshot, getFirestore, setDoc, getDoc, doc } from 'firebase/firestore';
 import { GroupsBar } from '../GroupsBar/GroupsBar';
+import { consoleUrl } from 'firebase-tools/lib/utils';
+import { getFirebase } from '../../firebase';
 
 export const AddFriendsPage = () => {
 	const [search, setSearch] = useState('');
 	const [resultsVisible, setResultsVisible] = useState(false);
 	const [fetchedUsers, setFetchedUsers] = useState([]);
 	const [friendsList, setFriendsList] = useState([]);
+	const [loggedInUserObject, setLoggedInUserObject] = useState({})
 	const [friendsStatic, setFriendsStatic] = useState([
 		{
-			userDetails: {
+			
 				avatarImgURL:
 					'https://static.independent.co.uk/2022/11/01/19/newFile.jpg',
 				createdAt: '',
 				profileVisible: true,
 				username: 'Alan',
-			},
+			
 		},
 		{
-			userDetails: {
+			
 				avatarImgURL:
 					'https://cdn.vox-cdn.com/thumbor/c_0rq2VdOQREgRRlHg3TqWcdG10=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/24387084/1357388423.jpg',
 				createdAt: '',
 				profileVisible: true,
 				username: 'Mike',
-			},
+			
 		},
 		{
-			userDetails: {
+			
 				avatarImgURL:
 					'https://static.wikia.nocookie.net/villainsfanon/images/4/4e/Troll-Face-Meme-PNG.png',
 				createdAt: '',
 				profileVisible: true,
 				username: 'Harold',
-			},
+			
 		},
 	]);
+	
 
 	const db = getFirestore();
+	const { auth } = getFirebase();
 	const usersColRef = collection(db, 'users');
+	const loggedInUser = auth.currentUser
 
 	const groups = [
 		{
@@ -82,17 +88,28 @@ export const AddFriendsPage = () => {
 	useEffect(() => {
 		onSnapshot(usersColRef, (results) => {
 			const fetchedData = results.docs.map((doc) => {
-				return { ...doc.data() };
+				return { ...doc.data(), id: doc.id };
 			});
-			setFriendsList(fetchedData[0].friends);
-			const filteredData = fetchedData.filter((user) => {
-				if (user.userDetails.username.includes(search)) {
-					return user;
-				}
-			});
-			setFetchedUsers(filteredData);
+			if (search === '') {
+				setFetchedUsers(fetchedData)
+			} else {
+				setFriendsList(fetchedData[0].friends);
+				const filteredData = fetchedData.filter((user) => {
+					if (user.username.includes(search)) {
+						return user;
+					}
+				});
+				setFetchedUsers(filteredData);
+			}
 		});
 	}, [search]);
+
+	useEffect(() => {
+		getDoc(doc(db, "users", loggedInUser.uid))
+		.then((user) => {
+			setLoggedInUserObject({...user.data()})
+		})
+	}, [])
 
 	//functions
 	const updateSearch = (search) => {
@@ -104,6 +121,13 @@ export const AddFriendsPage = () => {
 			setResultsVisible(false);
 		}
 	};
+
+	const handleAddUser = (user) => {
+		console.log(user + '<<< friend to add')
+		console.log(loggedInUserObject + '<<< user adding friend')
+		setDoc(doc(db, 'users', loggedInUser.uid, 'friends', user.id), user)
+		setDoc(doc(db, 'users', user.id, 'friends', loggedInUser.uid), loggedInUserObject)
+	}
 
 	return (
 		<SafeAreaView style={styles.mainView}>
@@ -127,13 +151,15 @@ export const AddFriendsPage = () => {
 								return (
 									<View style={AddFriendsstyles.result} key={index}>
 										<Text style={AddFriendsstyles.text}>
-											{user.userDetails.username}
+											{user.username}
 										</Text>
-										<Button size="sm" style={AddFriendsstyles.button}>
+										<Button size="sm" style={AddFriendsstyles.button} onPress={() =>{
+											handleAddUser(user)
+										}} >
 											Add Friends
 										</Button>
 										<Image
-											source={{ uri: user.userDetails.avatarImgURL }}
+											source={{ uri: user.avatarImgURL }}
 											style={AddFriendsstyles.icon}
 										/>
 									</View>
@@ -150,7 +176,7 @@ export const AddFriendsPage = () => {
 							return (
 								<View style={AddFriendsstyles.result} key={index}>
 									<Text style={AddFriendsstyles.text}>
-										{user.userDetails.username}
+										{user.username}
 									</Text>
 									<Button
 										size="sm"
@@ -160,7 +186,7 @@ export const AddFriendsPage = () => {
 										View Profile
 									</Button>
 									<Image
-										source={{ uri: user.userDetails.avatarImgURL }}
+										source={{ uri: user.avatarImgURL }}
 										style={AddFriendsstyles.icon}
 									/>
 								</View>

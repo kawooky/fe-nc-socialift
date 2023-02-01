@@ -159,12 +159,10 @@ export const LoginPage = ({ navigation }) => {
           setDoc(doc(db, "usernames", username), {});
           console.log(userCredentials, "<< userCredentials");
           setDoc(doc(db, "users", userCredentials.user.uid), {
-            userDetails: {
               username: username,
               avatarImgURL: "",
               createdAt: serverTimestamp(),
               profileVisible: true,
-            },
           });
         })
         .then(() => {
