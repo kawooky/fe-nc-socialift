@@ -19,11 +19,12 @@ import { Feed } from "../Feed/Feed.jsx";
 
 
 
-const { auth, firestore } = getFirebase();
+
 
 
 
 export const ProfilePage = ({navigation}) => {
+    const { auth } = getFirebase();
     ///// POST EXAMPLE
     let postsExample = [{
         id: 302,

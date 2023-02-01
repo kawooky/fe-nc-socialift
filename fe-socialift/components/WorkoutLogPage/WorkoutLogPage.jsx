@@ -10,13 +10,14 @@ import NavBar from '../NavBar/NavBar.jsx';
 
 
 
-const { auth, firestore } = getFirebase();
+
 
 
 
 
 
 export const WorkoutLogPage = ({navigation}) => {
+    const { auth, firestore } = getFirebase();
 
     // Use States \\
     const [workouts, setWorkouts] = useState([])
@@ -28,23 +29,20 @@ export const WorkoutLogPage = ({navigation}) => {
 
     // Data Collection \\
     const db = getFirestore();
-      const workoutsColRef = collection(db, "users", loggedInUser, "workouts")
+    const workoutsColRef = collection(db, "users", loggedInUser, "workouts")
 
-      getDocs(workoutsColRef)
-      .then((stuff) => {
-        const logs =  stuff.docs.map((thing) => {
-        
-            return {...thing.data()}
-        })
-            
-        setWorkouts(logs)
-        
-    })
+    
 
 
 useEffect(() => {
     console.log(workouts, "------workouts state")
-    
+    getDocs(workoutsColRef)
+      .then((stuff) => {
+        const logs = stuff.docs.map((thing) => {
+            return {...thing.data()}
+        })
+        setWorkouts(logs)
+    })
 }, [])
 
 

@@ -38,15 +38,7 @@ export const LoginPage = ({ navigation }) => {
   const db = getFirestore();
   const usernamesColRef = collection(db, "usernames");
 
-  getDocs(usernamesColRef)
-    .then((stuff) => {
-      return stuff.docs.map((thing) => {
-        return thing.id;
-      });
-    })
-    .then((usernames) => {
-      setCurrentUsers(usernames);
-    });
+  
 
   useEffect(() => {
     console.log('hi')
@@ -57,7 +49,7 @@ export const LoginPage = ({ navigation }) => {
       setCurrentUsers(usernames);
       
     });
-    
+
   }, []);
 
   const { auth } = getFirebase()
