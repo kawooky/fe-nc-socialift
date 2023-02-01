@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import { GroupsBar } from '../GroupsBar/GroupsBar';
 import { getFirebase } from '../../firebase';
+import { FriendsList } from '../FriendsList/FriendsList';
 
 export const AddFriendsPage = ({ navigation }) => {
 	const [search, setSearch] = useState('');
@@ -28,34 +29,6 @@ export const AddFriendsPage = ({ navigation }) => {
 	const { auth } = getFirebase();
 	const usersColRef = collection(db, 'users');
 	const loggedInUser = auth.currentUser;
-
-	const groups = [
-		{
-			name: 'NorthLifters',
-			img_url:
-				'https://pbs.twimg.com/profile_images/1333392601450426370/x_DT51WI_400x400.jpg',
-		},
-		{
-			name: 'Team 2',
-			img_url:
-				'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYlxIwUweoKKGupq0ObLDFlNZ2rTmv0wg89Q&usqp=CAU',
-		},
-		{
-			name: 'Another Group I Guess',
-			img_url:
-				'https://emojipedia-us.s3.amazonaws.com/source/skype/289/b-button-blood-type_1f171-fe0f.png',
-		},
-		{
-			name: 'One More Group I Guess',
-			img_url:
-				'https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&quality=85&auto=format&fit=max&s=a52bbe202f57ac0f5ff7f47166906403',
-		},
-		{
-			name: 'Guess I lied, this is the last Group I Guess',
-			img_url:
-				'https://i.natgeofe.com/n/1bba50e5-3a3f-490f-92ca-5803bca65a61/american-alligator_thumb_4x3.JPG',
-		},
-	];
 
 	//gets users from firestore
 	useEffect(() => {
@@ -89,20 +62,22 @@ export const AddFriendsPage = ({ navigation }) => {
 	}, [search, friendsList]);
 
 	useEffect(() => {
+		onSnapshot(collection(db, 'users', loggedInUser.uid, 'friends'), (friends) => {
+			const friendsData = friends.docs.map((doc) => {
+				return { ...doc.data(), id: doc.id };
+			});
+			setFriendsList(friendsData);
+		})
+	}, []);
+
+	useEffect(() => {
 		getDoc(doc(db, 'users', loggedInUser.uid)).then((user) => {
 			setLoggedInUserObject({ ...user.data(), id: user.id });
 		});
 	}, []);
 
 	//get friends list
-	useEffect(() => {
-		onSnapshot(collection(db, 'users', loggedInUser.uid, 'friends'), (friends) => {
-			const friendsData = friends.docs.map((doc) => {
-				return { ...doc.data() };
-			});
-			setFriendsList(friendsData);
-		})
-	}, []);
+	
 
 	//functions
 	const updateSearch = (search) => {
@@ -119,7 +94,7 @@ export const AddFriendsPage = ({ navigation }) => {
 
 	return (
 		<SafeAreaView style={styles.mainView}>
-				<GroupsBar groups={groups} navigation={navigation} />
+				<GroupsBar navigation={navigation} />
 			<ScrollView style={{ width: '100%',
 		maxWidth: 420}}>
 				<View>
@@ -131,79 +106,8 @@ export const AddFriendsPage = ({ navigation }) => {
 					/>
 				</View>
 
-				{resultsVisible ? (
-					<View>
-						<Card>
-							<Card.Title>Search results:</Card.Title>
-							<Card.Divider />
-							{fetchedUsers.map((user, index) => {
-								return (
-									<View style={AddFriendsstyles.result} key={index}>
-										<View style={AddFriendsstyles.banner}>
-
-										<Image
-											source={{ uri: user.avatarImgURL }}
-											style={AddFriendsstyles.icon}
-										/>
-										<Text style={AddFriendsstyles.username}>{user.username[0].toUpperCase()}{user.username.slice(1)}</Text>
-										</View>
-										
-
-										
-										<Button
-											buttonStyle={AddFriendsstyles.button}
-											onPress={() => {
-												handleAddUser(user);
-											}}
-											title="Add Friend"
-										/>
-										<Button color="#249e45" buttonStyle={AddFriendsstyles.button} onPress={() =>{
-											navigation.navigate("Profile", {userId: user.id})
-										}} title="View Profile"/>
-										
-										
-									</View>
-								);
-							})}
-							<View style={AddFriendsstyles.result}>
-
-							<Text style={AddFriendsstyles.text}>End of results</Text>
-							</View>
-						</Card>
-					</View>
-				) : null}
-
-				{friends ? (
-					<View>
-						<Card>
-							<Card.Title>Friends list:</Card.Title>
-							{friendsList.map((user, index) => {
-								return (
-									<View style={AddFriendsstyles.result} key={index}>
-										<View style={AddFriendsstyles.banner}>
-										<Image
-											source={{ uri: user.avatarImgURL }}
-											style={AddFriendsstyles.icon}
-										/>
-										<Text style={AddFriendsstyles.username}>{user.username}</Text>
-										</View>
-										<Button
-											size="sm"
-											color="#249e45"
-											buttonStyle={AddFriendsstyles.button}
-											onPress={() =>{
-												navigation.navigate("Profile", {userId: user.id})
-											}}
-										>
-											View Profile
-										</Button>
-										
-									</View>
-								);
-							})}
-						</Card>
-					</View>
-				) : null}
+					<FriendsList fetchedUsers={fetchedUsers} friendsList={friendsList} handleAddUser={handleAddUser} navigation={navigation}/>
+				
 			</ScrollView>
 			<NavBar navigation={navigation} />
 		</SafeAreaView>

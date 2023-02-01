@@ -20,9 +20,11 @@ import {
   getDocs,
   getFirestore,
   setDoc,
+  onSnapshot
 } from "firebase/firestore";
 import { Feed } from "../Feed/Feed.jsx";
 import { Loading } from "../Loading/Loading.jsx";
+
 
 export const ProfilePage = ({ route, navigation }) => {
   const { userId } = route.params;
@@ -39,6 +41,8 @@ export const ProfilePage = ({ route, navigation }) => {
   const [loggedInUserProfile, setLoggedInUserProfile] = useState(false);
   const [loading, setLoading] = useState(true);
   const [friends, setFriends] = useState([])
+  
+	
 
   const loggedInUserId = auth.currentUser.uid;
 
@@ -64,10 +68,13 @@ export const ProfilePage = ({ route, navigation }) => {
           })
         );
       }),
-      getDocs(collection(db, "users", loggedInUserId, 'friends')).then((friendDocs) => {
+      getDocs(collection(db, "users", userId, 'friends')).then((friendDocs) => {
         console.log(friendDocs.docs.map((friend) => {
             return friend.id
         }))
+        console.log(friendDocs.docs.map((friend) => {
+            return friend.id
+        }).includes(loggedInUserId))
         setFriends(friendDocs.docs.map((friend) => {
             return friend.id
         }))
@@ -76,6 +83,7 @@ export const ProfilePage = ({ route, navigation }) => {
       setLoading(false);
     });
   }, [userId]);
+
 
   const handleAddUser = (userToAdd) => {
     setFriends((current) => {return [...current, userId]})
@@ -115,7 +123,7 @@ export const ProfilePage = ({ route, navigation }) => {
             buttonStyle={styles.button}
           />
         )}
-        {(!loggedInUserProfile && !friends.includes(userId)) && (
+        {(!loggedInUserProfile && !friends.includes(loggedInUserId)) && (
           <Button
             onPress={() => {
               handleAddUser(user);
@@ -126,7 +134,7 @@ export const ProfilePage = ({ route, navigation }) => {
         )}
 
         <ButtonGroup
-          buttons={["Feed", "Records", "Statistics"]}
+          buttons={["Feed", "Friends", "Groups"]}
           selectedIndex={sectionOfProfile}
           onPress={(e) => {
             setSectionOfProfile(e);
@@ -137,9 +145,9 @@ export const ProfilePage = ({ route, navigation }) => {
         {sectionOfProfile === 0 && <Feed posts={posts} />}
 
         {sectionOfProfile === 1 && (
-          <View>
-            <Text>THIS IS THE RECORDS SECTION</Text>
-          </View>
+          <SafeAreaView>
+          
+            </SafeAreaView>
         )}
 
         {sectionOfProfile === 2 && (

@@ -45,7 +45,8 @@ const homeStyles = StyleSheet.create({
         padding: 5,
         maxWidth: 320,
         margin: 5,
-        alignItems: "center"
+        alignItems: "center",
+        borderRadius: 10
     },
     postUserDetails: {
         flexDirection: "row"
