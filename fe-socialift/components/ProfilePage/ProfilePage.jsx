@@ -1,142 +1,154 @@
 import {
-    StyleSheet,
-    View,
-    SafeAreaView,
-    Text,
-    Alert,
-    TextInput,
-    Image,
-    ViewBase
-  } from "react-native";
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Text,
+  Alert,
+  TextInput,
+  Image,
+  ViewBase,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
-import { Avatar, Button, Icon} from '@rneui/themed';
+import { Avatar, Icon, Button, ButtonGroup } from "@rneui/themed";
 import NavBar from "../NavBar/NavBar.jsx";
 import { getFirebase } from "../../firebase.js";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 import { Feed } from "../Feed/Feed.jsx";
+import { Loading } from "../Loading/Loading.jsx";
 
+export const ProfilePage = ({ route, navigation }) => {
+  const { userId } = route.params;
+  const { auth } = getFirebase();
+  ///// POST EXAMPLE
 
+  const db = getFirestore();
 
+  const [sectionOfProfile, setSectionOfProfile] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [user, setUser] = useState({});
+  const [username, setUsername] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const [loggedInUserProfile, setLoggedInUserProfile] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [friends, setFriends] = useState([])
 
+  const loggedInUserId = auth.currentUser.uid;
 
+  const feedRef = collection(db, "users", userId, "posts");
 
+  useEffect(() => {
+    setLoggedInUserProfile(false);
+    setLoading(true);
+    if (loggedInUserId === userId) {
+      setLoggedInUserProfile(true);
+    }
+    Promise.all([
+      getDoc(doc(db, "users", userId)).then((userDoc) => {
+        const user = { ...userDoc.data(), id: userDoc.id };
+        setUser(user);
+        setUsername(user.username);
+        setProfilePic(user.avatarImgURL);
+      }),
+      getDocs(feedRef).then((posts) => {
+        setPosts(
+          posts.docs.map((post) => {
+            return post.data();
+          })
+        );
+      }),
+      getDocs(collection(db, "users", loggedInUserId, 'friends')).then((friendDocs) => {
+        console.log(friendDocs.docs.map((friend) => {
+            return friend.id
+        }))
+        setFriends(friendDocs.docs.map((friend) => {
+            return friend.id
+        }))
+      })
+    ]).then(() => {
+      setLoading(false);
+    });
+  }, [userId]);
 
+  const handleAddUser = (userToAdd) => {
+    setFriends((current) => {return [...current, userId]})
+    setDoc(
+      doc(db, "users", loggedInUserId, "friends", userToAdd.id),
+      userToAdd
+    );
+    setDoc(doc(db, "users", userToAdd.id, "friends", loggedInUserId), user);
+  };
 
-export const ProfilePage = ({navigation}) => {
-    const { auth } = getFirebase();
-    ///// POST EXAMPLE
-    let postsExample = [{
-        id: 302,
-        type: "logged-workout",
-        user: "bohdan",
-        user_img_url:
-          "https://www.themoviedb.org/t/p/w500/dhv9f3AaozOjpvjAwVzOWlmmT2V.jpg",
-        date: "2023-01-12",
-        exercises: [{name: "Bicep Curl",
-                    sets: 3,
-                    average_reps: 12,
-                    average_weight: 50,
-                    units: 'kg'},
-                    {name: "Weighted Squat",
-                    sets: 5,
-                    average_reps: 20,
-                    average_weight: 150,
-                    units: 'lbs'}],
-        notes: "Need to make this one more than two lines long so I can test the ellipsis so I'm just going to keep typing. How are you today? Ate a can of spinach, did a deadlift, simple as.",
-        likes: 10,
-        comments: 6,
-      }]
-    
-      const db = getFirestore();
+  if (loading) {
+    return <Loading />;
+  }
 
-    const [sectionOfProfile, setSectionOfProfile] = useState('feed')
-    const [posts, setPosts] = useState([])
-    
-    const loggedInUserName = auth.currentUser.displayName
-    const loggedInUserPP = auth.currentUser.photoURL
-    const loggedInUserId = auth.currentUser.uid
+  return (
+    <SafeAreaView style={styles.mainView}>
+      <View style={styles.formView}>
+        <View style={styles.banner}>
+          <Image
+            alt="Username"
+            style={styles.profilePic}
+            source={{ uri: profilePic }}
+          />
 
-    const feedRef = collection(db, "users", loggedInUserId, "posts")
-
-    useEffect(() => {
-        getDocs(feedRef).then((posts) => {
-            setPosts(posts.docs.map((post) => {
-                return post.data()
-            }))
-        })
-        console.log(posts, "<<< posts")
-    }, [])
-
-
-
-  
-    
-
-    return (
-        <View style={styles.mainView }>
-            <View style={styles.formView}>
-                <View style={styles.avatar}>
-            <Avatar 
-  alt="Username"
-  activeOpacity={0.2}
-  avatarStyle={{}}
-  containerStyle={{ backgroundColor: "#BDBDBD", marginBottom: 10}}
-  icon={{}}
-  iconStyle={{}}
-  imageProps={{}}
-  onPress={() => navigation.navigate('EditProfile')}
-  overlayContainerStyle={{}}
-  placeholderStyle={{}}
-  rounded
-  size="large"
-  source={{ uri: loggedInUserPP }}
-  titleStyle={{}}
-/>
-<View style={styles.username}>
-            <Text>{loggedInUserName}</Text>
-            </View>
-</View>
-
-<View style={styles.buttonContainer}>
-<View style={styles.button}>
-            <Button onPress={() => {
-                setSectionOfProfile("feed")
-            }} variant="contained">Feed</Button>
-</View>
-<View style={styles.button}>
-            <Button onPress={() => {
-                setSectionOfProfile("records")
-            }}variant="contained">Records</Button>
-</View>
-            <Button onPress={() => {
-                setSectionOfProfile("statistics")}} variant="contained">Statistics</Button>
-            </View>
-
-            { sectionOfProfile === "feed" && (
-                <View> 
-
-                    <Text>THIS IS THE FEED</Text>
-                    <Feed posts={posts}/>
-                </View>
-            )}
-
-{ sectionOfProfile === "records" && (
-                <View> 
-
-                    <Text>THIS IS THE RECORDS SECTION</Text>
-                </View>
-            )}
-
-{ sectionOfProfile === "statistics" && (
-                <View> 
-
-                    <Text>THIS IS THE STATISTICS SECTION</Text>
-                </View>
-            )}
-
-            </View>
-            <NavBar navigation={navigation} />
+          <Text style={styles.username}>
+            {username[0].toUpperCase()}
+            {username.slice(1)}'s Profile
+          </Text>
         </View>
-    )
-}
+
+        {loggedInUserProfile && (
+          <Button
+            onPress={() => {
+              navigation.navigate("EditProfile");
+            }}
+            title="Edit profile"
+            buttonStyle={styles.button}
+          />
+        )}
+        {(!loggedInUserProfile && !friends.includes(userId)) && (
+          <Button
+            onPress={() => {
+              handleAddUser(user);
+            }}
+            title="Add friend"
+            buttonStyle={styles.button}
+          />
+        )}
+
+        <ButtonGroup
+          buttons={["Feed", "Records", "Statistics"]}
+          selectedIndex={sectionOfProfile}
+          onPress={(e) => {
+            setSectionOfProfile(e);
+          }}
+          containerStyle={{ width: "100%", alignSelf: "center" }}
+        />
+
+        {sectionOfProfile === 0 && <Feed posts={posts} />}
+
+        {sectionOfProfile === 1 && (
+          <View>
+            <Text>THIS IS THE RECORDS SECTION</Text>
+          </View>
+        )}
+
+        {sectionOfProfile === 2 && (
+          <View>
+            <Text>THIS IS THE STATISTICS SECTION</Text>
+          </View>
+        )}
+      </View>
+      <NavBar navigation={navigation} />
+    </SafeAreaView>
+  );
+};

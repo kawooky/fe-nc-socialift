@@ -109,7 +109,7 @@ export const LoginPage = ({ navigation }) => {
     if (email && password) {
       setDisableButtons(true);
       console.log('Signing in')
-      signInWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(auth, email.trim(), password)
         .then(() => {
           navigation.navigate("Home");
         })
@@ -208,6 +208,7 @@ export const LoginPage = ({ navigation }) => {
                   : " "
               }
               autoCorrect={false}
+              autoCapitalize='none'
               ref={usernameRef}
             />
           )}
@@ -221,6 +222,7 @@ export const LoginPage = ({ navigation }) => {
               }}
               errorMessage={emailErrorMessage}
               autoCorrect={false}
+              autoCapitalize='none'
               ref={emailRef}
             />
           )}
@@ -236,6 +238,7 @@ export const LoginPage = ({ navigation }) => {
                 passwordError ? "Password must be at least 8 characters" : " "
               }
               autoCorrect={false}
+              autoCapitalize='none'
               secureTextEntry={true}
               ref={passRef}
             />
@@ -251,6 +254,7 @@ export const LoginPage = ({ navigation }) => {
               errorMessage={confirmError ? "Passwords must match" : " "}
               autoCorrect={false}
               secureTextEntry={true}
+              autoCapitalize='none'
               ref={confirmRef}
             />
           )}

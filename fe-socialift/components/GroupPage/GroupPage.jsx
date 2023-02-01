@@ -39,6 +39,7 @@ export const GroupPage = ({ route, navigation}) => {
     // const chartData = [[1,1,1],[2,2,2]]
     // const chartLabels = ['2','2','2']
 
+
     const { auth } = getFirebase();
     const loggedInUser = auth.currentUser
     const loggedInUserName = loggedInUser.displayName

@@ -17,7 +17,7 @@ export const GroupsBar = ({navigation}) => {
       getDocs(collection(db, 'users', loggedInUser.uid, 'groups'))
       .then((userGroups) => {
         setGroups(userGroups.docs.map((group) => {
-          return group.data()
+          return {...group.data(), group_id: group.id}
         }))
       })
     }, [])
