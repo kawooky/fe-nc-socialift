@@ -1,8 +1,8 @@
-import { View, Text } from "react-native"
+import { View, ActivityIndicator } from "react-native"
 
 
 
 
 export const Loading = () => {
-    return <View><Text>Loading...</Text></View>
+    return <View style={{justifyContent: "center", alignItems:"center", height: "100%"}}><ActivityIndicator size="large"/></View>
 }
