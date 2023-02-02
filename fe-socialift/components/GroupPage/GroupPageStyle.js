@@ -1,52 +1,57 @@
-import { StyleSheet } from 'react-native';
-import {createTheme} from '@rneui/themed'
+import { StyleSheet, StatusBar, Dimensions } from "react-native";
 
+const mainAreaHeight = Dimensions.get("window").height - 75;
 const styles = StyleSheet.create({
-    
-    mainView: {
-        flex: 1,
-        backgroundColor: "#f1f1f1",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    membersContainer: {
+
+  mainView: {
+    backgroundColor: "#36373A",
     justifyContent: "center",
     alignItems: "center",
-    color: 'white',
-    fontSize: 15,
-    fontWeight: 'bold',
-    display: 'flex',
-    flexDirection: 'row'
+    marginTop: StatusBar.currentHeight,
   },
-    formView: {
-       width: 320,
-       backgroundColor: "#f5f5f5",
-       borderRadius: 10,
-       paddingTop: 30,
-       padding: 10,
-       paddingRight: 10
-    }   
-    });
-    
-    const theme = createTheme({
-      components: {
-        Button: {
-          raised: true,
-          radius: 10,
-          containerStyle: {
-            marginBottom: 20,
-            
-          }
-        },
-        Input: {
-          containerStyle: {
-            
-          }
-        }
-      }
-    })
-    
-export { styles, theme }
+  formView: {
+    maxWidth: 420,
+    width: "100%",
+    backgroundColor: "#36373A",
+    borderRadius: 10,
+    padding: 10,
+    height: mainAreaHeight
+  },
+  banner: {
+    backgroundColor: '#222322',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    marginBottom: 15
+  },
+  profilePic: {
+    height: 100,
+        width: 100,
+        borderColor: "black",
+        borderWidth: 2,
+        borderRadius: 100
+   },
+   username: {
+    fontSize: 20,
+    color: '#f4f4f5'
+   },
+
+
+
+  membersContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    fontSize: 15,
+    fontWeight: "bold",
+    display: "flex",
+    flexDirection: "row",
+  },
+
+});
+
+export { styles };
 
 // view: {
 //     height: "100vh",
@@ -103,6 +108,3 @@ export { styles, theme }
 //     marginVertical: 20
 // },
 // });
-
-
-

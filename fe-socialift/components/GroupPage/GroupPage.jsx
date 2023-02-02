@@ -32,12 +32,7 @@ export const GroupPage = ({ route, navigation}) => {
     const [groupObj, setGroupObj] = useState({})
     const [members, setMembers] = useState([])
     const db = getFirestore();
-    // const [chartLegend, setChartLegend] = useState(['1','1','1'])
-    // const [chartData, setChartData] =useState([[1,1,1],[2,2,2]])
-    // const [chartLabels, setChartLabels] = useState(['2','2','2'])
-    // const chartLegend = ['1','1','1']
-    // const chartData = [[1,1,1],[2,2,2]]
-    // const chartLabels = ['2','2','2']
+
 
 
     const { auth } = getFirebase();
@@ -76,27 +71,12 @@ console.log(loggedInUser, '<<< logged in user')
     })
 
 
-    //for the bar chart
-    // const chartLabels= [...tableTitle]
-    // useEffect(()=>{
-      // setChartLegend( ['Squat', 'Deadlift', 'Bench Press'])
-      // setChartData( members.map((member)=>{
-      //   return [ member.squatMax, member.chestMax, member.deadliftMax ]}))
-  
-      // //   console.log(chartLabels, '<<<chart labels')
-      // // console.log(chartData, '<<<chart data')
-  
-      // setChartLabels ( members.map((member)=>{
-      //   return member.username}))
-
-    // },[])
 
       const chartLegend = ['Squat', 'Deadlift', 'Bench Press']
       const chartData = members.map((member)=>{
         return [ member.squatMax, member.chestMax, member.deadliftMax ]})
   
-      //   console.log(chartLabels, '<<<chart labels')
-      // console.log(chartData, '<<<chart data')
+
   
       const chartLabels = members.map((member)=>{
         return member.username})
@@ -115,22 +95,27 @@ console.log(loggedInUser, '<<< logged in user')
 
     return (
 
-        <View style={styles.mainVeiw }>
+      <SafeAreaView style={styles.mainView}>
+        <View style={styles.formView}>
 
 
-            <Text>{groupObj.group_name}</Text>
-          <Avatar
+        <View style={styles.banner}>
+            <Image
                     alt='group picture'
-                    rounded
+                    style={styles.profilePic}
                     source={groupObj.group_img_url}
-                    sx={{ width: 100, height: 100 }}
-                  />
+                    />
+
+            <Text style={styles.username} >{groupObj.group_name}</Text>
+        </View>
 
           <Button
           onPress={()=>{
             navigation.navigate('GroupMessaging', {groupId, groupName: groupObj.group_name , loggedInUserName})
           }}
           title='Message'/>
+
+
         <View style={styles.membersContainer}>
                 {members.map((member)=>{
                     return (<Avatar
@@ -213,12 +198,13 @@ console.log(loggedInUser, '<<< logged in user')
       </View> 
 
     </View>
-
   )}
+        
+        
 
-
-        <NavBar navigation={navigation}/>
 
         </View>
+        <NavBar navigation={navigation}/>
+        </SafeAreaView >
     )
 }

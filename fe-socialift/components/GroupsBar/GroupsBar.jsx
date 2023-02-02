@@ -34,7 +34,7 @@ export const GroupsBar = ({navigation}) => {
         </Pressable>
         {groups.map((group) => {
           return (
-            <Pressable style={homeStyles.groupItem} onPress={() => navigation.navigate("Group", {groupId : group.group_id})}>
+            <Pressable key={group.group_id} style={homeStyles.groupItem} onPress={() => navigation.navigate("Group", {groupId : group.group_id})}>
               <Image
                 source={{ uri: group.group_img_url }}
                 style={homeStyles.groupIcon}
