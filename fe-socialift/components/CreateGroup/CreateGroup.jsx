@@ -1,8 +1,8 @@
 import { Pressable, SafeAreaView, Text, View, Image } from "react-native";
-import { Button, Input, SearchBar } from "@rneui/themed";
+import { Button, Input, SearchBar, ThemeProvider } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { styles } from "./CreateGroupStyles";
+import { styles, theme } from "./CreateGroupStyles";
 import NavBar from "../NavBar/NavBar";
 
 import {
@@ -178,7 +178,7 @@ export const CreateGroup = ({ route, navigation }) => {
   return (
     <View style={styles.mainArea}>
 
-    
+<ThemeProvider theme={theme}>
     <SafeAreaView style={styles.createGroupContainer}>
       
 
@@ -265,6 +265,7 @@ export const CreateGroup = ({ route, navigation }) => {
       
     </SafeAreaView>
     <NavBar navigation={navigation}/>
+    </ThemeProvider>
     </View>
   );
 };
