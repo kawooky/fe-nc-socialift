@@ -124,11 +124,11 @@ export const EditProfilePage = ({ navigation }) => {
         <View>
           <View style={styles.toggleContainer}>
             <Text style={styles.toggleText}>Dark Mode</Text>
-            <Switch color="#249e45" value={darkMode} onValueChange={toggleDarkMode} />
+            <Switch color="#49BF87" value={darkMode} onValueChange={toggleDarkMode} />
           </View>
           <View style={styles.toggleContainer}>
             <Text style={styles.toggleText}>Private Account</Text>
-            <Switch color="#249e45" value={privateMode} onValueChange={togglePrivateMode} />
+            <Switch color="#49BF87" value={privateMode} onValueChange={togglePrivateMode} />
           </View>
         </View>
         <Button
