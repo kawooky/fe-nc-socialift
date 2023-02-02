@@ -115,6 +115,7 @@ export const ProfilePage = ({ route, navigation }) => {
 
         {loggedInUserProfile && (
           <Button
+            color="#49BF87"
             onPress={() => {
               navigation.navigate("EditProfile");
             }}
