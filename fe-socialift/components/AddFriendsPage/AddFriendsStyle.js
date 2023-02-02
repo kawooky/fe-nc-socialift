@@ -13,7 +13,7 @@ const AddFriendsstyles = StyleSheet.create({
 		borderColor: '#9e9d9b',
 		alignItems: "center",
 		marginBottom: 10,
-		backgroundColor: '#f2f2f2',
+		backgroundColor: '#36373A',
 		borderRadius: 10,
 		paddingBottom: 10
 	},

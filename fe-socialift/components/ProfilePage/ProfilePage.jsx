@@ -29,7 +29,6 @@ import { Loading } from "../Loading/Loading.jsx";
 export const ProfilePage = ({ route, navigation }) => {
   const { userId } = route.params;
   const { auth } = getFirebase();
-  ///// POST EXAMPLE
 
   const db = getFirestore();
 
@@ -135,11 +134,14 @@ export const ProfilePage = ({ route, navigation }) => {
 
         <ButtonGroup
           buttons={["Feed", "Friends", "Groups"]}
+          buttonStyle={{backgroundColor:"#28292B", }}
+          textStyle={{color: "white"}}
+          selectedButtonStyle={{backgroundColor: "#49BF87",  innerBorderStyle: "pink"}}
           selectedIndex={sectionOfProfile}
           onPress={(e) => {
             setSectionOfProfile(e);
           }}
-          containerStyle={{ width: "100%", alignSelf: "center" }}
+          containerStyle={{ width: "100%", alignSelf: "center", borderColor: "#28292B", }}
         />
 
         {sectionOfProfile === 0 && <Feed posts={posts} />}

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
 
     mainView: {
         flex: 1,
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "#36373A",
         justifyContent: "center",
         alignItems: "center",
         marginTop: StatusBar.currentHeight
