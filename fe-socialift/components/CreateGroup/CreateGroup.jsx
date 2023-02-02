@@ -3,6 +3,7 @@ import { Button, Input, SearchBar } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { styles } from "./CreateGroupStyles";
+import NavBar from "../NavBar/NavBar";
 
 import {
   faUserGroup,
@@ -175,17 +176,11 @@ export const CreateGroup = ({ route, navigation }) => {
   }
 
   return (
+    <View style={styles.mainArea}>
+
+    
     <SafeAreaView style={styles.createGroupContainer}>
-      <Pressable
-        onPress={() => {
-          return navigation.goBack();
-        }}
-      >
-        <Text>Back</Text>
-      </Pressable>
-      <Pressable>
-        <Text>Save</Text>
-      </Pressable>
+      
 
       <Pressable onPress={updateAvatar} style={styles.groupImageSelector}>
         {groupImage !== '' && (
@@ -202,7 +197,7 @@ export const CreateGroup = ({ route, navigation }) => {
             />
           </View>
         )}
-        <Text>Tap to choose group photo</Text>
+        <Text style={styles.username}>Tap to choose group photo</Text>
       </Pressable>
 
       <Input
@@ -217,7 +212,7 @@ export const CreateGroup = ({ route, navigation }) => {
         return (
           <View style={styles.friendCard}>
             <Image source={{ uri: result.avatarImgURL }} style={styles.friendIcon} />
-            <Text>{result.username}</Text>
+            <Text style={styles.username}>{result.username}</Text>
 
             <Button
               style={styles.addButton}
@@ -226,20 +221,20 @@ export const CreateGroup = ({ route, navigation }) => {
                   return member.id === result.id;
                 })
                   ? {
-                      backgroundColor: "#198754",
+                      backgroundColor: "#49BF87",
                       borderColor: "black",
                       borderWidth: 2,
                       borderRadius: 50,
-                      height: 40,
-                      width: 40,
+                      height: 60,
+                      width: 60,
                     }
                   : {
-                      backgroundColor: "white",
+                      backgroundColor: "#e8e8e8",
                       borderColor: "black",
                       borderWidth: 2,
                       borderRadius: 50,
-                      height: 40,
-                      width: 40,
+                      height: 60,
+                      width: 60,
                     }
               }
               title={
@@ -267,6 +262,9 @@ export const CreateGroup = ({ route, navigation }) => {
         title={groupIdEdit ? "Save Group": "Create Group"}
         disabled={(groupName !== '' && groupImage !== '' )? false : true}
       />
+      
     </SafeAreaView>
+    <NavBar navigation={navigation}/>
+    </View>
   );
 };
