@@ -9,7 +9,7 @@ const AddFriendsstyles = StyleSheet.create({
 	},
 	result: {
 		width: "100%",
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: '#9e9d9b',
 		alignItems: "center",
 		marginBottom: 10,
@@ -26,7 +26,8 @@ const AddFriendsstyles = StyleSheet.create({
 		width: 340,
 		alignItems: "center",
 		margin: 5,
-		borderRadius: 10
+		borderRadius: 10,
+		color: "#49BF87"
 	},
 	text: {
 		marginTop: 10,
@@ -34,6 +35,7 @@ const AddFriendsstyles = StyleSheet.create({
 		display: 'flex',
 		justifyContent: 'center',
 		fontSize: 17,
+		color: '#f4f4f5',
 	},
 	banner: {
 		width: "100%",
@@ -55,7 +57,8 @@ const AddFriendsstyles = StyleSheet.create({
 	  username: {
 		margin: 5,
 	   fontSize: 20,
-	   color: '#f4f4f5'
+	   color: '#f4f4f5',
+	   borderWidth: 0
 	  },
 });
 

@@ -47,6 +47,7 @@ const homeStyles = StyleSheet.create({
     margin: 5,
     alignItems: "flex-start",
     borderRadius: 10, 
+    padding: 10
   },
   postUserDetails: {
     flexDirection: "row",
@@ -60,12 +61,15 @@ const homeStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     marginTop: 20,
+    width: "100%"
   },
   button: {
     flex: 1,
-    padding: 5
+    padding: 5,
+    width: 150,
+    borderRadius: 10
 
   },
   textName: {

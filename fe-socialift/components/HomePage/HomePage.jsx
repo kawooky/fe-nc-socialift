@@ -101,22 +101,7 @@ export const HomePage = ({ navigation }) => {
       n: 1.7},
       likes: 4,
       comments: 3,
-    },
-    {
-      id: 304,
-      type: "record",
-      user: "dave",
-      user_img_url:
-        "https://www.biography.com/.image/t_share/MTY3MDUxMjkzMjI1OTIwMTcz/brad-pitt-attends-the-premiere-of-20th-century-foxs--square.jpg",
-      date: "2023-01-12",
-      exercise: "deadlift",
-      weight: 240,
-      units: "kg",
-      reps: 1,
-      notes: "Ate a can of spinach, did a deadlift, simple as.",
-      likes: 4,
-      comments: 3,
-    },
+    }
   ];
 
   return (
