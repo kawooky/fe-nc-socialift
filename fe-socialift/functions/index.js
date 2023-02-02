@@ -64,15 +64,26 @@ exports.updateUserAvatarEverywhere = functions.firestore
     });
   });
 
-exports.updateGroupAvatarEverywhere = functions.firestore
+exports.updateGroupEverywhere = functions.firestore
   .document("groups/{groupId}")
   .onUpdate(async (change, context) => {
     const groupId = context.params.groupId;
-    const newAvatar = change.after.data().avatarImgURL;
-    const oldAvatar = change.before.data().avatarImgURL;
+    const newAvatar = change.after.data().group_img_url;
+    const oldAvatar = change.before.data().group_img_url;
+    const newName = change.after.data().group_name;
+    const oldName = change.before.data().group_name;
 
-    if (newAvatar == oldAvatar) {
+    const updateObj = {};
+
+    if (newAvatar == oldAvatar && newName == oldName) {
       return null;
+    } else if (newAvatar == oldAvatar && newName != oldName) {
+      updateObj.group_name = newName;
+    } else if (newAvatar != oldAvatar && newName == oldName) {
+      updateObj.group_img_url = newAvatar;
+    } else {
+      updateObj.group_img_url = newAvatar;
+      updateObj.group_name = newName;
     }
 
     const members = await admin
@@ -89,8 +100,6 @@ exports.updateGroupAvatarEverywhere = functions.firestore
         .doc(member.id)
         .collection("groups")
         .doc(groupId)
-        .update({
-          group_img_url: newAvatar,
-        });
+        .update(updateObj);
     });
   });
