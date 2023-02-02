@@ -4,8 +4,8 @@ import { AddFriendsstyles } from "../AddFriendsPage/AddFriendsStyle";
 
 export const FriendsList = ({fetchedUsers, friendsList, handleAddUser, navigation}) => {
     return (<View>
-        <Card>
-        <Card.Title>Search results:</Card.Title>
+        <Card containerStyle={{backgroundColor: "#28292B", borderColor: "black", borderRadius: 10, borderWidth: 0}}>
+        <Card.Title style={AddFriendsstyles.username}>Search results:</Card.Title>
         <Card.Divider />
         {fetchedUsers.map((user, index) => {
             return (
@@ -21,14 +21,14 @@ export const FriendsList = ({fetchedUsers, friendsList, handleAddUser, navigatio
                     
 
                     
-                    <Button
+                    <Button color="#49BF87" 
                         buttonStyle={AddFriendsstyles.button}
                         onPress={() => {
                             handleAddUser(user);
                         }}
                         title="Add Friend"
                     />
-                    <Button color="#249e45" buttonStyle={AddFriendsstyles.button} onPress={() =>{
+                    <Button color="#49BF87" buttonStyle={AddFriendsstyles.button} onPress={() =>{
                         navigation.navigate("Profile", {userId: user.id})
                     }} title="View Profile"/>
                     
@@ -42,8 +42,8 @@ export const FriendsList = ({fetchedUsers, friendsList, handleAddUser, navigatio
         </View>
     </Card>
 
-    <Card>
-        <Card.Title>Friends list:</Card.Title>
+    <Card containerStyle={{backgroundColor: "#28292B", borderColor: "black", borderRadius: 10, borderWidth: 0}}>
+        <Card.Title style={AddFriendsstyles.username}>Friends list:</Card.Title>
         {friendsList.map((user, index) => {
             return (
                 <View style={AddFriendsstyles.result} key={index}>
@@ -56,7 +56,7 @@ export const FriendsList = ({fetchedUsers, friendsList, handleAddUser, navigatio
                     </View>
                     <Button
                         size="sm"
-                        color="#249e45"
+                        color="#49BF87" 
                         buttonStyle={AddFriendsstyles.button}
                         onPress={() =>{
                             navigation.navigate("Profile", {userId: user.id})

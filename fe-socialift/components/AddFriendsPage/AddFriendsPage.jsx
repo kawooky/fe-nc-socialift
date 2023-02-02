@@ -100,7 +100,7 @@ export const AddFriendsPage = ({ navigation }) => {
 				<View>
 					<SearchBar
 						placeholder="Search for friends..."
-						lightTheme={true}
+						lightTheme={false}
 						value={search}
 						onChangeText={updateSearch}
 					/>

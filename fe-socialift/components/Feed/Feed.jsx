@@ -58,22 +58,7 @@ const posts = [
       n: 1.7},
       likes: 4,
       comments: 3,
-    },
-    {
-      id: 304,
-      type: "record",
-      user: "dave",
-      user_img_url:
-        "https://www.biography.com/.image/t_share/MTY3MDUxMjkzMjI1OTIwMTcz/brad-pitt-attends-the-premiere-of-20th-century-foxs--square.jpg",
-      date: "2023-01-12",
-      exercise: "deadlift",
-      weight: 240,
-      units: "kg",
-      reps: 1,
-      notes: "Ate a can of spinach, did a deadlift, simple as.",
-      likes: 4,
-      comments: 3,
-    },
+    }
   ];
 
 export const Feed = ({posts}) => {
@@ -123,10 +108,10 @@ export const Feed = ({posts}) => {
             )}
           </View>
           <View style={homeStyles.postLikesComments}>
-            <View style={homeStyles.button}>
+            
             <Button
               color="#49BF87"
-              
+              buttonStyle={homeStyles.button}
               title={
                 <Text >
                   {post.likes} <FontAwesomeIcon icon={faThumbsUp} />
@@ -134,11 +119,10 @@ export const Feed = ({posts}) => {
               }
               disabled={false}
             />
-            </View>
-            <View style={homeStyles.button}>
+            
             <Button
             color="#49BF87"
-             
+              buttonStyle={homeStyles.button}
               title={
                 <Text >
                   {post.comments} <FontAwesomeIcon icon={faCommentAlt} />
@@ -146,7 +130,7 @@ export const Feed = ({posts}) => {
               }
               disabled={false}
             />
-            </View>
+            
           </View>
         </View>
       );
