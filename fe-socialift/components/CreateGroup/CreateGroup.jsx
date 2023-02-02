@@ -1,8 +1,8 @@
 import { Pressable, SafeAreaView, Text, View, Image } from "react-native";
-import { Button, Input, SearchBar } from "@rneui/themed";
+import { Button, Input, SearchBar, ThemeProvider } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { styles } from "./CreateGroupStyles";
+import { styles, theme } from "./CreateGroupStyles";
 import NavBar from "../NavBar/NavBar";
 
 import {
@@ -34,6 +34,8 @@ export const CreateGroup = ({ route, navigation }) => {
   const [groupId, setGroupId] = useState('')
   const [loggedInUserObject, setLoggedInUserObject] = useState({})
   const [loading, setLoading] = useState(true)
+  const [editImage, setEditImage] = useState(false)
+  const [editName, setEditName] = useState(false)
  
   const groupIdEdit = route.params.groupId
 
@@ -66,6 +68,7 @@ export const CreateGroup = ({ route, navigation }) => {
       .then((newAvatarURI) => {
         console.log(newAvatarURI, "<< newAvatarURI");
         setGroupImage(newAvatarURI);
+        setEditImage(true)
       })
       .catch((error) => {
         setGroupImage(null);
@@ -120,15 +123,16 @@ export const CreateGroup = ({ route, navigation }) => {
         navigation.navigate("Group", {groupId: newGroupId})
       })
     } else {
-      console.log(groupImage)
-      return Promise.all([
-
-        uploadImage(groupImage, ref(storage, `groups/${groupIdEdit}.jpg`)),
+      if (editImage) {
+        uploadImage(groupImage, ref(storage, `groups/${groupIdEdit}.jpg`))
+      }
+      if (editName) {
         updateDoc(doc(db, 'groups', groupIdEdit), {group_name: groupName})
-      ])
-      .then(() => {
-        navigation.navigate("Group", {groupId: groupIdEdit})
-      })
+        
+      }
+      navigation.navigate("Group", {groupId: groupIdEdit})
+        
+      
 
     }
   };
@@ -178,7 +182,7 @@ export const CreateGroup = ({ route, navigation }) => {
   return (
     <View style={styles.mainArea}>
 
-    
+<ThemeProvider theme={theme}>
     <SafeAreaView style={styles.createGroupContainer}>
       
 
@@ -205,6 +209,7 @@ export const CreateGroup = ({ route, navigation }) => {
         placeholder="Group Name"
         onChangeText={(e) => {
           setGroupName(e);
+          setEditName(true)
         }}
       />
 
@@ -265,6 +270,7 @@ export const CreateGroup = ({ route, navigation }) => {
       
     </SafeAreaView>
     <NavBar navigation={navigation}/>
+    </ThemeProvider>
     </View>
   );
 };

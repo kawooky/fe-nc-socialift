@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { createTheme } from "@rneui/themed";
 
 
 
@@ -68,3 +69,16 @@ export const styles = StyleSheet.create({
         
     }
 })
+
+export const theme = createTheme({
+    components: {
+      Input: {
+        borderBottomColor: "white",
+        placeholderTextColor: "#F4F6F9",
+        inputStyle: { color: "white" },
+        containerStyle: {
+          borderBottomColor: "white",
+        },
+      },
+    },
+  });
