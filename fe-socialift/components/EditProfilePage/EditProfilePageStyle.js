@@ -4,13 +4,13 @@ import { createTheme } from "@rneui/themed";
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#36373A",
     justifyContent: "center",
     alignItems: "center",
   },
   formView: {
     width: 320,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#28292B",
     borderRadius: 10,
     paddingTop: 30,
     padding: 10,
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
   },
 
   infoText: {
-    fontSize: 20
+    fontSize: 20,
+    color: "white"
   },
 
   toggleContainer: {
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
 
   toggleText: {
     fontSize: 20,
+    color: "white"
   },
 
   avatar: {

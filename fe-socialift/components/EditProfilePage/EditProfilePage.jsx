@@ -107,7 +107,7 @@ export const EditProfilePage = ({ navigation }) => {
             onPress={changeAvatar}
           >
           </Avatar>
-          <Text>Hint: Tap your avatar circle above to edit it</Text>
+          <Text style={{color: "white"}}>Hint: Tap your avatar circle above to edit it</Text>
         </View>
         <Divider />
         <View>
@@ -124,11 +124,11 @@ export const EditProfilePage = ({ navigation }) => {
         <View>
           <View style={styles.toggleContainer}>
             <Text style={styles.toggleText}>Dark Mode</Text>
-            <Switch value={darkMode} onValueChange={toggleDarkMode} />
+            <Switch color="#49BF87" value={darkMode} onValueChange={toggleDarkMode} />
           </View>
           <View style={styles.toggleContainer}>
             <Text style={styles.toggleText}>Private Account</Text>
-            <Switch value={privateMode} onValueChange={togglePrivateMode} />
+            <Switch color="#49BF87" value={privateMode} onValueChange={togglePrivateMode} />
           </View>
         </View>
         <Button
