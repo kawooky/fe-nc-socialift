@@ -109,6 +109,6 @@ export const HomePage = ({ navigation }) => {
       <GroupsBar groups={testGroups} navigation={navigation}/>
       <Feed posts={posts}/>
       <NavBar navigation={navigation}/>
-    </SafeAreaView>
+      </SafeAreaView>
   );
 };

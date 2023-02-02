@@ -37,7 +37,8 @@ const logStyles = StyleSheet.create({
   },
   button: {
     flex: 1, 
-    justifyContent: "flex-end"
+    justifyContent: "flex-end", 
+    borderRadius: 10
   }
 });
 
