@@ -1,47 +1,69 @@
-import { StyleSheet } from 'react-native';
-import {createTheme} from '@rneui/themed'
+import { StyleSheet, Dimensions, StatusBar } from "react-native";
+import { createTheme } from "@rneui/themed";
+const mainAreaHeight = Dimensions.get("window").height - 75;
 
 const styles = StyleSheet.create({
-    mainView: {
-        display: 'flex',
-        flex: 1,
-        backgroundColor: "#f1f1f1",
-        justifyContent: "center",
-    },
-    formView: {
-        width: 320,
-        backgroundColor: "#f5f5f5",
-        borderRadius: 10,
-        paddingTop: 30,
-        padding: 10,
-        paddingRight: 10
-     },
-     sentMessage: {
-      textAlign: "right"
-     },
-     receivedMessage: {
-      alignItems: "left",
-      backgroundColor: 'light-blue'
-     }
-
-})
+  mainView: {
+    backgroundColor: "#36373A",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: StatusBar.currentHeight,
+  },
+  formView: {
+    padding: 30,
+    paddingTop: 50,
+    minWidth: "550",
+    width: "100%",
+    backgroundColor: "#36373A",
+    borderRadius: 10,
+    alignItems: "center",
+    height: mainAreaHeight,
+  },
+  profilePic: {
+    height: 100,
+    width: 100,
+    borderColor: "black",
+    borderWidth: 2,
+    borderRadius: 100,
+  },
+  username: {
+    fontSize: 20,
+    color: "#f4f4f5",
+  },
+  banner: {
+    backgroundColor: "#222322",
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    marginBottom: 15,
+    width: "70%",
+  },
+  sentMessage: {
+    textAlign: "right",
+    fontSize: 15,
+    color: "#f4f4f5",
+  },
+  receivedMessage: {
+    alignItems: "left",
+    fontSize: 15,
+    color: "#f4f4f5",
+  },
+});
 
 const theme = createTheme({
-    components: {
-      Button: {
-        raised: true,
-        radius: 10,
-        containerStyle: {
-          marginBottom: 20,
-          
-        }
+  components: {
+    Button: {
+      raised: true,
+      radius: 10,
+      containerStyle: {
+        marginBottom: 20,
       },
-      Input: {
-        containerStyle: {
-          
-        }
-      }
-    }
-  })
+    },
+    Input: {
+      containerStyle: {},
+    },
+  },
+});
 
-  export { styles, theme }
+export { styles, theme };
