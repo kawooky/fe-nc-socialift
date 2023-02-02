@@ -1,19 +1,14 @@
 import { View , Text, ScrollView, SafeAreaView} from 'react-native';
-import { styles, theme } from './WorkoutLogPageStyle.js';
+import { logStyles, theme } from './WorkoutLogPageStyle.js';
 import React, { useEffect, useState } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getFirebase } from "../../firebase.js";
 import {collection, getFirestore, getDocs, addDoc} from "firebase/firestore"
+import {styles} from "../someDefaultStyles"
+
 
 import NavBar from '../NavBar/NavBar.jsx';
-
-
-
-
-
-
-
-
+import { homeStyles } from '../HomePage/HomePageStyle.js';
 
 
 export const WorkoutLogPage = ({navigation}) => {
@@ -47,29 +42,30 @@ useEffect(() => {
 
 
     return (
-        <View style={styles.mainView}>
-            <ThemeProvider theme={theme}>
+        <SafeAreaView style={styles.mainView}>
+      <ScrollView style={{width: "100%"}}
+    contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
 
-            <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
 {workouts.map((workout) => {
     return (
-        <View style={styles.formView}> 
-        <Text>{workout.date}</Text>
-        <Text>{workout.notes}</Text>
-        <Button onPress={() => {
+        <View style={homeStyles.post}> 
+        <Text style={logStyles.textName}>{workout.date}</Text>
+        <Text style={logStyles.text}>{workout.notes}</Text>
+        <Button 
+        color="#49BF87"
+        style={logStyles.button}
+        onPress={() => {
                 const workoutColRefPost = collection(firestore, "users", loggedInUser, "posts")
 
                 addDoc(workoutColRefPost, workout)
-            }}>Share</Button> 
+            }}>Post</Button> 
         </View>
     )
 })}
+
 </ScrollView>
-    </SafeAreaView>
-
-
             <Button
+            color="#49BF87"
             onPress={() => {
                 return navigation.navigate('WorkoutLogger')
             }}
@@ -78,10 +74,8 @@ useEffect(() => {
                             
 
 
-            </ThemeProvider>
             <NavBar navigation={navigation}/>
-        </View>
-        
+        </SafeAreaView>
         
 
     )

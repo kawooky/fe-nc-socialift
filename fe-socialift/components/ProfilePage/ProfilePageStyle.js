@@ -4,7 +4,7 @@ const mainAreaHeight = Dimensions.get('window').height - 75
 const styles = StyleSheet.create({
 
 mainView: {
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#36373A",
     justifyContent: "center",
     alignItems: "center",
     marginTop: StatusBar.currentHeight
@@ -12,7 +12,7 @@ mainView: {
   formView: {
     maxWidth: 420,
     width: "100%",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#36373A",
     borderRadius: 10,
     padding: 10,
     height: mainAreaHeight

@@ -1,13 +1,14 @@
 import { Text, View, SafeAreaView, Image, ScrollView} from "react-native";
 import { getFirebase } from "../../firebase";
 import { styles } from "../someDefaultStyles";
-import { homeStyles } from "./HomePageStyle";
+import { homeStyles, theme } from "./HomePageStyle";
 import NavBar from "../NavBar/NavBar";
 import {Feed} from "../Feed/Feed.jsx"
 import { faCar } from "@fortawesome/free-solid-svg-icons";
 import { GroupsBar } from "../GroupsBar/GroupsBar";
 import { useState } from "react";
 import { Button } from '@rneui/themed';
+import { ThemeProvider } from "@react-navigation/native";
 
 export const HomePage = ({ navigation }) => {
   const { auth } = getFirebase();

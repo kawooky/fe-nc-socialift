@@ -1,44 +1,46 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions} from "react-native";
 import { createTheme } from "@rneui/themed";
 
-const styles = StyleSheet.create({
+
+const logStyles = StyleSheet.create({
   mainView: {
-    flex: 1,
-    backgroundColor: "#f1f1f1",
+    flex: 1, 
+    backgroundColor: "#36373A",
     justifyContent: "center",
-    alignItems: "center"
+    alignContent: "center", 
+    maxWidth: 400,
+
   },
   formView: {
-    width: 320,
-    backgroundColor: "#f5f5f5",
+    flex: 1,
+    width: "90%",
+    backgroundColor: "#28292B",
     borderRadius: 10,
-    padding: 10,
-    paddingRight: 10,
+    padding: 5,
     marginBottom: 10,
     marginTop: 10,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    marginLeft: 20
   },
   container: {
-    flex: 1
   },
-  scrollView: {
-    backgroundColor: "pink",
-    marginHorizontal: 20,
+  textName: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 17,
+    marginBottom: 2
   },
+  text: {
+    color: "white",
+    marginBottom: 10,
+  },
+  button: {
+    flex: 1, 
+    justifyContent: "flex-end"
+  }
 });
 
-const theme = createTheme({
-  components: {
-    Button: {
-      raised: true,
-      radius: 10,
-      containerStyle: {
-        marginBottom: 20,
-      },
-    },
-    Input: {
-      containerStyle: {},
-    },
-  },
-});
 
-export { styles, theme };
+
+export { logStyles};

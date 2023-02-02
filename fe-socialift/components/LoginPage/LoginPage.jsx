@@ -198,6 +198,7 @@ export const LoginPage = ({ navigation }) => {
           {showRegister && (
             <Input
               placeholder="Username"
+        
               onChangeText={(e) => {
                 handleChange(e, setUsername);
                 validateUsername(e);

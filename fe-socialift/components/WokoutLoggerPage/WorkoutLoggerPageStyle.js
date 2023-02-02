@@ -1,63 +1,51 @@
-import { StyleSheet } from 'react-native';
-import {createTheme} from '@rneui/themed'
+import { StyleSheet } from "react-native";
+import { createTheme } from "@rneui/themed";
 
-const styles = StyleSheet.create({
-    mainView: {
-        display: 'flex',
-        flex: 1,
-        backgroundColor: "#f1f1f1",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    formView: {
-        width: 320,
-        backgroundColor: "#f5f5f5",
-        borderRadius: 10,
-        paddingTop: 30,
-        padding: 10,
-        paddingRight: 10
-     } 
-    ,stageOne: {
-        
-    }
-    ,stageTwo: {
+const workLogStyles = StyleSheet.create({
+  mainView: {
+    flex: 1,
+    backgroundColor: "#36373A",
+    justifyContent: "center",
+    alignContent: "center",
+    maxWidth: 400,
+  },
+  formView: {
+    width: 320,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 10,
+    paddingTop: 30,
+    padding: 10,
+    paddingRight: 10,
+  },
+  stageOne: {},
+  stageTwo: {},
+  muscleButtonList: {
+    flexDirection: "row",
 
-    }
-    ,muscleButtonList:{
-        flexDirection: 'row',
-        
-        flexWrap: 'wrap',
-        justifyContent: 'space-evenly'
-    }
-    ,muscleButton:{
-        width: 300,
-        flexGrow: 1,
-    }
-    ,stageThree: {
-        
-    } 
-    ,stageFour: {
-        
-    }
-
-})
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
+  },
+  muscleButton: {
+    width: 300,
+    flexGrow: 1,
+  },
+  stageThree: {},
+  stageFour: {},
+});
 
 const theme = createTheme({
-    components: {
-      Button: {
-        raised: true,
-        radius: 10,
-        containerStyle: {
-          marginBottom: 20,
-          
-        }
+  components: {
+    Button: {
+      raised: true,
+      radius: 10,
+      containerStyle: {
+        marginBottom: 20,
       },
-      Input: {
-        containerStyle: {
-          
-        }
-      }
-    }
-  })
+    },
+    Input: {
+      containerStyle: {},
+    },
+  },
+});
 
-  export { styles, theme }
+export { workLogStyles, theme };

@@ -139,9 +139,8 @@ const handlePost = () => {
 
     return (
         <View style={styles.mainView}>
-        <ThemeProvider theme={theme}>
-
-        { stage ===1 && ( <View style={styles.stageOne}>
+       
+        { stage ===1 && ( <View style={styles.mainView}>
         <Button
         onPress={() => {
             return navigation.goBack()
@@ -380,8 +379,6 @@ const handlePost = () => {
         />
         </View>)}
 
-
-        </ThemeProvider>
     </View>
             
     )
