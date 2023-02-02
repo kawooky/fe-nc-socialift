@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Image } from "react-native";
 import React, { createRef, useEffect, useState } from "react";
 import { styles, theme } from "./LoginPageStyle.js";
 import { Input, Button, ThemeProvider } from "@rneui/themed";
@@ -9,6 +9,8 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+
+
 
 import {
   doc,
@@ -193,6 +195,7 @@ export const LoginPage = ({ navigation }) => {
 
   return (
     <View style={styles.mainView}>
+      <Image style={{width: 200, height: 200}} source={require('./logo-both.png')}/>
       <View style={styles.formView}>
         <ThemeProvider theme={theme}>
           {showRegister && (

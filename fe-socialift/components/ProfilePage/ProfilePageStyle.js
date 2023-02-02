@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     textAlign: "center",
-    borderRadius: 10
+    borderRadius: 10,
+    paddingHorizontal: "35%"
   },
 
   username: {

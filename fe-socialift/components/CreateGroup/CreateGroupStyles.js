@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { createTheme } from "@rneui/themed";
 
 
@@ -11,18 +11,19 @@ export const styles = StyleSheet.create({
     mainArea: {
         backgroundColor: "#36373A", 
         width: '100%',
+        marginTop: StatusBar.currentHeight,
     },
     createGroupContainer: {
         backgroundColor: "#36373A",
-        alignItems: 'center',
         width: '100%',
         maxWidth: 360,
         alignSelf: 'center',
-        maxHeight: "100%",
-        overflow: "scroll",
-        padding: 15,
+        
+        paddingHorizontal: 15,
         height: mainAreaHeight,
-        padding: 20,
+        
+        marginBottom: 25,
+        overflow: "scroll"
     },
     groupImageContainer: {
         backgroundColor: "#e8e8e8",

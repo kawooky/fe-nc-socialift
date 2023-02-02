@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   formView: {
     padding: 30,
     paddingTop: 50,
-    minWidth: "550",
+    minWidth: 550,
     width: "100%",
     backgroundColor: "#36373A",
     borderRadius: 10,

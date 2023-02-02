@@ -5,13 +5,14 @@ import { createTheme } from "@rneui/themed";
 
 const workLogStyles = StyleSheet.create({
 mainContainer: {
-maxHeight: "90"
+marginTop: "40%"
 },
 
   mainView: {
     width: "100%",
     flex: 1, 
     backgroundColor: "#36373A",
+    
   },
   card: {
 flex: 1, 

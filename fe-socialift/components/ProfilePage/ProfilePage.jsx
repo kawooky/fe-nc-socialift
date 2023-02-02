@@ -53,6 +53,18 @@ export const ProfilePage = ({ route, navigation }) => {
   useEffect(() => {
     setLoggedInUserProfile(false);
     setLoading(true);
+    onSnapshot(collection(db, "users", userId, 'friends'), (friendDocs) => {
+      setFriends(friendDocs.docs.map((friend) => {
+        if (friend.id !== userId) {
+          return {...friend.data(), id:friend.id}
+        }
+      }))
+      setFriendsIds(friendDocs.docs.map((friend) => {
+        if (friend.id !== userId) {
+          return friend.id
+        }
+      }))
+    })
     if (loggedInUserId === userId) {
       setLoggedInUserProfile(true);
     }
@@ -70,18 +82,18 @@ export const ProfilePage = ({ route, navigation }) => {
           })
         );
       }),
-      getDocs(collection(db, "users", userId, 'friends')).then((friendDocs) => {
-        setFriends(friendDocs.docs.map((friend) => {
-          if (friend.id !== userId) {
-            return {...friend.data(), id:friend.id}
-          }
-        }))
-        setFriendsIds(friendDocs.docs.map((friend) => {
-          if (friend.id !== userId) {
-            return friend.id
-          }
-        }))
-      }),
+      // getDocs(collection(db, "users", userId, 'friends')).then((friendDocs) => {
+      //   setFriends(friendDocs.docs.map((friend) => {
+      //     if (friend.id !== userId) {
+      //       return {...friend.data(), id:friend.id}
+      //     }
+      //   }))
+      //   setFriendsIds(friendDocs.docs.map((friend) => {
+      //     if (friend.id !== userId) {
+      //       return friend.id
+      //     }
+      //   }))
+      // }),
       getDocs(collection(db, "users", userId, 'groups')).then((groupDocs) => {
         setGroups(groupDocs.docs.map((group) => {
           return {...group.data(), id:group.id}
@@ -134,6 +146,7 @@ export const ProfilePage = ({ route, navigation }) => {
         )}
         {!loggedInUserProfile && !friendsIds.includes(loggedInUserId) && (
           <Button
+          color="#49BF87"
             onPress={() => {
               handleAddUser(user);
             }}
@@ -199,9 +212,11 @@ export const ProfilePage = ({ route, navigation }) => {
         )}
 
         {sectionOfProfile === 2 && (
-          <Card containerStyle={styles.feed}>
+          <ScrollView containerStyle={styles.feed}>
+            <View>
             {groups.map((group) => {
               return (
+                <Card containerStyle={styles.feed}>
                 <View style={styles.banner} key={group.id}>
                   <Image
                     source={{ uri: group.group_img_url }}
@@ -212,9 +227,11 @@ export const ProfilePage = ({ route, navigation }) => {
                     {group.group_name.slice(1)}
                   </Text>
                 </View>
+          </Card>
               );
             })}
-          </Card>
+          </View>
+        </ScrollView>
         )}
       </View>
       <NavBar navigation={navigation} />

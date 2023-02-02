@@ -44,7 +44,7 @@ useEffect(() => {
     return (
         <SafeAreaView style={styles.mainView}>
       <ScrollView style={{width: "100%"}}
-    contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
+    contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}>
 
 {workouts.map((workout) => {
     return (
@@ -63,7 +63,6 @@ useEffect(() => {
     )
 })}
 
-</ScrollView>
             <Button
             color="#49BF87"
             onPress={() => {
@@ -71,6 +70,7 @@ useEffect(() => {
             }}
             title="Log Workout"
             />
+</ScrollView>
                             
 
 

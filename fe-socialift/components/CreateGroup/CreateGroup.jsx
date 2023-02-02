@@ -1,4 +1,4 @@
-import { Pressable, SafeAreaView, Text, View, Image } from "react-native";
+import { Pressable, SafeAreaView, Text, View, Image, ScrollView } from "react-native";
 import { Button, Input, SearchBar, ThemeProvider } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -183,7 +183,7 @@ export const CreateGroup = ({ route, navigation }) => {
     <View style={styles.mainArea}>
 
 <ThemeProvider theme={theme}>
-    <SafeAreaView style={styles.createGroupContainer}>
+    <ScrollView style={styles.createGroupContainer}>
       
 
       <Pressable onPress={updateAvatar} style={styles.groupImageSelector}>
@@ -212,7 +212,7 @@ export const CreateGroup = ({ route, navigation }) => {
           setEditName(true)
         }}
       />
-
+      
       {searchResults.map((result) => {
         return (
           <View style={styles.friendCard}>
@@ -221,6 +221,7 @@ export const CreateGroup = ({ route, navigation }) => {
 
             <Button
               style={styles.addButton}
+              
               buttonStyle={
                 groupMembers.some((member) => {
                   return member.id === result.id;
@@ -258,9 +259,10 @@ export const CreateGroup = ({ route, navigation }) => {
           </View>
         );
       })}
-
+      
       <Button
         variant="contained"
+        color="#49BF87"
         onPress={() => {
           handleGroupCreate();
         }}
@@ -268,7 +270,7 @@ export const CreateGroup = ({ route, navigation }) => {
         disabled={(groupName !== '' && groupImage !== '' )? false : true}
       />
       
-    </SafeAreaView>
+      </ScrollView>
     <NavBar navigation={navigation}/>
     </ThemeProvider>
     </View>
