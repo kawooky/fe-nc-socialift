@@ -24,6 +24,7 @@ import {
 } from "firebase/firestore";
 import { Feed } from "../Feed/Feed.jsx";
 import { Loading } from "../Loading/Loading.jsx";
+import { ScrollView } from "react-native";
 
 
 export const ProfilePage = ({ route, navigation }) => {
@@ -131,7 +132,7 @@ export const ProfilePage = ({ route, navigation }) => {
             buttonStyle={styles.button}
           />
         )}
-        {(!loggedInUserProfile && !friendsIds.includes(loggedInUserId)) && (
+        {!loggedInUserProfile && !friendsIds.includes(loggedInUserId) && (
           <Button
             onPress={() => {
               handleAddUser(user);
@@ -143,55 +144,75 @@ export const ProfilePage = ({ route, navigation }) => {
 
         <ButtonGroup
           buttons={["Feed", "Friends", "Groups"]}
-          buttonStyle={{backgroundColor:"#28292B", }}
-          textStyle={{color: "white"}}
-          selectedButtonStyle={{backgroundColor: "#49BF87",  innerBorderStyle: "pink"}}
+          buttonStyle={{ backgroundColor: "#28292B" }}
+          textStyle={{ color: "white" }}
+          selectedButtonStyle={{
+            backgroundColor: "#49BF87",
+            innerBorderStyle: "pink",
+          }}
           selectedIndex={sectionOfProfile}
           onPress={(e) => {
             setSectionOfProfile(e);
           }}
-          containerStyle={{ width: "100%", alignSelf: "center", borderColor: "#28292B", }}
+          containerStyle={{
+            width: "100%",
+            alignSelf: "center",
+            borderColor: "#28292B",
+          }}
         />
 
         {sectionOfProfile === 0 && <Feed posts={posts} />}
 
         {sectionOfProfile === 1 && (
-          <Card containerStyle={styles.feed}>
-            {friends.map((friend) => {
-              return (<View style={styles.result} key={friend.id}>
+          
+          <ScrollView containerStyle={styles.feed}>
+          <View>
+              {friends.map((friend) => {
+                return (
+                  <Card containerStyle={styles.feed}>
+                  <View style={styles.result} key={friend.id}>
                     <View style={styles.banner}>
-
-                    <Image
+                      <Image
                         source={{ uri: friend.avatarImgURL }}
                         style={styles.icon}
-                    />
-                    <Text style={styles.username}>{friend.username[0].toUpperCase()}{friend.username.slice(1)}</Text>
+                      />
+                      <Text style={styles.username}>
+                        {friend.username[0].toUpperCase()}
+                        {friend.username.slice(1)}
+                      </Text>
                     </View>
-                   
-                    <Button color="#49BF87" buttonStyle={styles.button} onPress={() =>{
-                        navigation.navigate("Profile", {userId: friend.id})
-                    }} title="View Profile"/>
-                    
-                    
-                </View>)
-            })}
-          </Card>
+
+                    <Button
+                      color="#49BF87"
+                      buttonStyle={styles.button}
+                      onPress={() => {
+                        navigation.navigate("Profile", { userId: friend.id });
+                      }}
+                      title="View Profile"
+                    />
+                  </View>
+            </Card>
+                );
+              })}
+          </View>
+          </ScrollView>
         )}
 
         {sectionOfProfile === 2 && (
           <Card containerStyle={styles.feed}>
             {groups.map((group) => {
               return (
-                    <View style={styles.banner} key={group.id}>
-
-                    <Image
-                        source={{ uri: group.group_img_url }}
-                        style={styles.icon}
-                    />
-                    <Text style={styles.username}>{group.group_name[0].toUpperCase()}{group.group_name.slice(1)}</Text>
-                    </View>
-                   
-                )
+                <View style={styles.banner} key={group.id}>
+                  <Image
+                    source={{ uri: group.group_img_url }}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.username}>
+                    {group.group_name[0].toUpperCase()}
+                    {group.group_name.slice(1)}
+                  </Text>
+                </View>
+              );
             })}
           </Card>
         )}
