@@ -53,7 +53,7 @@ useEffect(() => {
         <Text style={logStyles.text}>{workout.notes}</Text>
         <Button 
         color="#49BF87"
-        style={logStyles.button}
+        style={homeStyles.button}
         onPress={() => {
                 const workoutColRefPost = collection(firestore, "users", loggedInUser, "posts")
 

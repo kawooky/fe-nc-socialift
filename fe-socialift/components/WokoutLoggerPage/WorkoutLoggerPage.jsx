@@ -1,5 +1,5 @@
-import { View , Text} from 'react-native';
-import { styles, theme } from './WorkoutLoggerPageStyle.js';
+import { View , Text, SafeAreaView, ScrollView, ScrollViewBase} from 'react-native';
+import { workLogStyles } from './WorkoutLoggerPageStyle.js';
 import React, { useEffect, useState, useRef } from 'react';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { getExercisesByMuscle } from '../../api'
@@ -7,6 +7,9 @@ import { doc, setDoc, addDoc, updateDoc, collection} from 'firebase/firestore'
 import { getFirebase } from "../../firebase.js";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { styles, theme } from '../someDefaultStyles.js';
+import NavBar from '../NavBar/NavBar.jsx';
+
 
 const { firestore } = getFirebase()
 const { auth } = getFirebase();
@@ -138,19 +141,25 @@ const handlePost = () => {
 
 
     return (
-        <View style={styles.mainView}>
+            
+        <SafeAreaView style={workLogStyles.mainView}>
+
+
        
-        { stage ===1 && ( <View style={styles.mainView}>
+        { stage ===1 && ( <View style={workLogStyles.card}>
+            <View style={workLogStyles.formView}>
         <Button
+        color="#49BF87"
         onPress={() => {
             return navigation.goBack()
         }}
         title="Back"
         />
 
-        <Text>Name</Text>
-        <Text>Date: {date}</Text>
+    
+        <Text style={workLogStyles.text}>Date: {date}</Text>
         <Button
+        color="#49BF87"
         onPress={()=>{
             setShowDatePicker(true)
         }}
@@ -165,9 +174,11 @@ const handlePost = () => {
 
         <Input
               value={notes}
+              inputStyle={ {color: "white" }}
+              style={{marginTop: 15}}
               placeholder="Notes"
               onChangeText={(event) => {
-                setNotes(event)
+                  setNotes(event)
                 setWorkout((workout) => {return {...workout, notes: event}})}}
               errorMessage={''}
               autoCorrect={false}
@@ -175,16 +186,18 @@ const handlePost = () => {
 
         {fullExerciseHolder.map((singleExerciseSets, i)=>{
             return (<View>
-            <Text>{`Exercise: ${singleExerciseSets[0].exercise}`}</Text> 
+            <Text style={workLogStyles.text}>{`Exercise: ${singleExerciseSets[0].exercise}`}</Text> 
                 
             
             {singleExerciseSets.map((singleSet,index)=>{
                 return (<View>
-                <Text key={index}>{`Set: ${index+1} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>
+                <Text style={workLogStyles.text} key={index}>{`Set: ${index+1} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>
 
                 </View>)
             })}
             <Button 
+            color="#49BF87"
+            style={{marginBottom: 10}}
                 onPress={()=>{
                     setFullExerciseHolder((currentFullExerciseHolder)=>{
                         const copyOfCurrent = [...currentFullExerciseHolder]
@@ -199,12 +212,14 @@ const handlePost = () => {
 
         
         <Button
+        color="#49BF87"
             onPress={() => {
                 setStage(2)
             }}
             title="Add Exercise"
         />
         <Button
+        color="#49BF87"
             onPress={() => {
                 handleLog()
                 
@@ -212,50 +227,88 @@ const handlePost = () => {
             title="Log"
         />
         <Button
+        color="#49BF87"
             onPress={() => {
                 handlePost()
             }}
             title="Post"
-        />
-        <Text>hi ur about to log a workout</Text>
-        </View>)}
+            />
+        </View>
+        </View>
+        )}
         
 
 
 
 
-        { stage ===2 && ( <View style={styles.stageTwo}>
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+        
+        
+        { stage ===2 && ( <View style={workLogStyles.card}>
+            <View style={workLogStyles.formView}>
             <Button
+            color="#49BF87"
             onPress={() => {
                 setStage(1)
             }}
             title="Back"
         />
-        <Text>Select a Muscle Group</Text>
-        <View style={styles.muscleButtonList}>
+        <Text styles={workLogStyles.title}>Select a Muscle Group</Text>
+        <View style={workLogStyles.muscleButtonList}>
         {
-        muscleList.map((muscle)=>{
-            return (
-                <Button style={styles.muscleButton}
+            muscleList.map((muscle)=>{
+                return (
+                    <Button style={workLogStyles.muscleButton}
+                color="#49BF87"
                 key={muscle}
                 onPress={() => {
-                   setMuscle(muscle)
-                   setStage(3)
+                    setMuscle(muscle)
+                    setStage(3)
                 }}
                 title={muscle}
-            />)
-        })
+                />)
+            })
         }
         </View>
 
-
+        </View>
         </View>)}
+       
+    
 
 
 
 
-        {stage ===3 && ( <View style={styles.stageThree}>
+
+
+
+
+
+
+
+
+
+
+
+        
+        {stage ===3 && (<View style={workLogStyles.card}>
+             <View style={workLogStyles.formView}>
             <Button
+            color="#49BF87"
             onPress={() => {
                 setStage(2)
             }}
@@ -264,31 +317,54 @@ const handlePost = () => {
         <Text>3 Select a Exercise for Your Muscle Group</Text>
 
         {
-        exercisesByMuscle.map((singleExercise, index)=>{
+            exercisesByMuscle.map((singleExercise, index)=>{
             return (
                 <Button
+                color="#49BF87"
                 key={singleExercise + index}
                 onPress={() => {
-                   setExercise(singleExercise.name)
-                   setStage(4)
+                    setExercise(singleExercise.name)
+                    setStage(4)
                 }}
                 title={singleExercise.name}
-            />)
+                />)
         })
-        }
+    }
         <Button
+        color="#49BF87"
             onPress={() => {
                 setStage(4)
             }}
             title="Forward"
         />
+</View>
         </View>)}
 
 
 
 
-        {stage ===4 && ( <View style={styles.stageFour}>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {stage ===4 && (
+        <SafeAreaView style={workLogStyles.mainContainer}>
+        <ScrollView>
+        <View style={workLogStyles.card}> 
+        <View style={workLogStyles.formView}>
             <Button
+            color="#49BF87"
             onPress={() => {
                 setStage(3)
                 setExercise('')
@@ -298,38 +374,42 @@ const handlePost = () => {
                 setExerciseSetsHolder([])
             }}
             title="Back"
-        />
-        <Text>{exercise}</Text>
+            />
+        <Text style={workLogStyles.title}>{exercise}</Text>
         <Input
               value={weight}
+              inputStyle={ {color: "white" }}
               placeholder="Weight"
               onChangeText={(event) => {
-                setWeight(event)
-                setWeightError('')}}
-              errorMessage={weightError}
-              autoCorrect={false}
-              ref={weightRef}
-              leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="black" />}
-            />
+                  setWeight(event)
+                  setWeightError('')}}
+                  errorMessage={weightError}
+                  autoCorrect={false}
+                  ref={weightRef}
+                  leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="white" />}
+                  />
         <Input
               value={reps}
+              inputStyle={ {color: "white" }}
               placeholder="Reps"
               onChangeText={(event) => {
-                setReps(event)
-                setRepsError('')}}
+                  setReps(event)
+                  setRepsError('')}}
               errorMessage={repsError}
               autoCorrect={false}
               ref={repsRef}
-              leftIcon={<MaterialCommunityIcons name="weight-kilogram" size={24} color="black" />}
-            />
+              leftIcon={<MaterialCommunityIcons name="counter" size={24} color="white" />}
+              />
         <Input
               value={singleSetNotes}
+              inputStyle={ {color: "white" }}
               placeholder="Notes"
               onChangeText={(event) => {setSingleSetNotes(event)}}
               errorMessage={''}
               autoCorrect={false}
             />
         <Button
+        color="#49BF87"
             onPress={() => {
                 if((/^\d+$/.test(weight) || weight === '') && (/^\d+$/.test(reps) || reps === '')) {
                     setExerciseSetsHolder([...exerciseSetsHolder,{exercise:exercise, weight:Number(weight), reps:Number(reps), singleSetNotes:singleSetNotes}])
@@ -344,19 +424,20 @@ const handlePost = () => {
                 }
             }}
             title="Add Set"
-        />
+            />
 
         {exerciseSetsHolder.map((singleSet,index)=>{
             return (<View  key={index}>
-            <Text>{`Set: ${index+1} Exercise: ${singleSet.exercise} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>
+            <Text style={workLogStyles.text}>{`Set: ${index+1} Exercise: ${singleSet.exercise} Weight: ${singleSet.weight} Reps: ${singleSet.reps} Notes: ${singleSet.singleSetNotes}`}</Text>
             <Button 
+            color="#49BF87"
             onPress={()=>{
                 setExerciseSetsHolder((currentExerciseSetsHolder)=>{
                     const copyOfCurrent = [...currentExerciseSetsHolder]
                     const newArr = copyOfCurrent.splice(index,1)
                     return copyOfCurrent
                 })
-                                console.log(exerciseSetsHolder,'holder')
+                console.log(exerciseSetsHolder,'holder')
             }}
             title='delete set'/>
             </View>
@@ -364,7 +445,9 @@ const handlePost = () => {
         })}
 
 
+
         <Button
+        color="#49BF87"
             onPress={() => {
                 setStage(1)
                 setFullExerciseHolder([...fullExerciseHolder, exerciseSetsHolder])
@@ -377,11 +460,14 @@ const handlePost = () => {
             }}
             title="Add"
         />
-        </View>)}
+        </View>
+        </View>
+        </ScrollView>
+        </SafeAreaView>)}
 
-    </View>
-            
-    )
+<NavBar navigation={navigation}/>
+        </SafeAreaView>
+        )
 }
 
 
