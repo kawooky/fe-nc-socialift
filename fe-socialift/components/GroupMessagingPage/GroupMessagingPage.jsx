@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View , Text} from 'react-native';
+import { View , Text, SafeAreaView, Image} from 'react-native';
 import { Input, Button, ThemeProvider } from '@rneui/themed';
 import { styles } from "./GroupMessagingPageStyle";
 import io from "socket.io-client"
@@ -9,7 +9,7 @@ const socket = io.connect("http://localhost:3001");
 
 
 export const GroupMessagingPage = ({route, navigation}) => {
-  const {groupId, groupName, loggedInUserName} = route.params
+  const {groupId, groupName, groupImage, loggedInUserName} = route.params
 
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] =useState([])
@@ -20,13 +20,6 @@ export const GroupMessagingPage = ({route, navigation}) => {
 
 
     const messageRef = useRef()
-
-
-    // new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes()
-    // useEffect(() => {
-    //   socket.emit('room', group)
-    //   setMessageList([])
-    // }, [group])
 
     socket.emit('room', group)
 
@@ -54,8 +47,21 @@ export const GroupMessagingPage = ({route, navigation}) => {
 
 
   return (
-    <View style={styles.mainView}>
-        <Text>{groupName}</Text>
+    <SafeAreaView style={styles.mainView}>
+      <View style={styles.formView}>
+      <View style={styles.banner}>
+            <Image
+                    alt='group picture'
+                    style={styles.profilePic}
+                    source={groupImage}
+                    />
+
+            <Text style={styles.username} >{groupName}</Text>
+        </View>
+
+
+
+    <View style={{}}>
         <Input
               value={message}
               placeholder="send message"
@@ -65,27 +71,31 @@ export const GroupMessagingPage = ({route, navigation}) => {
               ref={messageRef}
               errorMessage={messageError}
               autoCorrect={false}
+              style={{color:"#f4f4f5"}}
             />
         <Button 
+        color="#49BF87"
+        style={{padding:10}}
               onPress={() => {
                 sendMessage()
 
             }}
             title='send message'/>
+    </View>
         
 
         {messageList.map((singleMessage, index)=>{
           if (singleMessage.sender === 'loggedInUserName') {
-            return (<Text style={styles.sentMessage} key={index}>{`Sender:${singleMessage.sender} Message: ${singleMessage.message}`}</Text>)
+            return (<Text style={styles.sentMessage} key={index}>{`${singleMessage.sender}:  ${singleMessage.message}`}</Text>)
           } else {
-            return (<Text style={styles.receivedMessage} key={index}>{`Sender:${singleMessage.sender} Message: ${singleMessage.message}`}</Text>)
+            return (<Text style={styles.receivedMessage} key={index}>{`${singleMessage.sender}:  ${singleMessage.message}`}</Text>)
           }
      
         })}
         
 
-
+        </View>
         <NavBar navigation={navigation} />
-    </View>
+    </SafeAreaView>
   );
 }

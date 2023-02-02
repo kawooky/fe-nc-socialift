@@ -2,7 +2,6 @@ import { StyleSheet, StatusBar, Dimensions } from "react-native";
 
 const mainAreaHeight = Dimensions.get("window").height - 75;
 const styles = StyleSheet.create({
-
   mainView: {
     backgroundColor: "#36373A",
     justifyContent: "center",
@@ -10,34 +9,52 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
   },
   formView: {
-    maxWidth: 420,
+    padding: 30,
+    paddingTop: 50,
+    minWidth: "550",
     width: "100%",
     backgroundColor: "#36373A",
     borderRadius: 10,
-    padding: 10,
-    height: mainAreaHeight
+    alignItems: "center",
+    height: mainAreaHeight,
+  },
+  membersPics: {
+    height: 60,
+    width: 60,
+    borderColor: "black",
+    borderWidth: 2,
+    borderRadius: 60,
+  },
+  groupBar: {
+    backgroundColor: "#28292B",
+    borderColor: "black",
+    borderWidth: 2,
+    borderRadius: 5,
+    maxHeight: 100,
+    minHeight: 100,
+    width: "100%",
+    marginBottom: "auto",
   },
   banner: {
-    backgroundColor: '#222322',
+    backgroundColor: "#222322",
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 20,
-    marginBottom: 15
+    marginBottom: 15,
+    width: "70%",
   },
   profilePic: {
     height: 100,
-        width: 100,
-        borderColor: "black",
-        borderWidth: 2,
-        borderRadius: 100
-   },
-   username: {
+    width: 100,
+    borderColor: "black",
+    borderWidth: 2,
+    borderRadius: 100,
+  },
+  username: {
     fontSize: 20,
-    color: '#f4f4f5'
-   },
-
-
+    color: "#f4f4f5",
+  },
 
   membersContainer: {
     justifyContent: "center",
@@ -48,7 +65,34 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
+  graphContainer: {
+    backgroundColor: "#222322",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    paddingBottom: 50,
+    borderRadius: 20,
+    marginBottom: 15,
+    width: "100%",
+  },
 
+  tableText: {
+    textAlign: "center",
+    flex: 1,
+    color: "#f4f4f5",
+    minWidth: 100,
+    minHeight: 30,
+    justifyContent: "center",
+  },
+  tableHead: {
+    height: 40,
+    justifyContent: "center",
+    // width:100
+  },
+  tableRows: {
+    justifyContent: "center",
+    // width:100
+  },
 });
 
 export { styles };

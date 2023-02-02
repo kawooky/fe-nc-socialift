@@ -7,7 +7,8 @@ import {
     TextInput,
     Image,
     Picker,
-    Dimensions
+    Dimensions,
+    ScrollView,
   } from "react-native";
   import { MaterialCommunityIcons } from '@expo/vector-icons';
   import {BarChart, PieChart, StackedBarChart} from "react-native-chart-kit";
@@ -108,38 +109,67 @@ console.log(loggedInUser, '<<< logged in user')
 
             <Text style={styles.username} >{groupObj.group_name}</Text>
         </View>
+        
+        <View style={styles.banner}>
 
-          <Button
+        {/* <View style={styles.membersContainer}> */}
+        <ScrollView
+        horizontal={true}
+        style={{padding: 10}}
+        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+      >
+
+                {members.map((member)=>{
+                  return (
+
+                    <View>
+                      <Image
+                      alt={member.username}
+                      key={member.username}
+                      style={styles.membersPics}
+                      source={member.avatarImgURL}
+                      />
+
+                    </View>
+                  )
+                  })}
+
+      </ScrollView>
+        
+        <View style={{flexDirection:"row"}}>
+                  <Button
+                  style={{width: 160, padding: 5 }}
+        color="#49BF87"
           onPress={()=>{
-            navigation.navigate('GroupMessaging', {groupId, groupName: groupObj.group_name , loggedInUserName})
+            navigation.navigate('GroupMessaging', {groupId, groupName: groupObj.group_name , loggedInUserName, groupImage: groupObj.group_img_url})
           }}
           title='Message'/>
 
+          <Button 
+          style={{width: 160 , padding: 5}}
+          color="#49BF87"
+          onPress={() => {navigation.navigate("CreateGroup", {groupId})}}>Edit Group</Button>
 
-        <View style={styles.membersContainer}>
-                {members.map((member)=>{
-                    return (<Avatar
-                    alt={member.username}
-                    rounded
-                    key={member.username}
-                    source={member.avatarImgURL}
-                    sx={{ width: 35, height: 35 }}
-                  />)
-                })}
-          
-        <Button onPress={() => {navigation.navigate("CreateGroup", {groupId})}}>Edit Group</Button>
+        </View>
         </View>
 
 
+
+
+
+
         { graphOrTable === 'graph' && (
-          <View>
+          <View style={styles.graphContainer}>
           <Button 
+          style={{paddingBottom: 20}}
+          color="#49BF87"
           onPress={()=>{
             setGraphOrTable('table')
             console.log(chartLabels, '<<<chart labels')
             console.log(chartData, '<<<chart data')
           }}
           title='Switch to table'/>
+
           <StackedBarChart
           data={{
           labels: chartLabels,
@@ -147,8 +177,11 @@ console.log(loggedInUser, '<<< logged in user')
           data: chartData,
           barColors: ["#0000FF", "#1E90FF", "#00BFFF"]
           }}
-          width={Dimensions.get("window").width - 50} // from react-native
-          height={220}
+          width= {500}
+          // {Dimensions.get("window").width - 70} // from react-native
+          height={230}
+          strokeWidth={16}
+          radius={20}
           yAxisLabel={"Kg"}
           chartConfig={{
             backgroundColor: "#white",
@@ -162,24 +195,22 @@ console.log(loggedInUser, '<<< logged in user')
           }
           }}
           style={{
-          marginVertical: 0,
+          marginVertical: 10,
+          marginHorizontal: 10,
           borderRadius: 16
           }}
           /> 
           </View>
           )
-          
           }
 
 
 
-
-
-
-
         { graphOrTable === 'table' && (
-          <View>
+          <View style={styles.graphContainer}>
           <Button 
+          style={{paddingBottom: 20}}
+          color="#49BF87"
           onPress={()=>{
             setGraphOrTable('graph')
             console.log(loggedInUser, '<<<logged in user')
@@ -187,12 +218,12 @@ console.log(loggedInUser, '<<< logged in user')
 
           }}
         title='Switch to graph'/>
-      <View>
-        <Table>
-          <Row data={tableHead} flexArr={[1, 1, 1, 1]} />
-          <TableWrapper style={{flexDirection: 'row'}}>
-            <Col data={tableTitle} />
-            <Rows data={tableData} flexArr={[1, 1, 1]} />
+      <View styles={{paddingTop: 50}}>
+        <Table borderStyle={{borderWidth: 1, minWidth:600, borderColor:"#f4f4f5"}}>
+          <Row data={tableHead}  style={styles.tableHead} textStyle={styles.tableText}/>
+          <TableWrapper style={{flexDirection: 'row'}} >
+            <Col flexArr={[2]}data={tableTitle} style={styles.tableRows} textStyle={styles.tableText}/>
+            <Rows data={tableData} style={styles.tableRows} textStyle={styles.tableText}/>
           </TableWrapper>
         </Table>
       </View> 
@@ -204,6 +235,7 @@ console.log(loggedInUser, '<<< logged in user')
 
 
         </View>
+
         <NavBar navigation={navigation}/>
         </SafeAreaView >
     )
