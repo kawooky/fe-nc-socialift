@@ -39,8 +39,8 @@ export const CreateGroup = ({ route, navigation }) => {
   console.log(groupIdEdit)
 
   useEffect(() => {
+    setLoading(true)
     if (groupIdEdit) {
-      setLoading(true)
       Promise.all([
         getDocs(collection(db, 'groups', groupIdEdit, 'members'))
         .then((memberDocs) => {
@@ -57,6 +57,7 @@ export const CreateGroup = ({ route, navigation }) => {
         setLoading(false)
       })
     }
+    setLoading(false)
   }, [])
 
   function updateAvatar() {
