@@ -22,6 +22,7 @@ const homeStyles = StyleSheet.create({
     borderRadius: 100,
     borderColor: "black",
     borderWidth: 2,
+    backgroundColor: "#e8e8e8"
   },
   groupName: {
     marginTop: 5, 

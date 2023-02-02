@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { styles } from "./ProfilePageStyle.js";
-import { Avatar, Icon, Button, ButtonGroup } from "@rneui/themed";
+import { Avatar, Icon, Button, ButtonGroup, Card } from "@rneui/themed";
 import NavBar from "../NavBar/NavBar.jsx";
 import { getFirebase } from "../../firebase.js";
 import {
@@ -40,6 +40,8 @@ export const ProfilePage = ({ route, navigation }) => {
   const [loggedInUserProfile, setLoggedInUserProfile] = useState(false);
   const [loading, setLoading] = useState(true);
   const [friends, setFriends] = useState([])
+  const [friendsIds, setFriendsIds] = useState([])
+  const [groups, setGroups] = useState([])
   
 	
 
@@ -68,14 +70,20 @@ export const ProfilePage = ({ route, navigation }) => {
         );
       }),
       getDocs(collection(db, "users", userId, 'friends')).then((friendDocs) => {
-        console.log(friendDocs.docs.map((friend) => {
-            return friend.id
-        }))
-        console.log(friendDocs.docs.map((friend) => {
-            return friend.id
-        }).includes(loggedInUserId))
         setFriends(friendDocs.docs.map((friend) => {
+          if (friend.id !== userId) {
+            return {...friend.data(), id:friend.id}
+          }
+        }))
+        setFriendsIds(friendDocs.docs.map((friend) => {
+          if (friend.id !== userId) {
             return friend.id
+          }
+        }))
+      }),
+      getDocs(collection(db, "users", userId, 'groups')).then((groupDocs) => {
+        setGroups(groupDocs.docs.map((group) => {
+          return {...group.data(), id:group.id}
         }))
       })
     ]).then(() => {
@@ -123,7 +131,7 @@ export const ProfilePage = ({ route, navigation }) => {
             buttonStyle={styles.button}
           />
         )}
-        {(!loggedInUserProfile && !friends.includes(loggedInUserId)) && (
+        {(!loggedInUserProfile && !friendsIds.includes(loggedInUserId)) && (
           <Button
             onPress={() => {
               handleAddUser(user);
@@ -148,15 +156,44 @@ export const ProfilePage = ({ route, navigation }) => {
         {sectionOfProfile === 0 && <Feed posts={posts} />}
 
         {sectionOfProfile === 1 && (
-          <SafeAreaView>
-          
-            </SafeAreaView>
+          <Card containerStyle={styles.feed}>
+            {friends.map((friend) => {
+              return (<View style={styles.result} key={friend.id}>
+                    <View style={styles.banner}>
+
+                    <Image
+                        source={{ uri: friend.avatarImgURL }}
+                        style={styles.icon}
+                    />
+                    <Text style={styles.username}>{friend.username[0].toUpperCase()}{friend.username.slice(1)}</Text>
+                    </View>
+                   
+                    <Button color="#49BF87" buttonStyle={styles.button} onPress={() =>{
+                        navigation.navigate("Profile", {userId: friend.id})
+                    }} title="View Profile"/>
+                    
+                    
+                </View>)
+            })}
+          </Card>
         )}
 
         {sectionOfProfile === 2 && (
-          <View>
-            <Text>THIS IS THE STATISTICS SECTION</Text>
-          </View>
+          <Card containerStyle={styles.feed}>
+            {groups.map((group) => {
+              return (
+                    <View style={styles.banner} key={group.id}>
+
+                    <Image
+                        source={{ uri: group.group_img_url }}
+                        style={styles.icon}
+                    />
+                    <Text style={styles.username}>{group.group_name[0].toUpperCase()}{group.group_name.slice(1)}</Text>
+                    </View>
+                   
+                )
+            })}
+          </Card>
         )}
       </View>
       <NavBar navigation={navigation} />
