@@ -40,6 +40,26 @@ We have decided to build this project in React Native, as we only had a small te
 
 ### I gained confidence...
 
+I personally gained confidence working in a group setting. We were independently been able to come up with an idea, delegate tasks and communicate effectively, in order to come together and develop a full stack application under strict time pressure.
+
 ### If we had more time...
 
-If we had more time to work on this project, we would finish the functionality, and improve the styling, inlcluding animations.
+If we had more time to work on this project, we would finish the functionality, and improve the styling, including animations.
+
+Some of the functionality that we were unable to complete under the dedicated time limit include
+
+- Dark mode toggle functionality
+- Live group chat functionality
+- ‘Fun facts’ status section that takes statistics and posts them in a readable manner
+- Update database results for likes and comments on statuses
+- Display graphs of workout data in groups
+- Improve iOS performance
+- Add Spotify integration to show what music is listened to
+- Add special functionality for gyms, monetising the app
+
+Improve the stylisation by
+
+- Standardising width parameters
+- Add loading animation to make the app feel smoother in operation
+- Make it more user friendly for web users
+- Make font sizes more consistent
