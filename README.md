@@ -1,6 +1,6 @@
 # fe-nc-socialift
 
-![SociaLift iPhone Mockup](fe-socialift/assets/mockup2.png)
+![SociaLift iPhone Mockup](/assets/mockup2.png)
 
 Gym social media app
 
