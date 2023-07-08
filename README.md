@@ -2,7 +2,7 @@
 
 ![SociaLift iPhone Mockup](fe-socialift/assets/mockup2.png)
 
-Gym social media app
+SociaLift is an app for gym enthusiasts to log, share, and compare their workout stats with their friends!
 
 ## To View This Project
 
